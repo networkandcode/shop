@@ -1,65 +1,100 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { TextField, Container, Grid, Accordion, AccordionSummary, AccordionDetails, Card, CardActionArea, CardContent, CardActions, CardMedia, FormControl } from '@material-ui/core';
+import { Save } from '@material-ui/icons';
+import db from '../utils/db';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+const Categories = ({ categoriesData }) => {
+    const [ newCategory, setNewCategory ] = useState({
+        name: "",
+        products: "",
+        services: ""
+    });
+    const [ submit, setSubmit ] = useState(false);
+    const onChange = (e) => {         
+        setNewCategory({...newCategory, [e.target.name] : e.target.value});
+        console.log(newCategory);        
+    }
+    const addNewCategory = async() => {        
+        const res = await axios.post('/api/newCategory', newCategory);
+        setNewCategory({
+            name: "",
+            products: "",
+            services: ""
+        });
+        setSubmit( !submit );
+    }
+    useEffect(() => {
+        console.log('rendering');
+    }, [ submit ]);
+    return(
+        <Container>
+            <h1>Categories</h1>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={4}>
+                    <Card>
+                        <CardActionArea>                                
+                            <CardMedia
+                                component="img"
+                                alt="category"
+                                height="200"
+                                image={`https://source.unsplash.com/featured/?category`}
+                                title="category"
+                            />                 
+                        </CardActionArea>
+                        <CardContent>
+                            <FormControl fullWidth>
+                                <TextField label="Add a category" placeholder="Add a category" name="name" value={ newCategory.name } onChange={ onChange } />                              
+                                <TextField label="Add products" placeholder="Separated by comma" name="products" value={ newCategory.products } onChange={ onChange } />                                                                  
+                                <TextField label="Add services" placeholder="Separated by comma" name="services" value={ newCategory.services } onChange={ onChange } />                           
+                            </FormControl>
+                        </CardContent>                        
+                        <CardActions>
+                            <Save onClick={addNewCategory}/>
+                        </CardActions>
+                    </Card>
+                </Grid>
+            </Grid>            
+            <Grid container spacing={2}>
+                { categoriesData.map( ( {id, name, slug, created, products} ) => (
+                    <Grid item key={id} xs={12} sm={4}>
+                        <Card>
+                            <CardActionArea>                                
+                                <CardMedia
+                                  component="img"
+                                  alt={slug}
+                                  height="200"
+                                  image={`https://source.unsplash.com/featured/?${slug}`}
+                                  title={name}
+                                />
+                                <TextField value={name}/>                                                         
+                            </CardActionArea>
+                            <CardActions>
+                                <Link href="/"><a>Products</a></Link>
+                                <Link href="/"><a>Services</a></Link>
+                                <Link href="/"><a>Categories</a></Link>
+                            </CardActions>                            
+                        </Card>                        
+                    </Grid>          
+                ))}
+            </Grid>
+        </Container>
+    );
+}   
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+export const getStaticProps = async () => {
+    const categories = await db.collection('categories').orderBy('created', 'desc').get();    
+    const categoriesData = categories.docs.map(category => ({
+        id: category.id,
+        ...category.data()
+    }))
+    return {
+        props: {
+            categoriesData,
+            revalidate: 1
+        }
+    }
 }
+
+export default Categories
