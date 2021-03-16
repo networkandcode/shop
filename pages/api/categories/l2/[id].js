@@ -1,8 +1,9 @@
-import db from '../../../utils/db';
+import db from '../../../../utils/db';
 const admin = require('firebase-admin');
 import dashify from 'dashify';
 
 export default async (req, res) => {
+  console.log(req.query);
   const { id, c } = req.query;  
   try {
     if (req.method === 'PUT') {
@@ -26,12 +27,14 @@ export default async (req, res) => {
         await db.collection("categories").doc(id).set(data);
     } else if (req.method === 'GET') {  
       const doc = await db.collection('categories').doc(id).get();      
-      const x = doc.data().categories.map( i => {
+      var x = {};
+      doc.data().categories.map( i => {
         if (i.name === c) {          
-          return i;
+          x = i;
         }
-      });            
-      res.status(200).json(x[0]);
+      });     
+      console.log(x);       
+      res.status(200).json(x);
     } else if (req.method === 'DELETE') {
       if(req.body){        
         const doc = await db.collection('categories').doc(id).get();

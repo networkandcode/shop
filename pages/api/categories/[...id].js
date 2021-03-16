@@ -48,11 +48,11 @@ export default async (req, res) => {
         data['updated'] = new Date().toISOString();      
         await db.collection("categories").doc(id).set(data);          
       }      
-      
     } else if (req.method === 'GET') {
         console.log(id);
         const doc = await db.collection('categories').doc(id).get();
         if (!doc.exists) {
+          console.log(`${id} doesn't exist`);
           res.status(404).end();
         } else {
           if(c1){

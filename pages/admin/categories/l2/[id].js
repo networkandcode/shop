@@ -16,6 +16,7 @@ import {
     Alert
 } from '@material-ui/lab';
 import axios from 'axios';
+import dashify from "dashify";
 
 const EditCategory = (props) => {
     const [category, setCategory] = useState(props.category);    
@@ -31,7 +32,9 @@ const EditCategory = (props) => {
     return(
         <>
             <TextField name="name" value={props.category.name} onChange={onChange} required/>
+            {/*
             <Link href={`/admin/categories/sub-${props.id}`}><a><Launch/></a></Link>
+            */}
             <Save onClick={() => props.saveCategory(category)}/>
             <DeleteForever onClick={() => props.deleteCategory(category)}/>
         </>
@@ -41,35 +44,39 @@ const EditCategory = (props) => {
 const Categories = () => {
     // router
     const router = useRouter();
-    console.log(router.query);        
-    const { id, c } = router.query;    
+    console.log(router.query);     
+    const { id, c } = router.query;
     
     // state
-    const [ newCategory, setNewCategory ] = useState({
-        name: ''
-    });
+    const [ newCategories, setNewCategories ] = useState("");
     const [click, setClick] = useState(false);
-    const [ loading, setLoading ] = useState('');
-    const [categoryName, setCategoryName] = useState(c);
+    const [ loading, setLoading ] = useState('');    
     const [categories, setCategories] = useState([]);
 
     // handlers
-    const onChange = (e) => {
-        setLoading('');
-        const { name, value } = e.target;
-        setNewCategory({ ...newCategory, [name]: value });
-    }    
-    const addCategory = async(e) => {
-        if(newCategory.name.trim() !== ""){    
-            if( categories.some( category => ( category.name === newCategory.name ) )) {
-                setLoading('Duplicate entry...');
-            } else {
-                setLoading('Adding...');        
-                await axios.put(`/api/categories/l2?id=${id}&c=${c}`, newCategory);
-                setCategories([...categories, newCategory]);                
-                setNewCategory({ name: '' });
-                setClick(!click);                
-            }               
+    const onChangeAdd = (e) => {
+        setLoading('');        
+        setNewCategories(e.target.value);
+    };    
+    const addCategory = () => {
+        if(newCategories.trim() !== ""){
+            newCategories.trim().split(',').map( async(i) => {
+                if(i.trim() !== ""){
+                    const name = i.trim();
+                    const newCategory = {
+                        name: name
+                    };
+                    if( categories.some( category => ( dashify(category.name) === dashify(newCategory.name) ) )) {
+                        setLoading(`Duplicate entry...${newCategory.name}`);
+                    } else {
+                        setLoading('Adding...');        
+                        await axios.put(`/api/categories/l2/${id}?c=${c}`, newCategory);
+                        setCategories(prevState => ([...prevState, newCategory]));                                                   
+                    } 
+                }
+            })
+            setNewCategories("");
+            setClick(!click);    
         }
     }
     const saveCategory = async(category) => {
@@ -94,24 +101,22 @@ const Categories = () => {
         if (id) {    
             setLoading('Loading...');
             if(categories.length === 0){
-                const res = await axios.get(`/api/categories/l2?id=${id}&c=${c}`);
-                setCategoryName(res.data.name);            
-                console.log(res.data.categories);         
+                const res = await axios.get(`/api/categories/l2/${id}?c=${c}`);                                                  
                 if(res.data.categories) {
                     setCategories(res.data.categories)
                 }
             }
             setLoading('');
         }        
-    }, [router, click]);
+    }, [id, click]);
     
     // jsx
     return (
         <Container>
-            <h1><Link href="/admin/categories"><a>Categories</a></Link>/{ categoryName }</h1>
+            <h1><Link href="/admin/categories"><a>Categories</a></Link>/{ c }</h1>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
-                    <TextField name="name" value={ newCategory.name } onChange={ onChange } required/>
+                    <TextField multiline label="Add categories" placeholder="Separated by comma" name="categories" value={ newCategories } onChange={ onChangeAdd }/>
                     <AddCircle onClick={ addCategory }/>
                 </Grid>
             </Grid>

@@ -5,33 +5,32 @@ import AddCircle from '@material-ui/icons/AddCircle';
 import { TextField, IconButton } from '@material-ui/core';
 
 const AddCategory = () => {
-  const [content, setContent] = useState({
-    name: "",
-    description: ""    
-  })
-  const onChange = (e) => {
-    const { value, name } = e.target;
-    setContent(prevState => ({ ...prevState, [name]: value }));
+  const [newCategories, setNewCategories] = useState("");
+  const onChangeAdd = (e) => {
+    setNewCategories(e.target.value);
   }
-  const onSubmit = async () => {
-    const { name, description } = content;
-    if(name) {
-      console.log(name)
-      const res = await axios.post('/api/category', { name, slug: dashify(name), description });
+  const addCategory = () => {
+    if(newCategories){
+      newCategories.trim().split(',').map( async(i) => {
+        if(i.trim() !== ""){
+          const name = i.trim();
+          await axios.post('/api/categories', { name, slug: dashify(name) });
+        }        
+      })
       window.location.reload();
     }
   }
   return (
     <div>      
-      <label htmlFor="name"></label>
       <TextField
-        type="text"
-        name="name"
-        value={content.name}
-        onChange={onChange}
-        placeholder="Add a category"
+        multiline
+        label="Add categories"
+        placeholder="Separated by comma"
+        name="newCategories"
+        value={newCategories}
+        onChange={onChangeAdd}        
       />      
-      <AddCircle color="primary" onClick={onSubmit}/>
+      <AddCircle color="primary" onClick={addCategory}/>
     </div>
   );
 };
