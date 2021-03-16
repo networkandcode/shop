@@ -28,6 +28,7 @@ const EditCategory = (props) => {
         })
     }
     useEffect(()=>{
+        setCategory(props.category);
     },[props.category]);   
     return(
         <>
@@ -44,7 +45,6 @@ const EditCategory = (props) => {
 const Categories = () => {
     // router
     const router = useRouter();
-    console.log(router.query);     
     const { id, c } = router.query;
     
     // state
@@ -91,8 +91,7 @@ const Categories = () => {
             const idx = prevState.indexOf(category)
             prevState.splice(idx, 1);
             return prevState;
-        });
-        console.log(categories);
+        });        
         setClick(!click);
     }
     

@@ -28,6 +28,7 @@ const EditCategory = (props) => {
         })
     }
     useEffect(()=>{
+        setCategory(props.category);
     },[props.category]);   
     return(
         <>
@@ -42,8 +43,7 @@ const EditCategory = (props) => {
 const Categories = () => {
     // router
     const router = useRouter();        
-    const id = router.query.slug;
-    console.log(id);
+    const id = router.query.slug;    
     
     // state
     const [ newCategories, setNewCategories ] = useState("");
@@ -87,13 +87,10 @@ const Categories = () => {
     }
     const deleteCategory = async(category) => {
         setLoading('Deleting...');        
-        await axios.delete(`/api/categories/${id}`, {data: category});
-        //const idx = categories.indexOf(category);
-        //setCategories([...categories.slice(0, idx), ...categories.slice(idx + 1)])
+        await axios.delete(`/api/categories/${id}`, {data: category});        
         setCategories(prevState => {
-            const idx = prevState.indexOf(category)
-            prevState.splice(idx, 1);
-            return prevState;
+            const idx = prevState.indexOf(category);            
+            return [...prevState.slice(0, idx), ...prevState.slice(idx + 1)];            
         });        
         setClick(!click);
     }
@@ -104,8 +101,7 @@ const Categories = () => {
             setLoading('Loading...');
             if(categories.length === 0){
                 const res = await axios.get(`/api/categories/${id}`);
-                setCategoryName(res.data.name);            
-                console.log(res.data.categories);         
+                setCategoryName(res.data.name);                                 
                 if(res.data.categories) {
                     setCategories(res.data.categories)
                 }
@@ -127,7 +123,7 @@ const Categories = () => {
             <br/>{loading && <Alert severity="info">{loading}</Alert>}<br/><br/>
             <Grid container spacing={2}>
                 {categories.map((category, idx) => (
-                    <Grid key={idx + 1} item xs={12} sm={3}>
+                    <Grid key={idx + 1} item xs={12} sm={3}>                        
                         <EditCategory id={id} category={category} saveCategory={saveCategory} deleteCategory={deleteCategory}/>
                     </Grid>
                 ))}
