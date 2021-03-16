@@ -3,7 +3,6 @@ const admin = require('firebase-admin');
 import dashify from 'dashify';
 
 export default async (req, res) => {
-  console.log(req.query);
   const { id, c } = req.query;  
   try {
     if (req.method === 'PUT') {
@@ -35,17 +34,21 @@ export default async (req, res) => {
       });     
       console.log(x);       
       res.status(200).json(x);
-    } else if (req.method === 'DELETE') {
+    } else if (req.method === 'DELETE') {      
       if(req.body){        
         const doc = await db.collection('categories').doc(id).get();
         if (!doc.exists) {
           res.status(404).end();
         } else {
           var docData = doc.data();
-          docData.categories.map((category, idx) => {
-            if (category.name === req.body.name) {
-              docData.categories.splice(idx, 1)              
-            }
+          docData.categories.map((l1, l1Idx) => {
+            if(l1.name == c){
+              l1.categories.map((l2, l2Idx) => {
+                if (l2.name === req.body.name) {
+                  docData.categories[l1Idx].categories.splice(l2Idx, 1)              
+                }
+              })
+            }            
           });
           docData['updated'] = new Date().toISOString();      
           await db.collection("categories").doc(id).set(docData)                     

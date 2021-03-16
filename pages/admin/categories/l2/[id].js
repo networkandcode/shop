@@ -86,13 +86,12 @@ const Categories = () => {
     }
     const deleteCategory = async(category) => {
         setLoading('Deleting...');        
-        await axios.delete(`/api/categories/${id}`, {data: category});        
+        await axios.delete(`/api/categories/l2/${id}?c=${c}`, {data: category});        
         setCategories(prevState => {
-            const idx = prevState.indexOf(category)
-            prevState.splice(idx, 1);
-            return prevState;
-        });        
-        setClick(!click);
+            const idx = prevState.indexOf(category);            
+            return [...prevState.slice(0, idx), ...prevState.slice(idx + 1)];            
+        });
+        setClick(!click);        
     }
     
     // refresh
