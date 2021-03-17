@@ -33,7 +33,7 @@ const EditCategory = (props) => {
     return(
         <>
             <TextField name="name" value={category.name} onChange={onChange} required/>
-            <Link href={`/admin/categories/l2/${props.id}?c=${category.name}`}><a><Launch/></a></Link>
+            <Link href={`/admin/categories/l2/${props.id}?l1=${props.l1}&c=${category.name}`}><a><Launch/></a></Link>
             <Save onClick={() => props.saveCategory(category)}/>
             <DeleteForever onClick={() => props.deleteCategory(category)}/>
         </>
@@ -87,11 +87,16 @@ const Categories = () => {
     }
     const deleteCategory = async(category) => {
         setLoading('Deleting...');        
-        await axios.delete(`/api/categories/${id}`, {data: category});        
+        await axios.delete(`/api/categories/${id}`, {data: category});     
         setCategories(prevState => {
-            const idx = prevState.indexOf(category);            
-            return [...prevState.slice(0, idx), ...prevState.slice(idx + 1)];            
-        });        
+            var copyCategories = [...prevState];                    
+            copyCategories.map( (i, idx) => {
+                if(i.name === category.name){                    
+                    copyCategories.splice(idx, 1);
+                }
+            })            
+            return copyCategories;
+        });           
         setClick(!click);
     }
     
@@ -113,7 +118,10 @@ const Categories = () => {
     // jsx
     return (
         <Container>
-            <h1><Link href="/admin/categories"><a>Categories</a></Link>/{ categoryName }</h1>
+            <small>
+                <Link href="/admin/categories"><a>Categories</a></Link>/
+                { categoryName }
+            </small>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
                     <TextField multiline label="Add categories" placeholder="Separated by comma" name="name" value={ newCategories } onChange={ onChangeAdd }/>
@@ -124,7 +132,7 @@ const Categories = () => {
             <Grid container spacing={2}>
                 {categories.map((category, idx) => (
                     <Grid key={idx + 1} item xs={12} sm={3}>                        
-                        <EditCategory id={id} category={category} saveCategory={saveCategory} deleteCategory={deleteCategory}/>
+                        <EditCategory id={id} l1={categoryName} category={category} saveCategory={saveCategory} deleteCategory={deleteCategory}/>
                     </Grid>
                 ))}
                 

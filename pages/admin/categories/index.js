@@ -81,7 +81,7 @@ const List = () => {
 
   return (
     <Container>
-      <h1>Categories</h1>
+      <small>Categories</small>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
           <AddCategory/>

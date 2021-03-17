@@ -6,24 +6,45 @@ export default async (req, res) => {
   const { id, c } = req.query;  
   try {
     if (req.method === 'PUT') {
-      req.body = { ...req.body, ['slug']: dashify(req.body.name) };
-      const data = await db.collection("categories").doc(id).get().then(doc => {
+      if (req.query.o === 'edit') {
+        const data = await db.collection("categories").doc(id).get().then(doc => {
           if(doc && doc.exists){
             var docData = doc.data()            
-            docData.categories.map( i => {
-              if(i.name === c){               
-                if('categories' in i){
-                  i.categories = [...i.categories, req.body];
-                } else {
-                  i.categories = [ req.body ];
-                }     
+            docData.categories.map(l1 => {
+              if(l1.name === c){
+                l1.categories.map(l2 => {
+                  if(l2.slug === req.body.slug){
+                    l2.name = req.body.name;
+                    l2.slug = dashify(req.body.name);
+                  }
+                })
               }
-            })                          
+            })
             return docData;
-          }
-        })        
-        data['updated'] = new Date().toISOString();      
-        await db.collection("categories").doc(id).set(data);
+          }          
+        });
+        data['updated'] = new Date().toISOString();   
+        await db.collection("categories").doc(id).set(data); 
+      } else {
+        req.body = { ...req.body, ['slug']: dashify(req.body.name) };
+        const data = await db.collection("categories").doc(id).get().then(doc => {
+            if(doc && doc.exists){
+              var docData = doc.data()            
+              docData.categories.map( i => {
+                if(i.name === c){               
+                  if('categories' in i){
+                    i.categories = [...i.categories, req.body];
+                  } else {
+                    i.categories = [ req.body ];
+                  }     
+                }
+              })                          
+              return docData;
+            }
+          })        
+          data['updated'] = new Date().toISOString();      
+          await db.collection("categories").doc(id).set(data);
+      }      
     } else if (req.method === 'GET') {  
       const doc = await db.collection('categories').doc(id).get();      
       var x = {};

@@ -19,8 +19,8 @@ import axios from 'axios';
 import dashify from "dashify";
 
 const EditCategory = (props) => {
-    const [category, setCategory] = useState(props.category);    
-    const onChange = (e) => {
+    const [category, setCategory] = useState({...props.category, ['slug']: dashify(props.category.name)});    
+    const onChangeEdit = (e) => {
         const {name, value} = e.target;
         setCategory({
             ...category,
@@ -28,11 +28,11 @@ const EditCategory = (props) => {
         })
     }
     useEffect(()=>{
-        setCategory(props.category);
+        setCategory({...props.category, ['slug']: dashify(props.category.name)});
     },[props.category]);   
     return(
         <>
-            <TextField name="name" value={props.category.name} onChange={onChange} required/>
+            <TextField name="name" value={category.name} onChange={onChangeEdit}/>
             {/*
             <Link href={`/admin/categories/sub-${props.id}`}><a><Launch/></a></Link>
             */}
@@ -45,7 +45,7 @@ const EditCategory = (props) => {
 const Categories = () => {
     // router
     const router = useRouter();
-    const { id, c } = router.query;
+    const { id, l1, c } = router.query;
     
     // state
     const [ newCategories, setNewCategories ] = useState("");
@@ -70,7 +70,7 @@ const Categories = () => {
                         setLoading(`Duplicate entry...${newCategory.name}`);
                     } else {
                         setLoading('Adding...');        
-                        await axios.put(`/api/categories/l2/${id}?c=${c}`, newCategory);
+                        await axios.put(`/api/categories/l2/${id}?c=${c}&o=add`, newCategory);
                         setCategories(prevState => ([...prevState, newCategory]));                                                   
                     } 
                 }
@@ -81,16 +81,21 @@ const Categories = () => {
     }
     const saveCategory = async(category) => {
         setLoading('Saving...');       
-        await axios.put(`/api/categories/${id}`, { ...category, level: 'l1' });
+        await axios.put(`/api/categories/l2/${id}?c=${c}&o=edit`, { ...category });
         setClick(!click);        
     }
     const deleteCategory = async(category) => {
         setLoading('Deleting...');        
-        await axios.delete(`/api/categories/l2/${id}?c=${c}`, {data: category});        
+        await axios.delete(`/api/categories/l2/${id}?c=${c}`, {data: category});              
         setCategories(prevState => {
-            const idx = prevState.indexOf(category);            
-            return [...prevState.slice(0, idx), ...prevState.slice(idx + 1)];            
-        });
+            var copyCategories = [...prevState];                    
+            copyCategories.map( (i, idx) => {
+                if(i.name === category.name){                    
+                    copyCategories.splice(idx, 1);
+                }
+            })            
+            return copyCategories;
+        });        
         setClick(!click);        
     }
     
@@ -111,7 +116,11 @@ const Categories = () => {
     // jsx
     return (
         <Container>
-            <h1><Link href="/admin/categories"><a>Categories</a></Link>/{ c }</h1>
+            <small>
+                <Link href="/admin/categories"><a>Categories</a></Link>\
+                <Link href={`/admin/categories/${id}`}><a>{ l1 }</a></Link>\
+                { c }
+            </small>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
                     <TextField multiline label="Add categories" placeholder="Separated by comma" name="categories" value={ newCategories } onChange={ onChangeAdd }/>
