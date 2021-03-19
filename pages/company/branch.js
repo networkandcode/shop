@@ -12,10 +12,20 @@ export default function Branch() {
 
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-         Branches
-      </Typography>
+      
       <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <TextField
+            required
+            variant="outlined"
+            margin="normal"
+            id="BranchName"
+            name="branchname"
+            label="Branch Name"
+            fullWidth
+            autoComplete="Branch-Name"
+          />
+        </Grid>
         <Grid item xs={12}>
           <TextField
             required
@@ -43,11 +53,35 @@ export default function Branch() {
             required
             variant="outlined"
             margin="normal"
-            id="taluk"
-            name="taluk"
-            label="Taluk"
+            id="subdistrict"
+            name="subdistrict"
+            label="Sub District"
             fullWidth
-            autoComplete="taluk"
+            autoComplete="sub-district"
+          />
+        </Grid>
+       <Grid item xs={6}>
+          <TextField
+            required
+            variant="outlined"
+            margin="normal"
+            id="district"
+            name="district"
+            label="District"
+            fullWidth
+            autoComplete="district"
+          />
+        </Grid>
+       <Grid item xs={6}>
+          <TextField
+            required
+            variant="outlined"
+            margin="normal"
+            id="state"
+            name="state"
+            label="State"
+            fullWidth
+            autoComplete="state"
           />
         </Grid>
         <Grid item xs={6}>
