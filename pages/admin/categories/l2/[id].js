@@ -48,7 +48,7 @@ const Categories = () => {
     const { id, l1, c } = router.query;
     
     // state
-    const [ newCategories, setNewCategories ] = useState("");
+    const [ newCategories, setNewCategories ] = useState("");    
     const [click, setClick] = useState(false);
     const [ loading, setLoading ] = useState('');    
     const [categories, setCategories] = useState([]);
@@ -58,31 +58,41 @@ const Categories = () => {
         setLoading('');        
         setNewCategories(e.target.value);
     };    
-    const addCategory = () => {
+    const addCategory = async() => {
         if(newCategories.trim() !== ""){
-            newCategories.trim().split(',').map( async(i) => {
+            newCategories.trim().split(',').map( i => {
                 if(i.trim() !== ""){
                     const name = i.trim();
                     const newCategory = {
                         name: name
                     };
                     if( categories.some( category => ( dashify(category.name) === dashify(newCategory.name) ) )) {
-                        setLoading(`Duplicate entry...${newCategory.name}`);
+                        setLoading(`Duplicate entry...${newCategory.name}`);                        
                     } else {
-                        setLoading('Adding...');        
-                        await axios.put(`/api/categories/l2/${id}?c=${c}&o=add`, newCategory);
-                        setCategories(prevState => ([...prevState, newCategory]));                                                   
-                    } 
+                        setLoading('Adding...');                                                      
+                        setCategories(prevState => ([...prevState, newCategory]));                     
+                    }
                 }
-            })
-            setNewCategories("");
+            })            
             setClick(!click);    
         }
     }
     const saveCategory = async(category) => {
-        setLoading('Saving...');       
-        await axios.put(`/api/categories/l2/${id}?c=${c}&o=edit`, { ...category });
-        setClick(!click);        
+        setLoading('Saving...');
+        if(category.name.trim() !== ""){
+            setCategories(prevState => {
+                var copy = [ ...prevState ];
+                copy.map((i, idx) => {
+                    if (dashify(i.name) === category.slug) {
+                        i.name = category.name;
+                    }
+                })
+                return copy;
+            })        
+            setClick(!click);        
+        }else{
+            setLoading('Empty text...');
+        }        
     }
     const deleteCategory = async(category) => {
         setLoading('Deleting...');        
@@ -108,6 +118,9 @@ const Categories = () => {
                 if(res.data.categories) {
                     setCategories(res.data.categories)
                 }
+            }else{                           
+                setNewCategories("");                
+                await axios.put(`/api/categories/l2/${id}?c=${c}&o=add`, {categories: categories});
             }
             setLoading('');
         }        
@@ -117,8 +130,8 @@ const Categories = () => {
     return (
         <Container>
             <small>
-                <Link href="/admin/categories"><a>Categories</a></Link>\
-                <Link href={`/admin/categories/${id}`}><a>{ l1 }</a></Link>\
+                <Link href="/admin/categories"><a>Categories</a></Link>/
+                <Link href={`/admin/categories/${id}`}><a>{ l1 }</a></Link>/
                 { c }
             </small>
             <Grid container spacing={2}>

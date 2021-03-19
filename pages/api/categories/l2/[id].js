@@ -1,6 +1,7 @@
 import db from '../../../../utils/db';
 const admin = require('firebase-admin');
 import dashify from 'dashify';
+import { ContactlessTwoTone } from '@material-ui/icons';
 
 export default async (req, res) => {
   const { id, c } = req.query;  
@@ -26,17 +27,18 @@ export default async (req, res) => {
         data['updated'] = new Date().toISOString();   
         await db.collection("categories").doc(id).set(data); 
       } else {
-        req.body = { ...req.body, ['slug']: dashify(req.body.name) };
+        // add        
+        var { categories } = req.body;
+        categories.map(i => {
+          i.slug = dashify(i.name);
+        });
         const data = await db.collection("categories").doc(id).get().then(doc => {
             if(doc && doc.exists){
               var docData = doc.data()            
-              docData.categories.map( i => {
-                if(i.name === c){               
-                  if('categories' in i){
-                    i.categories = [...i.categories, req.body];
-                  } else {
-                    i.categories = [ req.body ];
-                  }     
+              docData.categories.map( l1 => {
+                if(l1.name === c){                    
+                    console.log(l1.categories);
+                    l1.categories = categories;                    
                 }
               })                          
               return docData;
