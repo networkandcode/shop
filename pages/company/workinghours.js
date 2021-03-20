@@ -2,6 +2,8 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DateFnsUtils from '@date-io/date-fns';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -15,6 +17,7 @@ export default function Workinghour() {
   };
   return (
     <React.Fragment>
+      <Container maxWidth="sm">
       <Typography variant="h6" gutterBottom>
          Working Hours
       </Typography>
@@ -250,7 +253,16 @@ export default function Workinghour() {
         />
         </Grid>
         </MuiPickersUtilsProvider>
+        <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Submit
+          </Button>
         </Grid>
+        </Container>
     </React.Fragment>
   );
 }

@@ -2,12 +2,13 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
 
 export default function Contact() {
   return (
     <React.Fragment>
+      <Container maxWidth="sm">
       <Typography variant="h6" gutterBottom>
         Contact Information
       </Typography>
@@ -56,8 +57,16 @@ export default function Contact() {
             autoComplete="Email-address"
           />
         </Grid>
-        
+        <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Submit
+          </Button>
       </Grid>
+      </Container>
     </React.Fragment>
   );
 }

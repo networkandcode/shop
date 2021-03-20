@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -31,42 +30,7 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    position: 'relative',
-  },
-  layout: {
-    width: 'auto',
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(6),
-      marginBottom: theme.spacing(6),
-      padding: theme.spacing(3),
-    },
-  },
-  stepper: {
-    padding: theme.spacing(3, 0, 5)
-  },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  button: {
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
-  },
-}));
+
 
 const steps = ['Details', 'Contact Information', 'Address', 'Social Links','Images', 'Working Hours'];
 
@@ -89,8 +53,8 @@ function getStepContent(step) {
   }
 }
 
-export default function Profile() {
-  const classes = useStyles();
+//export default function Profile() {
+  
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
@@ -104,19 +68,19 @@ export default function Profile() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="absolute" color="default" className={classes.appBar}>
+      <AppBar position="absolute" color="default">
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap>
             Company Profile
           </Typography>
         </Toolbar>
       </AppBar>
-      <main className={classes.layout}>
-        <Paper className={classes.paper}>
+      <main>
+        <Paper>
           <Typography component="h1" variant="h4" align="center">
             Company Details
           </Typography>
-          <Stepper activeStep={activeStep} className={classes.stepper}>
+          <Stepper activeStep={activeStep}>
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
@@ -129,16 +93,16 @@ export default function Profile() {
                 <Typography variant="h5" gutterBottom>
                   Thank you for your submission.
                 </Typography>
-                <Button variant="contained" className={classes.button}>
+                <Button variant="contained">
                       <Link href="/">Home</Link>
                     </Button>
               </React.Fragment>
             ) : (
               <React.Fragment>
                 {getStepContent(activeStep)}
-                <div className={classes.buttons}>
+                <div>
                   {activeStep !== 0 && (
-                    <Button onClick={handleBack} color="primary" className={classes.button}>
+                    <Button onClick={handleBack} color="primary">
                       Back
                     </Button>
                   )}
@@ -146,7 +110,7 @@ export default function Profile() {
                     variant="contained"
                     color="primary"
                     onClick={handleNext}
-                    className={classes.button}
+              
                   >
                     {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                   </Button>

@@ -4,11 +4,14 @@ import Typography from '@material-ui/core/Typography';
 import AddAPhotoRoundedIcon from '@material-ui/icons/AddAPhotoRounded';
 import Avatar from '@material-ui/core/Avatar';
 import CreateNewFolderRoundedIcon from '@material-ui/icons/CreateNewFolderRounded';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 
 export default function Image() {
   
   return (
     <React.Fragment>
+      <Container maxWidth="sm">
       <Typography variant="h6">
          Upload Images
       </Typography>
@@ -31,7 +34,16 @@ export default function Image() {
         <CreateNewFolderRoundedIcon />
       </Avatar>
         </Grid>
+        <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Submit
+          </Button>
               </Grid>
+              </Container>
     </React.Fragment>
   );
 }

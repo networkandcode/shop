@@ -2,6 +2,8 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 
 export default function Details() {
   const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
@@ -11,6 +13,7 @@ export default function Details() {
   };
   return (
     <React.Fragment>
+      <Container maxWidth="sm">
       <Typography variant="h6" gutterBottom>
          Company Details
       </Typography>
@@ -53,7 +56,16 @@ export default function Details() {
         }}
       />
         </Grid>
+        <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Submit
+          </Button>
               </Grid>
+              </Container>
     </React.Fragment>
   );
 }

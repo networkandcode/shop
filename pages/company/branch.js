@@ -6,13 +6,14 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Container from '@material-ui/core/Container';
 
 
 export default function Branch() {
 
   return (
     <React.Fragment>
-      
+      <Container maxWidth="sm">
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <TextField
@@ -24,6 +25,42 @@ export default function Branch() {
             label="Branch Name"
             fullWidth
             autoComplete="Branch-Name"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
+            variant="outlined"
+            margin="normal"
+            id="contactperson"
+            name="contactperson"
+            label="Contact Person"
+            fullWidth
+            autoComplete="contact-person"
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            required
+            variant="outlined"
+            margin="normal"
+            id="email"
+            name="email"
+            label="Email"
+            fullWidth
+            autoComplete="Email"
+          />
+        </Grid>
+       <Grid item xs={6}>
+          <TextField
+            required
+            variant="outlined"
+            margin="normal"
+            id="mobile number"
+            name="mobile number"
+            label="Mobile Number"
+            fullWidth
+            autoComplete="mobile"
           />
         </Grid>
         <Grid item xs={12}>
@@ -98,6 +135,7 @@ export default function Branch() {
         </Grid>
         
               </Grid>
+              </Container>
     </React.Fragment>
   );
 }

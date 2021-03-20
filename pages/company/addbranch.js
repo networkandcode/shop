@@ -1,6 +1,8 @@
+import Container from '@material-ui/core/Container';
 import React, { Component } from "react";
 import  Branch from "./branch";
 import AddCircleOutlineSharpIcon from '@material-ui/icons/AddCircleOutlineSharp';
+import Button from '@material-ui/core/Button';
 
 class Addbranch extends Component {
   constructor() {
@@ -38,21 +40,31 @@ class Addbranch extends Component {
   render() {
     const { showBranch2, showBranch3, showBranch4, showBranch5 } = this.state;
     return (
+     <React.Fragment> <Container maxWidth="sm">
       <div>
+        <h2>Branches</h2>
+        <h3>Main-Branch</h3>
+
           <Branch />
           <AddCircleOutlineSharpIcon onClick={() => this.hideComponent("showBranch2")}></AddCircleOutlineSharpIcon>
-        {showBranch2 && <Branch />}
-        <AddCircleOutlineSharpIcon onClick={() => this.hideComponent("showBranch3")}></AddCircleOutlineSharpIcon>
-        {showBranch3 && <Branch />}
-        
-        <AddCircleOutlineSharpIcon onClick={() => this.hideComponent("showBranch4")}></AddCircleOutlineSharpIcon>
-        {showBranch4 && <Branch />}
-        <AddCircleOutlineSharpIcon onClick={() => this.hideComponent("showBranch5")}></AddCircleOutlineSharpIcon>
-        
-        {showBranch5 && <Branch />}
+        {showBranch2 && <><h3>Sub-Branch1</h3> <Branch /> <AddCircleOutlineSharpIcon onClick={() => this.hideComponent("showBranch3")}></AddCircleOutlineSharpIcon></>}
+        {showBranch3 && <><h3>Sub-Branch2</h3> <Branch /> <AddCircleOutlineSharpIcon onClick={() => this.hideComponent("showBranch4")}></AddCircleOutlineSharpIcon></>}
+        {showBranch4 && <><h3>Sub-Branch3</h3> <Branch /> <AddCircleOutlineSharpIcon onClick={() => this.hideComponent("showBranch5")}></AddCircleOutlineSharpIcon></>}
+        {showBranch5 && <><h3>Sub-Branch4</h3> <Branch /></>}
+        <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Submit
+          </Button>
+
         <div>        
         </div>
       </div>
+      </Container>
+      </React.Fragment>
     );
   }
 }
