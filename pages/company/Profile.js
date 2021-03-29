@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Details from './details';
-import Contact from './Contact';
+import Contact from './contact';
 import Addbranch from './addbranch';
 import Social from  './social';
 import Image from './image';
@@ -53,7 +53,7 @@ function getStepContent(step) {
   }
 }
 
-//export default function Profile() {
+export default function Profile() {
   
   const [activeStep, setActiveStep] = React.useState(0);
 
