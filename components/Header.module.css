@@ -1,0 +1,6 @@
+.scrolled{
+    min-height: 20vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}

@@ -41,7 +41,7 @@ const Profile = () => {
   }
   useEffect(() => {
     if(!auth.userAuthData){
-      router.push('/auth');
+      router.push('/user/auth');
     } else{
       const {displayName} = auth.userAuthData;
       auth.getCategories();

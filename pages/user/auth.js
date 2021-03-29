@@ -6,7 +6,6 @@ import {
     Container,
     CssBaseline,    
     FormControlLabel,
-    Link,
     TextField,
     Typography
 } from '@material-ui/core';
@@ -14,7 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { LockOutlined } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import Header from '../../components/Header';
+import { useAuth } from '../../hooks/useAuth';
 
 const useStyles = makeStyles(theme => ({
     avatar: {
@@ -29,24 +29,13 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'column',
-        marginTop: theme.spacing(8)
+        marginTop: theme.spacing(2)
     },
     submit: {
         margin: theme.spacing(3, 0, 2)
     }
 }));
 
-const Copyright = () => (
-    <Typography color="textSecondary" variant="body2" align="center">
-        {'Copyright © '}
-        <Link color="inherit" href="https://www.marebox.com/">
-            www.marebox.com
-        </Link>
-        {' '}
-        {new Date().getFullYear()}
-        {'.'}
-    </Typography>
-)
 const Auth = () => {
     const auth = useAuth();
     const router = useRouter();
@@ -78,14 +67,14 @@ const Auth = () => {
                     setData({...data, ['isLoading']: false});
                     response.error 
                         ? setData({...data, ['error']: response.error.message})
-                        : router.push('/company/profile');
+                        : router.push('/user/profile');
                 });
             }else{            
                 await auth.signIn({email, password}).then((response) => {                    
                     setData({...data, ['isLoading']: false});
                     response.error 
                         ? setData({...data, ['error']: response.error.message})
-                        : router.push('/company/profile');
+                        : router.push('/user/profile');
                 });
             }
         } else{
@@ -111,7 +100,7 @@ const Auth = () => {
         }        
     }
 
-    return(
+    return(        
         <Container component="main" maxWidth="xs">
             <CssBaseline/>            
             <div className={classes.paper}>
@@ -181,11 +170,8 @@ const Auth = () => {
                         {data.newUser ? <>Sign up</> : <>Log in</> }
                     </Button>
                 </form>
-            </div>
-            <Box mt={5}>
-                <Copyright/>
-            </Box>
-        </Container>
+            </div>      
+        </Container>        
     )
 }
 
