@@ -1,5 +1,4 @@
 
-import Header from '../components/Header';
 import db from '../utils/db';
 import { 
   Container,
@@ -30,7 +29,7 @@ const Categories = (props) => {
   return (
     <>
     
-      <Grid container spacing={2} style={{paddingLeft: `20px`,paddingRight: `20px`, backgroundColor: `seashell`}}>
+      <Grid container spacing={2} style={{paddingRight: `10px`, paddingLeft: `10px`, backgroundColor: `seashell`}}>
       {categoriesData.map(category => (
         <Grid item key={category.id} xs={12} sm={4}>
           <Card >
