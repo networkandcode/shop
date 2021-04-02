@@ -1,8 +1,8 @@
 
 import Header from '../components/Header';
 import db from '../utils/db';
-import {
-  Container, 
+import { 
+  Container,
   Grid, 
   Card, 
   makeStyles,
@@ -12,13 +12,16 @@ import {
   CardContent, 
   CardMedia 
 } from '@material-ui/core';
+import style from '../styles/Home.module.css';
 import Link from 'next/link'
 
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
   },
-});
+  
+  });
+  
 
 const Categories = (props) => {
   const { categoriesData } = props;
@@ -26,7 +29,8 @@ const Categories = (props) => {
 
   return (
     <>
-      <Grid container spacing={2} style={{backgroundColor: `seashell`}}>
+    
+      <Grid container spacing={2} style={{paddingLeft: `20px`,paddingRight: `20px`, backgroundColor: `seashell`}}>
       {categoriesData.map(category => (
         <Grid item key={category.id} xs={12} sm={4}>
           <Card >
@@ -34,18 +38,18 @@ const Categories = (props) => {
               <CardMedia
                 component="img"
                 alt={category.slug}
-                height="200"
+                height="150"
                 image={`https://source.unsplash.com/featured/?${category.slug}`}
                 title={category.name}
               />
             </CardActionArea>
             <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
+              <Typography gutterBottom variant="h6" component="h3">
               <Link href={`/categories/${category.slug}`}>
                 <a>{category.name}</a>            
               </Link>                        
               </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
+              <Typography variant="body2" color="textSecondary" component="p"> 
                 Checkout listings for {category.name}
               </Typography>
             </CardContent>
@@ -55,6 +59,7 @@ const Categories = (props) => {
         </Grid>      
       ))}
       </Grid>
+      
     </>
   );
 };

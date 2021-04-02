@@ -1,48 +1,57 @@
 import {
-    Button,
-    Grid,
-    Typography
+  Toolbar,
+  AppBar,
+  Button,
+  Grid,
+  Typography
 } from '@material-ui/core';
 import Link from 'next/link';
 import { useRequireAuth } from '../hooks/useRequireAuth';
+import Image from 'next/image';
 
 const Header = () => {
-  const auth = useRequireAuth();  
-  return (
-    <>
-        <Grid container spacing={2} style={{backgroundColor: `seashell`}}>
-            <Grid item xs={12} sm={12}>
-                <Typography style={{color: `#042F59`}} variant="h3" component="h1"> Marebox </Typography>
-                <Typography component="p" variant="subtitle1"> Connect with the right Product/Service Experts </Typography>
-                <Typography component="p" paragraph variant="subtitle2"> Find B2B {'&'} B2C businesses contact addresses, phone numbers,
-user ratings and reviews </Typography>
-            </Grid>            
+const auth = useRequireAuth();  
+return (
+  <>
+      <AppBar position="fixed" container  style={{backgroundColor: `pink`, color: `#042F59`, marginBottom:`10px`}}>
+      <Toolbar>
+        <Grid item>
+          <Link href="/"><a>
+          <Image
+        src="/mareboxwhite.png"
+        alt="Logo"
+        width={57}
+        height={57}
+      />
+          </a></Link>
         </Grid>
-        <Grid container spacing={2} style={{backgroundColor: `pink`, color: `#042F59`, marginBottom: `10px`}}>
-          <Grid item>
-            <Link href="/"><a>
-              <Typography component="h2" variant="h5">Categories</Typography>
-            </a></Link>
+        <Grid item style={{marginLeft: `10px`, marginRight: `10px`}}>
+        <Link href="/"><a>
+            <Typography component="h2" variant="h5">Categories</Typography>
+          </a></Link>
+        </Grid>
+        <Grid item style={{marginRight: `10px`}}>
+          <Link href="/"><a>
+          <Typography component="h2" variant="h5">Places</Typography>
+          </a></Link>
+        </Grid>
+        <Grid item style={{marginRight: `690px`}}>
+          <Link href="/user/profile"><a>
+          <Typography component="h2" variant="h5">My Account</Typography>
+          </a></Link>
+        </Grid>
+        {auth.userAuthData &&(
+          <Grid item style={{marginLeft: `130px`}}>
+            <Button color="primary" onClick={() => auth.signOut()}>
+              Logout
+            </Button>
           </Grid>
-          <Grid item>
-            <Link href="/"><a>
-            <Typography component="h2" variant="h5">Places</Typography>
-            </a></Link>
-          </Grid>
-          <Grid item>
-            <Link href="/user/profile"><a>
-            <Typography component="h2" variant="h5">My Account</Typography>
-            </a></Link>
-          </Grid>
-          {auth.userAuthData &&(
-            <Grid item style={{textAlign: `right`}}>
-              <Button color="primary" onClick={() => auth.signOut()}>
-                Logout
-              </Button>
-            </Grid>
-          )}
-        </Grid>  
-    </>    
+        )}
+        
+        </Toolbar>
+      </AppBar>  
+      <Toolbar />
+  </>    
 )};
 
 export default Header;
