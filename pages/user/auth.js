@@ -9,37 +9,18 @@ import {
     TextField,
     Typography
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import styles from '../../styles/Home.module.css';
 import { LockOutlined } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import Header from '../../components/Header';
 import { useAuth } from '../../hooks/useAuth';
 
-const useStyles = makeStyles(theme => ({
-    avatar: {
-        backgroundColor: theme.palette.secondary.main,
-        margin: theme.spacing(1)        
-    },
-    form: {
-        marginTop: theme.spacing(1),
-        width: '100%'
-    },
-    paper: {        
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        marginTop: theme.spacing(2)
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2)
-    }
-}));
+
 
 const Auth = () => {
     const auth = useAuth();
     const router = useRouter();
-    const classes = useStyles();
+    
     const [ data, setData ] = useState({
         email: '',
         password: '',
@@ -103,14 +84,14 @@ const Auth = () => {
     return(        
         <Container component="main" maxWidth="xs">
             <CssBaseline/>            
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlined/>
+            <div className={styles.paper}>
+                <Avatar className={styles.avatar}>
+                    <LockOutlined className={styles.avatar}/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Authentication
                 </Typography>                
-                <form className={classes.form} onSubmit={onSubmit} noValidate>
+                <form className={styles.form} onSubmit={onSubmit} noValidate>
                     <TextField
                         autoFocus
                         autoComplete="email"
@@ -161,7 +142,7 @@ const Auth = () => {
                         <p style={{color: "red"}}>{data.error}</p>
                     )}
                     <Button   
-                        className={classes.submit}
+                        className={styles.submit}
                         color="primary"
                         fullWidth             
                         type="submit"      

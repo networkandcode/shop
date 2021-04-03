@@ -121,3 +121,29 @@
     flex-direction: column;
   }
 }
+
+.root {
+  max-width: 345,
+}
+
+  .avatar {
+        
+      background-color: #dc004e;      
+  }
+  .form {
+      margin-top: 8px;
+      width: 100%;
+  }
+  .paper{        
+      align-items: center;
+      display: flex;
+      margin-top: 45px;
+      flex-direction: column;
+  }
+  .submit {
+      margin-top: 24px;
+      margin-right: 0px;
+      margin-bottom: 16px;
+  }
+
+

@@ -8,22 +8,17 @@ import {
   Typography,
   TextField
 } from '@material-ui/core';
-import {makeStyles} from '@material-ui/core/styles';
+
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
 
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120
-  }
-}));
+
 
 const Profile = () => {
   const router = useRouter();
-  const classes = useStyles();
+  
   const auth = useAuth();
   const [data, setData] = useState({});
   const onChange = e => {
@@ -106,7 +101,7 @@ const Profile = () => {
             value={data.companyName}
             variant="outlined"          
           />
-          <FormControl className={classes.formControl} fullWidth>
+          <FormControl fullWidth>
             <InputLabel id="businessTypeLabel">Business Type</InputLabel>
             <Select               
               id="businessTypeSelect" 
@@ -120,7 +115,7 @@ const Profile = () => {
               <MenuItem value="Product and Service">Product and Service</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className={classes.formControl} fullWidth>
+          <FormControl fullWidth>
             <InputLabel id="businessCategoryLabel">Business Category</InputLabel>
             <Select 
               id="businessCategorySelect" 

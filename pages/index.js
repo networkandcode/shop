@@ -4,7 +4,7 @@ import {
   Container,
   Grid, 
   Card, 
-  makeStyles,
+  
   CardActionArea, 
   CardActions, 
   Typography, 
@@ -14,17 +14,12 @@ import {
 import style from '../styles/Home.module.css';
 import Link from 'next/link'
 
-const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
-  
-  });
+
   
 
 const Categories = (props) => {
   const { categoriesData } = props;
-  const classes = useStyles();
+  
 
   return (
     <>

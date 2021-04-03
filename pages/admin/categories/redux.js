@@ -4,17 +4,9 @@ import dashify from 'dashify';
 import AddCategory from '../../../components/AddCategory';
 import { Save, DeleteForever, Launch} from '@material-ui/icons';
 import { TextField, Grid, IconButton, Container } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import { connect } from 'react-redux';
 import { addCategory, saveCategory, deleteCategory } from '../../../redux/actions/categoriesActions';
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    padding: theme.spacing(2)
-  }
-}));
 
 const EditCategory = (props) => {  
   const [content, setContent] = useState({
