@@ -19,7 +19,7 @@ function HideOnScroll(props) {
   const { children, window } = props;
   
   const trigger = useScrollTrigger({ target: window ? window() : undefined,disableHysteresis: true,
-    threshold: 200 });
+    threshold: 175 });
 
   return (
     <Slide appear={true} in={trigger}>
