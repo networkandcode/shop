@@ -13,6 +13,7 @@ import {
   import { useEffect, useState } from 'react';
   import { useRouter } from 'next/router';
   import { useAuth } from '../../hooks/useAuth';
+  import UserLinks from '../../components/UserLinks';
   
   const Address = () => {
     const router = useRouter();
@@ -95,11 +96,9 @@ import {
     return (
       auth.userAuthData ? (
         <Container maxWidth="xs" spacing={2}>
-          <Typography variant="h6" gutterBottom>
-            Address
-          </Typography>
+          <UserLinks address="#042F59"/>
           <form onSubmit={onSubmit}>
-          <Grid container spacing={2} style={margin: `2px`}>
+          <Grid container spacing={2} style={{margin: `2px`}}>
             <TextField
               autoComplete="address"
               fullWidth              
