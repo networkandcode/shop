@@ -1,16 +1,13 @@
 import Link from 'next/link'
 import db from '../../utils/db';
-import { Container, Grid, Card, makeStyles, CardActionArea, CardActions, Typography, CardContent, CardMedia } from '@material-ui/core';
+import { Container, Grid, Card, CardActionArea, CardActions, Typography, CardContent, CardMedia } from '@material-ui/core';
+import style from '../../styles/Home.module.css';
 
-const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
-});
+
 
 const Categories = (props) => {
   const { categoriesData } = props;
-  const classes = useStyles();
+
 
   return (
     <Container>
@@ -18,7 +15,7 @@ const Categories = (props) => {
       <Grid container spacing={1}>
       {categoriesData.map(category => (
         <Grid item key={category.id} xs={12} sm={4}>
-          <Card className={classes.root}>
+          <Card className={style.root}>
             <CardActionArea>
               <CardMedia
                 component="img"
