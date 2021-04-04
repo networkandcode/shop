@@ -12,8 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import Details from './details';
 import Contact from './contact';
 import Addbranch from './addbranch';
-import Social from  './social';
-import Image from './image';
+import Social from  '../pages/user/social';
+import Image from '../pages/user/image';
 import Workinghour from './workinghours';
 
 

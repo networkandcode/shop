@@ -9,10 +9,11 @@ import {
   TextField
 } from '@material-ui/core';
 
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+
 import { useAuth } from '../../hooks/useAuth';
+import UserLinks from '../../components/UserLinks';
 
 
 
@@ -43,12 +44,11 @@ const Profile = () => {
       setData({...data, displayName});
     }
   }, [auth, router]);
+  
   return (
     auth.userAuthData ? (
       <Container maxWidth="xs">
-        <Typography variant="h6" gutterBottom>
-          Contact Information
-        </Typography>
+        <UserLinks profile="#042F59"/>        
         <form onSubmit={onSubmit}>
           <TextField
             autoComplete="given-name"
@@ -102,13 +102,49 @@ const Profile = () => {
             variant="outlined"          
           />
           <FormControl fullWidth>
+          <TextField
+            autoComplete="establishedYear"
+            fullWidth
+            helperText=""
+            id="establishedYear"      
+            InputLabelProps={{
+              shrink: true,
+            }}
+            label="Established Year"                  
+            margin="normal"
+            name="establishedYear"
+            onChange={onChange}
+            placeholder="Established Year"
+            type="date"
+            value={data.establishedYear}
+            variant="outlined"          
+          />
+          <TextField
+            autoComplete="companyDescription"
+            fullWidth
+            helperText=""
+            id="companyDescription"      
+            InputLabelProps={{
+              shrink: true,
+            }}
+            label="About"                  
+            margin="normal"
+            multiline
+            name="companyDescription"
+            onChange={onChange}
+            placeholder="About your company"
+            type="text"
+            value={data.companyDescription}
+            variant="outlined"        
+          />
+          <FormControl fullWidth>
             <InputLabel id="businessTypeLabel">Business Type</InputLabel>
             <Select               
               id="businessTypeSelect" 
-              labelId="businessTypeLabel" 
+              labelId="businessTypeLabel"               
               name="businessType"
               onChange={onChange}
-              value={data.businessType || ''}
+              value={data.businessType || ''}              
             >
               <MenuItem value="Product">Product</MenuItem>
               <MenuItem value="Service">Service</MenuItem>

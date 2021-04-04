@@ -1,22 +1,19 @@
-import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
+import UserLinks from '../../components/UserLinks';
 
 export default function Social() {
   
   return (
-    <React.Fragment>
-      <Container maxWidth="sm">
-      <Typography variant="h6">
-         Social Links
-      </Typography>
+    <>
+      <Container maxWidth="xs" spacing={2}>
+        <UserLinks social="#042F59"/>
       <Grid container spacing={3}>
       <Grid item xs={12} sm={12}>
-          <TextField
-            
+          <TextField            
             variant="outlined"
             margin="normal"
             id="whatsapp"
@@ -90,6 +87,6 @@ export default function Social() {
           </Button>
               </Grid>
               </Container>
-    </React.Fragment>
+    </>
   );
 }
