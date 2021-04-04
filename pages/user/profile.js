@@ -61,7 +61,7 @@ const Profile = () => {
             id="displayName"     
             InputLabelProps={{
               shrink: true,
-            }}   
+            }}  
             label="Contact Person"       
             margin="normal"
             name="displayName"
