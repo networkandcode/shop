@@ -18,10 +18,11 @@ function HideOnScroll(props) {
     const auth = useRequireAuth();
   const { children, window } = props;
   
-  const trigger = useScrollTrigger({ target: window ? window() : undefined });
+  const trigger = useScrollTrigger({ target: window ? window() : undefined,disableHysteresis: true,
+    threshold: 200 });
 
   return (
-    <Slide appear={true} direction="down" in={trigger}>
+    <Slide appear={true} in={trigger}>
       {<AppBar style={{backgroundColor: `pink`, color: `#042F59`, marginBottom: `10px`}}>
           <Toolbar>
           <Grid container spacing={2} >
