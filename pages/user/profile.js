@@ -179,6 +179,7 @@ const Profile = () => {
           >
             Save
           </Button>
+        </FormControl>
         </form>
       </Container>
     ) : (
