@@ -40,11 +40,12 @@ const useAuthProvider = () => {
           return { error };
          });
     };
-    const updateUserDoc = async(user) => {
+    const updateUserDoc = async() => {
+        console.log(userDoc);        
         return await db
          .collection('users')
-         .doc(user.uid)
-         .set(user, {merge: true})
+         .doc(userAuthData.uid)
+         .set(userDoc, {merge: true})
          .then(() => {
           setUserDoc(user);
           return user;
@@ -86,14 +87,18 @@ const useAuthProvider = () => {
          getUserAdditionalData(user);
         }
     };    
-    const updateProfile = async({displayName, phoneNumber}) => {
-        return auth.currentUser.updateProfile({
-            displayName: displayName
-        }).then(() => {
-            setUser({...user, displayName, phoneNumber});  
-            updateUserDoc({phoneNumber});                      
-            return('Profile updated...');
-        }).catch(error => ({error}))
+    const updateProfile = async(data) => {
+        return await db
+         .collection('users')
+         .doc(userAuthData.uid)
+         .set(data, {merge: true})
+         .then(() => {
+            setUserDoc({...userDoc, ...data});            
+            return 'Profile updated in database';
+         })
+         .catch((error) => {
+          return { error };
+         });
     };
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(handleAuthStateChanged);

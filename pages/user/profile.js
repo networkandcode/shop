@@ -5,50 +5,54 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Typography,
   TextField
 } from '@material-ui/core';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { useAuth } from '../../hooks/useAuth';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import Status from '../../components/Status';
 import UserLinks from '../../components/UserLinks';
-
-
 
 const Profile = () => {
   const router = useRouter();
-  
-  const auth = useAuth();
+  const auth = useRequireAuth();
   const [data, setData] = useState({});
+  const [status, setStatus] = useState({
+    isLoading: false,
+    message: '',
+    error: ''
+  })
   const onChange = e => {
     const {name, value} = e.target;
-    setData({...data, [name]: value });    
+    setData({...data, [name]: value });
+    setStatus({isLoading: false,
+      message: '',
+      error: ''
+    });
   }
   const onSubmit = async(e) => {
-      e.preventDefault(); 
-      const {displayName, phoneNumber} = data;
+      e.preventDefault();
       await auth.updateProfile(data).then(response => {   
         response.error 
-          ? setData({...data, ['error']: response.error.message})
-          : setData({...data, ['message']: response.error.message});
+          ? setStatus({...status, isLoading: true, ['error']: response.error.message})
+          : setStatus({...status, isLoading: true, ['message']: response});
       })
+      setStatus({...status, isLoading: false})
   }
   useEffect(() => {
     if(!auth.userAuthData){
       router.push('/user/auth');
     } else{
-      const {displayName} = auth.userAuthData;
       auth.getCategories();
-      setData({...data, displayName});
+      setData({...data, ...auth.userDoc});
     }
   }, [auth, router]);
   
   return (
     auth.userAuthData ? (
       <Container maxWidth="xs">
-        <UserLinks profile="#042F59"/>        
+        <UserLinks profile="#042F59"/>
         <form onSubmit={onSubmit}>
           <TextField
             autoComplete="given-name"
@@ -81,7 +85,7 @@ const Profile = () => {
             onChange={onChange}
             placeholder="Phone Number"
             type="number"
-            value={data.phoneNumber}
+            value={data.phoneNumber || ''}
             variant="outlined"          
           />
           <TextField
@@ -98,10 +102,9 @@ const Profile = () => {
             onChange={onChange}
             placeholder="Company Name"
             type="text"
-            value={data.companyName}
+            value={data.companyName || ''}
             variant="outlined"          
           />
-          <FormControl fullWidth>
           <TextField
             autoComplete="establishedYear"
             fullWidth
@@ -116,7 +119,7 @@ const Profile = () => {
             onChange={onChange}
             placeholder="Established Year"
             type="date"
-            value={data.establishedYear}
+            value={data.establishedYear || ''}
             variant="outlined"          
           />
           <TextField
@@ -134,10 +137,10 @@ const Profile = () => {
             onChange={onChange}
             placeholder="About your company"
             type="text"
-            value={data.companyDescription}
+            value={data.companyDescription || ''}
             variant="outlined"        
           />
-          <FormControl fullWidth>
+          <FormControl fullWidth margin="normal">
             <InputLabel id="businessTypeLabel">Business Type</InputLabel>
             <Select               
               id="businessTypeSelect" 
@@ -151,7 +154,7 @@ const Profile = () => {
               <MenuItem value="Product and Service">Product and Service</MenuItem>
             </Select>
           </FormControl>
-          <FormControl fullWidth>
+          <FormControl fullWidth margin="normal">
             <InputLabel id="businessCategoryLabel">Business Category</InputLabel>
             <Select 
               id="businessCategorySelect" 
@@ -165,12 +168,14 @@ const Profile = () => {
                 <MenuItem key={idx} value={category}>{category}</MenuItem>
               ))}              
             </Select>
-          </FormControl>          
+          </FormControl>
+          <Status status={status}/>
           <Button
-              type="submit"
-              fullWidth
-              variant="contained"
               color="primary"
+              fullWidth
+              margin="normal"
+              type="submit"
+              variant="contained"              
           >
             Save
           </Button>
