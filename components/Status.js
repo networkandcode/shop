@@ -1,7 +1,7 @@
-const Status = ({ status }) => {
+const Status = ({ loading, status }) => {
     return (
         <>
-            { status.isLoading && (
+            { loading && (
                 <p style={{color: "orange"}}>Please wait...</p>
             )}
             { status.message && (

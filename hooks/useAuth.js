@@ -39,21 +39,7 @@ const useAuthProvider = () => {
          .catch((error) => {
           return { error };
          });
-    };
-    const updateUserDoc = async() => {
-        console.log(userDoc);        
-        return await db
-         .collection('users')
-         .doc(userAuthData.uid)
-         .set(userDoc, {merge: true})
-         .then(() => {
-          setUserDoc(user);
-          return user;
-         })
-         .catch((error) => {
-          return { error };
-         });
-    };
+    };    
     const signUp = async(email, password) => {
         return await auth
             .createUserWithEmailAndPassword(email, password)
@@ -88,6 +74,7 @@ const useAuthProvider = () => {
         }
     };    
     const updateProfile = async(data) => {
+        console.log(data);
         return await db
          .collection('users')
          .doc(userAuthData.uid)

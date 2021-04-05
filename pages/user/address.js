@@ -2,17 +2,16 @@ import {
     Button,
     Container,
     FormControl,
-    Grid,
     InputLabel,
     Select,
     MenuItem,
-    Typography,
     TextField
   } from '@material-ui/core';
   import axios from 'axios';
   import { useEffect, useState } from 'react';
   import { useRouter } from 'next/router';
   import { useAuth } from '../../hooks/useAuth';
+  import Status from '../../components/Status';
   import UserLinks from '../../components/UserLinks';
   
   const Address = () => {
@@ -20,15 +19,15 @@ import {
     const auth = useAuth();
     const [data, setData] = useState({
         address: '',
-        pinCode: '',
+        pinCode: '',        
+        poName: '',
         poNames: [],
-        poName: [],
         district: '',
         state: '',
-        country: '',        
-    });
-    const [status, setStatus] = useState({
-        isLoading: false,
+        country: 'India',    
+    });    
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState({        
         message: '',
         error: '',
     });
@@ -36,69 +35,74 @@ import {
     const onChange = e => {
         e.preventDefault();        
         const {name, value} = e.target;
-        setData({...data, poName: [], [name]: value});
-        setStatus({isLoading: false, message: '', error: ''});
+        setData({...data, [name]: value});
+        setLoading(false);
+        setStatus({message: '', error: ''});
         if(data.pinCode && data.pinCode.length >= 5){
             setGetDisabled(false);
         }else{
             setGetDisabled(true);
         }
     }
-    const getLocation = async(e) => {
-        e.preventDefault();            
-        setStatus({...status, isLoading: true, message: '', error: ''});
+    const refreshLocation = async() => {
+        setLoading(true);
         const res = await axios.get(`https://api.postalpincode.in/pincode/${data.pinCode}`)
         if(res.status === 200){   
             if(res.data[0].Status === 'Success'){
-                const poNames = res.data[0].PostOffice.map(i => [ i.Name ]);
-                setData({...data, ['poNames']: poNames});
-                setStatus({...status, isLoading: false, ['message']: res.data[0].Message});
+                setData({...data, poNames: res.data[0].PostOffice.map(i => i.Name )});                
+                setStatus({...status, ['message']: res.data[0].Message});
             } else{
-                setData({...data, poNames: []});
-                setStatus({...status, isLoading: false, ['error']: res.data[0].Message});
+                setData({...data, poNames: [] });                
+                setStatus({...status, ['error']: res.data[0].Message});
             }            
-        } 
+        }
+        setLoading(false);
+    }
+    const getLocation = (e) => {
+        e.preventDefault();
+        refreshLocation();
     }
     const onChangePoName = async(e) => {
         e.preventDefault();
-        const {name, value} = e.target;             
-        setStatus({...status, isLoading: true});
-        const res = await axios.get(`https://api.postalpincode.in/postoffice/${value[0]}`);
+        const {name, value} = e.target;            
+        setLoading(true);
+        const res = await axios.get(`https://api.postalpincode.in/postoffice/${value}`);
         if(res.status === 200){                
             if(res.data[0].Status === "Success"){
                 const district = res.data[0].PostOffice[0].District;                                
                 const state = res.data[0].PostOffice[0].State;                
                 setData(prevState => ({...prevState, [name]: value, district: district, ['state']: state}));
-                setStatus({...status, isLoading: false, message: '', error: ''});
+                setStatus({...status, message: '', error: ''});
             } else{
                 setData(prevState => ({...prevState, [name]: value}));
-                setStatus({...status, isLoading: false, message: '', ['error']: res.data[0].Message});
+                setStatus({...status, message: '', ['error']: res.data[0].Message});
             }
         }
+        setLoading(false);
     }
     const onSubmit = async(e) => {
-        e.preventDefault(); 
-        const {displayName, phoneNumber} = data;
-        await auth.updateProfile(data).then(response => {   
-          response.error 
-            ? setData({...data, ['error']: response.error.message})
-            : setData({...data, ['message']: response.error.message});
-        })
+      e.preventDefault();
+      setLoading(true);
+      await auth.updateProfile(data).then(response => {   
+        response.error 
+          ? setStatus({...status, ['error']: response.error.message})
+          : setStatus({...status, ['message']: response});
+      })
+      setLoading(false);
     }
     useEffect(() => {
       if(!auth.userAuthData){
-        router.push('/auth');
+        router.push('/user/auth');
       } else{
-        const {displayName} = auth.userAuthData;
-        setData({...data, displayName});
+        setData({...data, ...auth.userDoc});        
       }
     }, [auth, router]);
+    
     return (
       auth.userAuthData ? (
-        <Container maxWidth="xs" spacing={2}>
+        <Container maxWidth="xs">
           <UserLinks address="#042F59"/>
           <form onSubmit={onSubmit}>
-          <Grid container spacing={2} style={{margin: `2px`}}>
             <TextField
               autoComplete="address"
               fullWidth              
@@ -137,21 +141,21 @@ import {
                 color="primary"
                 disabled={getDisabled}
                 fullWidth
+                margin="normal"
                 onClick={getLocation}
                 variant="contained"
             >
                 Get
-            </Button>
-            </Grid>
-            <Grid container spacing={2}>
-            <FormControl fullWidth>
+            </Button>           
+            <FormControl fullWidth margin="normal">
               <InputLabel id="poNameLabel">P.O. Name</InputLabel>
               <Select 
                 id="poNameSelect" 
                 labelId="poNameLabel" 
                 name="poName"
-                onChange={onChangePoName}             
-                value={data.poName}
+                onChange={onChangePoName}
+                size={data.poNames.length}             
+                value={data.poName || ''}
               >
                 {data.poNames && data.poNames.map( (poName, idx) => (
                   <MenuItem key={idx} value={poName}>{poName}</MenuItem>
@@ -212,11 +216,7 @@ import {
               value="India"
               variant="outlined"         
             />
-            {status.isLoading && (<p style={{color: "orange"}}>Please wait...</p>)}
-            {status.message && (<p style={{color: "green"}}>{status.message}</p>)}
-            {status.error && (
-                <p style={{color: "red"}}>{status.error}</p>
-            )}
+            <Status loading={loading} status={status}/>
             <Button
                 type="submit"
                 fullWidth
@@ -224,8 +224,7 @@ import {
                 color="primary"
             >
               Save
-            </Button>
-            </Grid>
+            </Button>            
           </form>
         </Container>
       ) : (

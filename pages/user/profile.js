@@ -18,27 +18,29 @@ const Profile = () => {
   const router = useRouter();
   const auth = useRequireAuth();
   const [data, setData] = useState({});
-  const [status, setStatus] = useState({
-    isLoading: false,
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState({    
     message: '',
     error: ''
   })
   const onChange = e => {
     const {name, value} = e.target;
     setData({...data, [name]: value });
-    setStatus({isLoading: false,
+    setLoading(false);
+    setStatus({
       message: '',
       error: ''
     });
   }
   const onSubmit = async(e) => {
       e.preventDefault();
+      setLoading(true);
       await auth.updateProfile(data).then(response => {   
         response.error 
-          ? setStatus({...status, isLoading: true, ['error']: response.error.message})
-          : setStatus({...status, isLoading: true, ['message']: response});
+          ? setStatus({...status, ['error']: response.error.message})
+          : setStatus({...status, ['message']: response});
       })
-      setStatus({...status, isLoading: false})
+      setLoading(false);
   }
   useEffect(() => {
     if(!auth.userAuthData){
@@ -56,7 +58,6 @@ const Profile = () => {
         <form onSubmit={onSubmit}>
           <TextField
             autoComplete="given-name"
-            autoFocus
             id="displayName"     
             InputLabelProps={{
               shrink: true,
@@ -169,7 +170,7 @@ const Profile = () => {
               ))}              
             </Select>
           </FormControl>
-          <Status status={status}/>
+          <Status loading={loading} status={status}/>
           <Button
               color="primary"
               fullWidth
@@ -179,7 +180,6 @@ const Profile = () => {
           >
             Save
           </Button>
-        </FormControl>
         </form>
       </Container>
     ) : (
