@@ -1,10 +1,12 @@
 import {
   Button,
+  Chip,
   Container,
   FormControl,
   InputLabel,
-  Select,
+  ListItemText,
   MenuItem,
+  Select,  
   TextField
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
@@ -66,8 +68,7 @@ const Profile = () => {
             margin="normal"
             name="displayName"
             onChange={onChange}
-            placeholder="Contact Person"
-            required            
+            placeholder="Contact Person"        
             value={data.displayName || ''}
             variant="outlined"
             fullWidth
@@ -85,8 +86,26 @@ const Profile = () => {
             name="phoneNumber"
             onChange={onChange}
             placeholder="Phone Number"
+            required
             type="number"
             value={data.phoneNumber || ''}
+            variant="outlined"          
+          />
+          <TextField
+            autoComplete="altPhNo"
+            fullWidth
+            helperText=""
+            id="altPhNo"      
+            InputLabelProps={{
+              shrink: true,
+            }}
+            label="Alternate phone number"                  
+            margin="normal"
+            name="altPhNo"
+            onChange={onChange}
+            placeholder="Alternate phone number"
+            type="number"
+            value={data.altPhNo || ''}
             variant="outlined"          
           />
           <TextField
@@ -102,6 +121,7 @@ const Profile = () => {
             name="companyName"
             onChange={onChange}
             placeholder="Company Name"
+            required
             type="text"
             value={data.companyName || ''}
             variant="outlined"          
@@ -141,7 +161,7 @@ const Profile = () => {
             value={data.companyDescription || ''}
             variant="outlined"        
           />
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="normal" required>
             <InputLabel id="businessTypeLabel">Business Type</InputLabel>
             <Select               
               id="businessTypeSelect" 
@@ -155,18 +175,28 @@ const Profile = () => {
               <MenuItem value="Product and Service">Product and Service</MenuItem>
             </Select>
           </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="businessCategoryLabel">Business Category</InputLabel>
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="businessCategoriesLabel">Business Categories</InputLabel>
             <Select 
-              id="businessCategorySelect" 
-              labelId="businessCategoryLabel" 
-              name="businessCategory"
-              onChange={onChange}
+              id="businessCategoriesSelect" 
+              labelId="businessCategoriesLabel"              
+              multiple
+              name="businessCategories"
+              onChange={onChange}              
+              renderValue={(selected) => (
+                <div>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value}/>
+                  ))}
+                </div>
+              )}
               size = {auth.categories.length}
-              value={data.businessCategory || ''}
+              value={data.businessCategories || []}
             >
               {auth.categories && auth.categories.map( (category, idx) => (
-                <MenuItem key={idx} value={category}>{category}</MenuItem>
+                <MenuItem key={idx} value={category}>                  
+                  <ListItemText primary={category}/>
+                </MenuItem>
               ))}              
             </Select>
           </FormControl>

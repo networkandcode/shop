@@ -45,6 +45,11 @@ user ratings and reviews </Typography>
           </a></Link>
         </Grid>
         <Grid item>
+          <Link href="/directory"><a>
+          <Typography component="h2" variant="h5">Directory</Typography>
+          </a></Link>
+        </Grid>
+        <Grid item>
           <Link href="/user/profile"><a>
           <Typography component="h2" variant="h5">My Account</Typography>
           </a></Link>
@@ -53,6 +58,7 @@ user ratings and reviews </Typography>
         {auth.userAuthData &&(
             
           <Grid item style={{float: `right`}}>
+            You are logged in as {auth.userAuthData.email}
             <Button color="primary" onClick={() => auth.signOut()}>
               Logout
             </Button>
