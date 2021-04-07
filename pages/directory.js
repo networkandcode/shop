@@ -1,16 +1,24 @@
 
 import db from '../utils/db';
-import { 
-  Container,
+import {
   Grid, 
-  Card, 
-  
+  Card,
   CardActionArea, 
   CardActions, 
   Typography, 
   CardContent, 
   CardMedia 
 } from '@material-ui/core';
+import { 
+  Call,
+  WhatsApp,
+  Facebook,
+  Instagram,
+  YouTube,
+  Twitter,
+  LinkedIn,
+  Public
+} from '@material-ui/icons';
 import style from '../styles/Home.module.css';
 import Link from 'next/link'
 
@@ -30,7 +38,7 @@ const Directory = (props) => {
                 height="150"
                 image={user.businessCategories 
                   ? 'https://source.unsplash.com/featured/?' + user.businessCategories[Math.floor(Math.random() * user.businessCategories.length)]
-                  : 'https://source.unsplash.com/featured/?' + user.district
+                  : 'https://source.unsplash.com/featured/?' + user.businessCategory
                 }
                 title={user.companyName}
               />
@@ -38,7 +46,7 @@ const Directory = (props) => {
             <CardContent>
               <Typography variant="h6" component="h3">
               <Link href={`/directory/${user.companyName}`}>
-                <a>{user.companyName} </a>            
+                <a>{user.displayName } | {user.companyName} </a>            
               </Link>                          
               </Typography>  
               { user.establishedYear && (
@@ -63,16 +71,16 @@ const Directory = (props) => {
               </Typography>
             </CardContent>
             <CardActions>
-              <Typography variant="body2" color="textSecondary" component="small">
-                <a href={`tel:${user.phoneNumber}`}> {user.phoneNumber} </a>
-                <a href={`tel:${user.altPhNo}`}> {user.altPhNo} </a>
-                <a href={`https://api.whatsapp.com/send?phone=${user.whatsapp}`}> {user.whatsapp} </a>
-                <a href={`https://facebook.com/${user.facebook}`}> {user.facebook} </a>                
-                <a href={`https://www.instagram.com/${user.instagram}`}> {user.instagram} </a>
-                <a href={`https://www.youtube.com/channel/${user.youtube}`}> {user.youtube} </a>
-                <a href={`https://twitter.com/${user.twitter}`}> {user.twitter} </a>
-                <a href={`https://linkedin.com/${user.linkedin}`}> {user.linkedin} </a>
-                <a href={user.website}> {user.website} </a>
+              <Typography align="center" variant="body2" color="textSecondary" component="small">
+                <a href={`tel:${user.phoneNumber}`}> <Call color="primary"/> </a>
+                <a href={`tel:${user.altPhNo}`}> <Call/> </a>
+                <a href={`https://api.whatsapp.com/send?phone=${user.whatsapp}`}> <WhatsApp/> </a>
+                <a href={`https://facebook.com/${user.facebook}`}> <Facebook/> </a>                
+                <a href={`https://www.instagram.com/${user.instagram}`}> <Instagram/> </a>
+                <a href={`https://www.youtube.com/channel/${user.youtube}`}> <YouTube/> </a>
+                <a href={`https://twitter.com/${user.twitter}`}> <Twitter/> </a>
+                <a href={`https://linkedin.com/${user.linkedin}`}> <LinkedIn/> </a>
+                <a href={user.website}> <Public/> </a>
               </Typography>
             </CardActions>
           </Card>         
