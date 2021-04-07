@@ -24,7 +24,7 @@ const Categories = (props) => {
   return (
     <>
     
-      <Grid container spacing={2} style={{paddingRight: `10px`, paddingLeft: `10px`, backgroundColor: `seashell`}}>
+      <Grid container spacing={2} style={{paddingRight: `10px`, paddingLeft: `10px`, backgroundColor: `#FFFFFF`}}>
       {categoriesData.map(category => (
         <Grid item key={category.id} xs={12} sm={4}>
           <Card >

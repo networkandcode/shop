@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { 
   Call,
+  KeyboardArrowUp,
   WhatsApp,
   Facebook,
   Instagram,
@@ -25,9 +26,8 @@ import Link from 'next/link'
 const Directory = (props) => {
   const { usersData } = props; 
   return (
-    <>
-    
-      <Grid container spacing={2} style={{paddingRight: `10px`, paddingLeft: `10px`, backgroundColor: `seashell`}}>
+    <>    
+      <Grid container spacing={2} style={{paddingRight: `10px`, paddingLeft: `10px`, backgroundColor: `#FFFFFF`}}>
       {usersData.map(user => (
         <Grid item key={user.id} xs={12} sm={4}>
           <Card >
@@ -71,23 +71,27 @@ const Directory = (props) => {
               </Typography>
             </CardContent>
             <CardActions>
-              <Typography align="center" variant="body2" color="textSecondary" component="small">
-                <a href={`tel:${user.phoneNumber}`}> <Call color="primary"/> </a>
-                <a href={`tel:${user.altPhNo}`}> <Call/> </a>
-                <a href={`https://api.whatsapp.com/send?phone=${user.whatsapp}`}> <WhatsApp/> </a>
-                <a href={`https://facebook.com/${user.facebook}`}> <Facebook/> </a>                
-                <a href={`https://www.instagram.com/${user.instagram}`}> <Instagram/> </a>
-                <a href={`https://www.youtube.com/channel/${user.youtube}`}> <YouTube/> </a>
-                <a href={`https://twitter.com/${user.twitter}`}> <Twitter/> </a>
-                <a href={`https://linkedin.com/${user.linkedin}`}> <LinkedIn/> </a>
-                <a href={user.website}> <Public/> </a>
-              </Typography>
+              <Grid container>
+                <Grid item xs={9}>
+                  <a href={`tel:${user.phoneNumber}`}> <Call color="primary"/> </a>
+                  <a href={`tel:${user.altPhNo}`}> <Call/> </a>
+                  <a href={`https://api.whatsapp.com/send?phone=${user.whatsapp}`}> <WhatsApp/> </a>
+                  <a href={`https://facebook.com/${user.facebook}`}> <Facebook/> </a>                
+                  <a href={`https://www.instagram.com/${user.instagram}`}> <Instagram/> </a>
+                  <a href={`https://www.youtube.com/channel/${user.youtube}`}> <YouTube/> </a>
+                  <a href={`https://twitter.com/${user.twitter}`}> <Twitter/> </a>
+                  <a href={`https://linkedin.com/${user.linkedin}`}> <LinkedIn/> </a>
+                  <a href={user.website}> <Public/> </a>
+                </Grid>
+                <Grid item xs={3} style={{textAlign: `right`}}>
+                  <a href="#"> <KeyboardArrowUp/> </a>
+                </Grid>
+              </Grid>
             </CardActions>
           </Card>         
         </Grid>      
       ))}
       </Grid>
-      
     </>
   );
 };
