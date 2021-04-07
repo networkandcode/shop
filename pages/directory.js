@@ -63,6 +63,17 @@ const Directory = (props) => {
               </Typography>
             </CardContent>
             <CardActions>
+              <Typography variant="body2" color="textSecondary" component="small">
+                <a href={`tel:${user.phoneNumber}`}> {user.phoneNumber} </a>
+                <a href={`tel:${user.altPhNo}`}> {user.altPhNo} </a>
+                <a href={`https://api.whatsapp.com/send?phone=${user.whatsapp}`}> {user.whatsapp} </a>
+                <a href={`https://facebook.com/${user.facebook}`}> {user.facebook} </a>                
+                <a href={`https://www.instagram.com/${user.instagram}`}> {user.instagram} </a>
+                <a href={`https://www.youtube.com/channel/${user.youtube}`}> {user.youtube} </a>
+                <a href={`https://twitter.com/${user.twitter}`}> {user.twitter} </a>
+                <a href={`https://linkedin.com/${user.linkedin}`}> {user.linkedin} </a>
+                <a href={user.website}> {user.website} </a>
+              </Typography>
             </CardActions>
           </Card>         
         </Grid>      

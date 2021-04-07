@@ -56,6 +56,7 @@ export default function Social() {
             onChange={onChange}
             name="whatsapp"
             value={data.whatsapp}
+            placeholder="Whatsapp Number"
             label="Whatsapp Number"
             fullWidth
             InputLabelProps={{
@@ -69,7 +70,22 @@ export default function Social() {
             name="facebook"
             value={data.facebook}
             onChange={onChange}
-            label="Facebook"
+            placeholder="Facebook ID"
+            label="Facebook ID"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}  
+          />
+          <TextField            
+            variant="outlined"
+            margin="normal"
+            id="instagram"
+            name="instagram"
+            value={data.instagram}
+            onChange={onChange}
+            placeholder="Instagram ID"
+            label="Instagram ID"
             fullWidth
             InputLabelProps={{
               shrink: true,
@@ -82,7 +98,8 @@ export default function Social() {
             name="twitter"
             value={data.twitter}
             onChange={onChange}
-            label="Twitter"
+            placeholder="Twitter Handle"
+            label="Twitter Handle"
             fullWidth
             InputLabelProps={{
               shrink: true,
@@ -95,7 +112,8 @@ export default function Social() {
             name="youtube"
             value={data.youtube}
             onChange={onChange}
-            label="Youtube"
+            label="YouTube URL"
+            placeholder="YouTube URL"
             fullWidth
             InputLabelProps={{
               shrink: true,
@@ -108,12 +126,13 @@ export default function Social() {
             name="linkedin"
             value={data.linkedin}
             onChange={onChange}
-            label="LinkedIn"
+            placeholder="LinkedIn URL"
+            label="LinkedIn URL"
             fullWidth
             InputLabelProps={{
               shrink: true,
             }}  
-          />
+          />          
           <TextField            
             variant="outlined"
             margin="normal"
@@ -121,7 +140,8 @@ export default function Social() {
             name="website"
             value={data.website}
             onChange={onChange}
-            label="website"
+            placeholder="Website"
+            label="Website"
             fullWidth
             InputLabelProps={{
               shrink: true,
