@@ -2,11 +2,11 @@ import db from '../../utils/db';
 
 export default async (req, res) => {
   if(req.method === 'POST'){
-    try {
+    try {            
       const user = req.body;
       return await db
         .collection('users')
-        .doc(user.uid)
+        .doc(user.id)
         .set(user)
         .then(() => {
           res.status(200).end();

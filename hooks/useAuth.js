@@ -40,12 +40,27 @@ const useAuthProvider = () => {
           return { error };
          });
     };    
+    const sendEmailVerification = async() => {
+        return await auth
+            .currentUser.sendEmailVerification()
+            .then(response => {
+                return response;
+            })
+            .catch(error => {
+                return {error};
+            })
+    }
     const signUp = async(email, password) => {
         return await auth
             .createUserWithEmailAndPassword(email, password)
             .then((response) => {
-                auth.currentUser.sendEmailVerification();                                
+                auth.currentUser.sendEmailVerification();                                                
                 setUserAuthData({...userAuthData, ...response.user});
+                setUserDoc({
+                    ...userDoc, 
+                    email: response.user.email, 
+                    emailVerified: response.user.emailVerified
+                });                                                      
                 return response.user;                
             })
             .catch((error) => {
@@ -56,7 +71,12 @@ const useAuthProvider = () => {
         return await auth
             .signInWithEmailAndPassword(email, password)
             .then((response) => {                
-                setUserAuthData({...userAuthData, ...response.user});                                             
+                setUserAuthData({...userAuthData, ...response.user});
+                setUserDoc({
+                    ...userDoc, 
+                    email: response.user.email, 
+                    emailVerified: response.user.emailVerified
+                });                                             
                 getUserAdditionalData(response.user);
                 return response.user;
             })
@@ -139,6 +159,7 @@ const useAuthProvider = () => {
     return {
         userAuthData,
         userDoc,
+        sendEmailVerification,
         signUp,
         sendPasswordResetEmail,
         updateProfile,

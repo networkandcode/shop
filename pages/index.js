@@ -27,7 +27,7 @@ const Categories = (props) => {
       <Grid container spacing={2} style={{paddingRight: `10px`, paddingLeft: `10px`, backgroundColor: `#FFFFFF`}}>
       {categoriesData.map(category => (
         <Grid item key={category.id} xs={12} sm={4}>
-          <Card >
+          <Card>
             <CardActionArea>
               <CardMedia
                 component="img"

@@ -44,6 +44,16 @@ const Profile = () => {
       })
       setLoading(false);
   }
+  const sendEmailVerification = async(e) => {
+    e.preventDefault();
+    setLoading(true);
+    await auth.sendEmailVerification().then((response) => {                
+        response.error 
+          ? setStatus({...status, ['error']: response.error.message})
+          : setStatus({...status, ['message']: response});
+    });
+    setLoading(false);      
+  }
   useEffect(() => {
     if(!auth.userAuthData){
       router.push('/user/auth');
@@ -56,7 +66,18 @@ const Profile = () => {
   return (
     auth.userAuthData ? (
       <Container maxWidth="xs">
-        <UserLinks profile="#042F59"/>
+        <UserLinks profile="#042F59"/>        
+        {!auth.userAuthData.emailVerified &&
+          <Button
+          color="primary"
+          fullWidth
+          margin="normal"      
+          onClick={sendEmailVerification}    
+          variant="contained"              
+          >
+          Verify Email
+          </Button>
+        }        
         <form onSubmit={onSubmit}>
           <TextField
             autoComplete="given-name"

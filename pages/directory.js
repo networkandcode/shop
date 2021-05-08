@@ -11,6 +11,9 @@ import {
 } from '@material-ui/core';
 import { 
   Call,
+  Check,
+  Clear,
+  Email,
   KeyboardArrowUp,
   WhatsApp,
   Facebook,
@@ -21,16 +24,41 @@ import {
   Public
 } from '@material-ui/icons';
 import style from '../styles/Home.module.css';
-import Link from 'next/link'
+import Link from 'next/link';
+import { useRequireAuth } from '../hooks/useRequireAuth';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const Directory = (props) => {
   const { usersData } = props; 
+  const router = useRouter();
+  const auth = useRequireAuth();
+  const [approve, setApprove] = useState(false);
+  const [data, setData] = useState([]);
+  const approveListing = async(user) => {         
+    await axios.post(`/api/users`, {...user, approved: true});   
+    setApprove(!approve);
+  }
+  const disapproveListing = async(user) => {         
+    await axios.post(`/api/users`, {...user, approved: false});   
+    setApprove(!approve);
+  }
+  useEffect(() => {    
+    setData([...usersData])
+    console.log('effect');
+  }, [approve]);
   return (
     <>    
       <Grid container spacing={2} style={{paddingRight: `10px`, paddingLeft: `10px`, backgroundColor: `#FFFFFF`}}>
-      {usersData.map(user => (
-        <Grid item key={user.id} xs={12} sm={4}>
-          <Card >
+      {data.map((user, idx) => (  
+        <>
+        {user.emailVerified && 
+          (user.approved || ['shakir@techie.com', 'admin@example.com', 'fajurnisha86@gmail.com'].includes(auth.userAuthData.email)) &&
+
+          <Grid item key={idx} xs={12} sm={4}>
+            
+            <Card>
             <CardActionArea>
               <CardMedia
                 component="img"
@@ -82,14 +110,24 @@ const Directory = (props) => {
                   <a href={`https://twitter.com/${user.twitter}`}> <Twitter/> </a>
                   <a href={`https://linkedin.com/${user.linkedin}`}> <LinkedIn/> </a>
                   <a href={user.website}> <Public/> </a>
+                  <a href={`mailto:${user.email}`}><Email/></a>   
+                  { ['shakir@techie.com', 'admin@example.com', 'fajurnisha86@gmail.com'].includes(auth.userAuthData.email)
+                  ?
+                    user.approved ? <Clear onClick={() => disapproveListing(user)}/> : <Check onClick={() => approveListing(user)}/> 
+                  :
+                    <></>
+                  }                       
                 </Grid>
                 <Grid item xs={3} style={{textAlign: `right`}}>
                   <a href="#"> <KeyboardArrowUp/> </a>
                 </Grid>
               </Grid>
             </CardActions>
-          </Card>         
-        </Grid>      
+          </Card>
+                  
+          </Grid>      
+        }
+        </>
       ))}
       </Grid>
     </>
