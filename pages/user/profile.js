@@ -11,9 +11,8 @@ import {
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-
 import { useRequireAuth } from '../../hooks/useRequireAuth';
-import Status from '../../components/Status';
+import Status from '../../../components/Status';
 import UserLinks from '../../components/UserLinks';
 
 const Profile = () => {
