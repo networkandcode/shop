@@ -32,6 +32,7 @@ import axios from 'axios';
 import Status from '../components/Status';
 
 const Listing = (props) => {  
+  var colors = ["hotpink", "indigo", "grey", "inherit"];
   const auth = useRequireAuth();
   const [user, setUser] = useState(props.user);
   const [loading, setLoading] = useState(false);  
@@ -55,7 +56,7 @@ const Listing = (props) => {
     updateUserDoc();
   }, [user]);
   return(
-    <Grid item key={user.id} xs={12} sm={4}>
+    <Grid style={{ backgroundColor: `${colors[Math.floor(Math.random() * colors.length)]}` }} item key={user.id} xs={12} sm={4}>
       <Card>
       <CardActionArea>
         <CardMedia
