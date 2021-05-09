@@ -56,7 +56,7 @@ const Listing = (props) => {
     updateUserDoc();
   }, [user]);
   return(
-    <Grid style={{ backgroundColor: `${colors[Math.floor(Math.random() * colors.length)]}` }} item key={user.id} xs={12} sm={4}>
+    <Grid style={{ backgroundColor: `${colors[Math.floor(Math.random() * colors.length)]}` }} item xs={12} sm={4}>
       <Card>
       <CardActionArea>
         <CardMedia
@@ -146,7 +146,7 @@ const Directory = (props) => {
       {usersData.map(user => (  
         <>
         {user.emailVerified && 
-          (user.approved || ['shakir@techie.com', 'admin@example.com', 'fajurnisha86@gmail.com'].includes(auth.userAuthData.email)) &&  
+          (user.approved || (auth.userAuthData && ['shakir@techie.com', 'admin@example.com', 'fajurnisha86@gmail.com'].includes(auth.userAuthData.email))) &&  
           <Listing key={user.id} user={user}/>
         }
         </>
