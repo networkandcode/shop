@@ -21,6 +21,7 @@ function MyApp({ Component, pageProps }) {
         <Header/>
         <Component {...pageProps}/>
         <Box mt={2}>
+          <br/>
           <Copyright/>
         </Box>
      </Container>

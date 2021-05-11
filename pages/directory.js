@@ -5,14 +5,21 @@ import {
   Card,
   CardActionArea, 
   CardActions, 
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  TextField,
   Typography, 
   CardContent, 
-  CardMedia 
+  CardMedia  
 } from '@material-ui/core';
-import { 
+import {
+  Add, 
   Call,
   Check,
   Clear,
+  Close,
+  Edit,
   Email,
   KeyboardArrowUp,
   WhatsApp,
@@ -23,6 +30,7 @@ import {
   LinkedIn,
   Public
 } from '@material-ui/icons';
+import { Rating } from '@material-ui/lab';
 import style from '../styles/Home.module.css';
 import Link from 'next/link';
 import { useRequireAuth } from '../hooks/useRequireAuth';
@@ -40,6 +48,14 @@ const Listing = (props) => {
     message: '',
     error: ''
   })
+  const [avgRating, setAvgRating] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [reviews, setReviews] = useState(user['reviews'] || {});
+  const [review, setReview] = useState({
+    comment: '',
+    rating: 0
+  })
+  const [numOfReviews, setNumOfReviews] = useState(0);
   const approveListing = user => {   
     setLoading(true);
     setUser({...user, approved: true});    
@@ -49,10 +65,39 @@ const Listing = (props) => {
     setUser({...user, approved: false});
   }
   const updateUserDoc = async() => {
+    console.log(user);
     await axios.post(`/api/users`, user);
     setLoading(false);
   }
-  useEffect(() => {            
+  const openDialog = () => {
+    setOpen(true);
+  }
+  const closeDialog = () => {
+    setOpen(false);
+    setReviews({...reviews, [auth.userAuthData.uid]: review});
+    setUser({...user, reviews})
+  }
+  const onChange = (e) => {
+    const {name, value} = e.target;      
+    setReview({...review, [name]: value});        
+  }
+  useEffect(() => {   
+    try{
+      setReview({
+        ...review,
+        comment: reviews[auth.userAuthData.uid]['comment'],
+        rating: parseInt(reviews[auth.userAuthData.uid]['rating'])
+      })     
+    } catch(err) {      
+    }    
+    var sum = 0;
+    var n = 0;
+    for(const [key, value] of Object.entries({...reviews})){                
+      sum = sum + parseInt(value['rating']);
+      n = n + 1;
+    }        
+    setAvgRating(sum/n);
+    setNumOfReviews(n);
     updateUserDoc();
   }, [user]);
   return(
@@ -72,9 +117,30 @@ const Listing = (props) => {
       </CardActionArea>
       <CardContent>
         <Typography variant="h6" component="h3">
-        <Link href={`/directory/${user.companyName}`}>
-          <a>{user.displayName } | {user.companyName} </a>            
-        </Link>                          
+          <Link href={`/directory/${user.companyName}`}>
+            <a>{user.displayName } | {user.companyName} </a>             
+          </Link>                          
+          <Rating value={avgRating} readOnly size="small"/>
+          {auth.userAuthData && auth.userAuthData.emailVerified && auth.userAuthData.uid !== user.id && 
+            <>
+            <small>({numOfReviews})</small>
+            {
+              review['comment']
+                ? <Edit onClick={openDialog} size="small"/>
+                : <Add onClick={openDialog} size="small"/>
+            }            
+            <Dialog open={open} onClose={closeDialog}>
+              <DialogContent>
+                <DialogContentText>
+                  Give your review and rating to {user.company}
+                  <Close onClick={closeDialog} size="small"/>
+                </DialogContentText>
+                <TextField autoFocus name="comment" value={review.comment} onChange={onChange}/>    
+                <Rating  name="rating" value={review.rating} onChange={onChange} size="small"/>
+              </DialogContent>         
+            </Dialog>
+            </>
+          }
         </Typography>  
         { user.establishedYear && (
           <Typography gutterBottom variant="overline" color="textSecondary" component="small">
@@ -139,7 +205,7 @@ const Listing = (props) => {
 const Directory = (props) => {
   const { usersData } = props; 
   const router = useRouter();
-  const auth = useRequireAuth();  
+  const auth = useRequireAuth();
   return (
     <>    
       <Grid container spacing={2} style={{paddingRight: `10px`, paddingLeft: `10px`, backgroundColor: `#FFFFFF`}}>
