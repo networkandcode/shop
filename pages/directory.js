@@ -8,11 +8,14 @@ import {
   Dialog,
   DialogContent,
   DialogContentText,
+  Divider,
   TextField,
   Typography, 
+  useMediaQuery,
   CardContent, 
   CardMedia  
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import {
   Add, 
   Call,
@@ -39,6 +42,86 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import Status from '../components/Status';
 
+const ViewRatings = (props) => {    
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const { numOfReviews, reviews, user } = props;
+  const [open, setOpen] = useState(false);
+  const openDialog = () => {
+    setOpen(true);
+  }
+  const closeDialog = () => {
+    setOpen(false);
+  }
+  var reviewsAsArray = [];
+  Object.keys(reviews).map(key => {
+    const comment = reviews[key]['comment']
+    const rating = reviews[key]['rating']      
+    reviewsAsArray.push(<p><Rating readOnly value={rating}/><br/>{comment}<Divider/></p>)
+  })
+  useEffect(()=>{
+  },[reviews]);
+  return(
+    <>
+    {
+      reviews &&       
+      <>
+      <small><button onClick={openDialog}>({numOfReviews})</button></small>
+      <Dialog scroll="body" open={open} onClose={closeDialog} fullScreen={fullScreen}>
+        <DialogContent>
+          <DialogContentText>
+            View all reviews for {user.companyName} 
+            <Close onClick={() => closeDialog()} size="small" />
+            {reviewsAsArray}
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
+      </>
+    }   
+    </>
+  )
+}
+
+const GiveRating = (props) => {
+  const { auth, open, reviews, user } = props;
+  const [review, setReview] = useState({
+    comment: reviews[auth.userAuthData.uid] ? reviews[auth.userAuthData.uid]['comment'] : '',
+    rating: reviews[auth.userAuthData.uid] ? parseInt(reviews[auth.userAuthData.uid]['rating']) : 0
+  });
+  const onChange = (e) => {
+    const {name, value} = e.target;      
+    setReview({...review, [name]: value});        
+  }
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  useEffect(()=>{
+    setReview({
+      ...review,
+      comment: reviews[auth.userAuthData.uid] ? reviews[auth.userAuthData.uid]['comment'] : '',
+      rating: reviews[auth.userAuthData.uid] ? parseInt(reviews[auth.userAuthData.uid]['rating']) : 0
+    });    
+  },[auth]);  
+  return(
+    <>
+      {
+        review['comment']
+          ? <Edit onClick={() => props.openDialog()} size="small"/>
+          : <Add onClick={() => props.openDialog()} size="small"/>
+      }            
+      <Dialog scroll="body" open={open} onClose={() => props.closeDialog(review)} fullScreen={fullScreen}>
+        <DialogContent>
+          <DialogContentText>
+            Give your review and rating to {user.company}
+            <Close onClick={() => props.closeDialog(review)} size="small" />
+          </DialogContentText>
+          <TextField autoFocus fullWidth name="comment" value={review.comment} onChange={onChange}/>    
+          <Rating  name="rating" value={review.rating} onChange={onChange} size="small"/>
+        </DialogContent>         
+      </Dialog>
+    </>
+  )
+}
+
 const Listing = (props) => {  
   var colors = ["hotpink", "indigo", "grey", "inherit"];
   const auth = useRequireAuth();
@@ -47,15 +130,11 @@ const Listing = (props) => {
   const [status, setStatus] = useState({    
     message: '',
     error: ''
-  })
-  const [avgRating, setAvgRating] = useState(0);
+  });
   const [open, setOpen] = useState(false);
-  const [reviews, setReviews] = useState(user['reviews'] || {});
-  const [review, setReview] = useState({
-    comment: '',
-    rating: 0
-  })
+  const [avgRating, setAvgRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
+  const [reviews, setReviews] = useState(user['reviews'] || {});
   const approveListing = user => {   
     setLoading(true);
     setUser({...user, approved: true});    
@@ -69,27 +148,17 @@ const Listing = (props) => {
     await axios.post(`/api/users`, user);
     setLoading(false);
   }
+  useEffect(()=>{
+    setReviews({...reviews, ...user['reviews']});    
+  },[]);
   const openDialog = () => {
     setOpen(true);
   }
-  const closeDialog = () => {
+  const closeDialog = (review) => {
     setOpen(false);
-    setReviews({...reviews, [auth.userAuthData.uid]: review});
-    setUser({...user, reviews})
+    setReviews({...reviews, [auth.userAuthData.uid]: review});    
   }
-  const onChange = (e) => {
-    const {name, value} = e.target;      
-    setReview({...review, [name]: value});        
-  }
-  useEffect(() => {   
-    try{
-      setReview({
-        ...review,
-        comment: reviews[auth.userAuthData.uid]['comment'],
-        rating: parseInt(reviews[auth.userAuthData.uid]['rating'])
-      })     
-    } catch(err) {      
-    }    
+  useEffect(() => {    
     var sum = 0;
     var n = 0;
     for(const [key, value] of Object.entries({...reviews})){                
@@ -98,6 +167,9 @@ const Listing = (props) => {
     }        
     setAvgRating(sum/n);
     setNumOfReviews(n);
+    setUser({...user, reviews});    
+  },[reviews]);
+  useEffect(() => {
     updateUserDoc();
   }, [user]);
   return(
@@ -121,27 +193,11 @@ const Listing = (props) => {
             <a>{user.displayName } | {user.companyName} </a>             
           </Link>                          
           <Rating value={avgRating} readOnly size="small"/>
+          <ViewRatings numOfReviews={numOfReviews} reviews={reviews} user={user}/>
           {auth.userAuthData && auth.userAuthData.emailVerified && auth.userAuthData.uid !== user.id && 
-            <>
-            <small>({numOfReviews})</small>
-            {
-              review['comment']
-                ? <Edit onClick={openDialog} size="small"/>
-                : <Add onClick={openDialog} size="small"/>
-            }            
-            <Dialog open={open} onClose={closeDialog}>
-              <DialogContent>
-                <DialogContentText>
-                  Give your review and rating to {user.company}
-                  <Close onClick={closeDialog} size="small"/>
-                </DialogContentText>
-                <TextField autoFocus name="comment" value={review.comment} onChange={onChange}/>    
-                <Rating  name="rating" value={review.rating} onChange={onChange} size="small"/>
-              </DialogContent>         
-            </Dialog>
-            </>
+            <GiveRating auth={auth} open={open} openDialog={openDialog} closeDialog={closeDialog} reviews={reviews} user={user}/>            
           }
-        </Typography>  
+        </Typography>
         { user.establishedYear && (
           <Typography gutterBottom variant="overline" color="textSecondary" component="small">
             since {user.establishedYear.split('-')[0]}                                
@@ -209,11 +265,11 @@ const Directory = (props) => {
   return (
     <>    
       <Grid container spacing={2} style={{paddingRight: `10px`, paddingLeft: `10px`, backgroundColor: `#FFFFFF`}}>
-      {usersData.map(user => (  
+      {usersData.map((user, idx) => (  
         <>
         {user.emailVerified && 
           (user.approved || (auth.userAuthData && ['shakir@techie.com', 'admin@example.com', 'fajurnisha86@gmail.com'].includes(auth.userAuthData.email))) &&  
-          <Listing key={user.id} user={user}/>
+          <Listing key={idx} user={user}/>
         }
         </>
       ))}
