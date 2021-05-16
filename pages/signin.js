@@ -1,6 +1,5 @@
 import {
     Avatar,
-    Box,
     Button,
     Checkbox,
     Container,
@@ -9,13 +8,11 @@ import {
     TextField,
     Typography
 } from '@material-ui/core';
-import styles from '../../styles/Home.module.css';
+import styles from '../styles/Home.module.css';
 import { LockOutlined } from '@material-ui/icons';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
-
-
+import { useEffect, useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
 
 const Auth = () => {
     const auth = useAuth();
@@ -48,14 +45,14 @@ const Auth = () => {
                     setData({...data, ['isLoading']: false});
                     response.error 
                         ? setData({...data, ['error']: response.error.message})
-                        : router.push('/user/profile');
+                        : router.push('/add');
                 });
             }else{            
                 await auth.signIn({email, password}).then((response) => {                    
                     setData({...data, ['isLoading']: false});
                     response.error 
                         ? setData({...data, ['error']: response.error.message})
-                        : router.push('/user/profile');
+                        : router.push('/add');
                 });
             }
         } else{
@@ -63,24 +60,12 @@ const Auth = () => {
         }
         
     }
-    const resetPassword = async(e) => {
-        e.preventDefault();
-        const { email } = data;
-        if(email){
-            setData({...data, ['isLoading']: true, ['error']: ''});
-            const { email } = data;
-            await auth.sendPasswordResetEmail(email).then((response) => {
-                console.log(response);
-                setData({...data, ['isLoading']: false});
-                response.error 
-                    ? setData({...data, ['error']: response.error.message})
-                    : setData({...data, ['message']: response});
-            });
-        } else{
-            setData({...data, ['error']: 'Please enter email'});
-        }        
-    }
-
+    useEffect(() => {        
+        console.log(auth.userAuthData)
+        if(auth.userAuthData && Object.entries(auth.userAuthData).length > 0){          
+          router.push('/add');
+        }
+    },[auth, router]);
     return(        
         <Container component="main" maxWidth="xs">
             <CssBaseline/>            
@@ -120,22 +105,7 @@ const Auth = () => {
                         type="password"
                         value={data.password}
                         variant="outlined"                      
-                    />
-                    <FormControlLabel
-                        control={
-                        <Checkbox
-                            checked={data.newUser}                                               
-                            color="primary"
-                            name="newUser"
-                            value="newUser"                       
-                            onChange={onChangeNewUser}
-                        />
-                        }
-                        label="New user"
-                    />
-                    {!data.newUser && (
-                        <Button onClick={resetPassword}>Reset password</Button>
-                    )}
+                    />                                        
                     {data.isLoading && (<p style={{color: "orange"}}>Please wait...</p>)}
                     {data.message && (<p style={{color: "green"}}>{data.message}</p>)}
                     {data.error && (

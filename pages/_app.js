@@ -1,6 +1,5 @@
 import { Box, Container} from '@material-ui/core';
 import { useEffect } from 'react';
-import HideOnScroll from '../components/navbar';
 import Copyright from '../components/Copyright';
 import Header from '../components/Header';
 import { AuthProvider } from '../hooks/useAuth';
@@ -18,7 +17,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>       
      <Container>
-        <Header/>
+        <Header id="#"/>
+     </Container>
+     <Container>
         <Component {...pageProps}/>
         <Box mt={2}>
           <br/>

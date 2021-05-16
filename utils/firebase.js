@@ -2,19 +2,18 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
-import serviceAccount from './db/serviceAccountKey';
+//import serviceAccount from './db/serviceAccountKey';
 
 if (!firebase.apps.length) {
   try {
     firebase.initializeApp({        
-        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-        databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-        appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-        measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+      apiKey: "AIzaSyCPs4hjuEiD8viikfaB94E6Pt0ugfwF5n8",
+      authDomain: "safamarwa-b7ce7.firebaseapp.com",
+      projectId: "safamarwa-b7ce7",
+      storageBucket: "safamarwa-b7ce7.appspot.com",
+      messagingSenderId: "1062178643192",
+      appId: "1:1062178643192:web:94c1e052b759a9f57d6f0d",
+      measurementId: "G-R7HTCNTNBY"
     });
   } catch (error) {
     console.log('Firebase admin initialization error', error.stack);
@@ -23,6 +22,7 @@ if (!firebase.apps.length) {
 const app = firebase.app();
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
 const now = firebase.firestore.Timestamp.now();
-export { app, auth, db, now };
+export { app, auth, db, storage, now };
 console.log(app.name ? 'Firebase Mode Activated!' : 'Firebase not working :(');

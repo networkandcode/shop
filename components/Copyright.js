@@ -6,12 +6,16 @@ const Copyright = () => (
         {'Copyright © '}
         <Link href="/">
             <a>
-                www.marebox.com
+                www.safamarwa.store
             </a>            
         </Link>
         {' '}
+        2020 - 
+        {' '}
         {new Date().getFullYear()}
         {'.'}
+        <br/>
+        <br/>
     </Typography>
 );
 

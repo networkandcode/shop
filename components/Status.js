@@ -14,4 +14,4 @@ const Status = ({ loading, status }) => {
     );
 }
 
-export default Status;
+export default Status
