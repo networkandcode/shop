@@ -13,20 +13,23 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import Status from '../components/Status'; 
 import { useAuth } from '../hooks/useAuth';
+import { db } from '../utils/firebase';
 
 const Add = () => {
     const inputEl = useRef(null);                                                                                                                                                                                                                                                                                                                                                                                                                                                             
     const router = useRouter();
     const auth = useAuth();
     const [item, setItem] = useState({});
-    const [imgURL, setImgURL] = useState('');
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({    
       message: '',
       error: ''
     })
+    const [categories, setCategories] = useState([])
     const onChange = e => {  
       const {name, value} = e.target;  
+      console.log(name);
+      console.log(value);
       setItem({...item, [name]: value });
       setLoading(false);
       setStatus({
@@ -35,22 +38,29 @@ const Add = () => {
       });
     }
     const onChgImg = (e) => {
-        const { name, value } = e.target;
         e.preventDefault();
-        setItem({...item, imgFile: inputEl.current.files[0].name})
+        setItem({...item, imgFile: e.target.files[0]});
     }
     const onSubmit = async(e) => {
         e.preventDefault();
+        // clear status and show waiting
         setStatus({});
         setLoading(true);
-        const fileRef = firebase.storage().ref(`${item.category}/${item.name}/` + item.imgFile)
-        await fileRef.put(item.imgFile)
-        const fileURL = await fileRef.getDownloadURL()
-        await auth.addItem(item, fileURL).then(response => {   
-            response.error 
-              ? setStatus({...status, ['error']: response.error.message})
-              : setStatus({...status, ['message']: response});
-        })
+        // upload image to storage
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(`${item.category}/${item.name}/${item.imgFile.name}`);
+        const imgURL = await fileRef.put(item.imgFile).then(async()=>(await fileRef.getDownloadURL()))
+        console.log(imgURL);
+        addItemToDB(imgURL);
+    }
+    const addItemToDB = async(imgURL) => {
+        if (imgURL){
+          await auth.addItem(item, imgURL).then(response => {   
+              response.error 
+                ? setStatus({...status, ['error']: response.error.message})
+                : setStatus({...status, ['message']: response});
+          })
+        }
         setLoading(false);
         setItem({});
     }
@@ -59,9 +69,22 @@ const Add = () => {
         router.push('/signin');
       }
     },[auth, router]);
+    useEffect(() => {
+          const fetchCategories = async () => {
+            const categoriesCollection = await db.collection("categories").get();
+            setCategories(
+              categoriesCollection.docs.map((doc) => {
+                return doc.data();
+              })
+            );
+          };
+          fetchCategories();
+      }, []);
+        
     
     return (
-        <Container maxWidth="xs">      
+        <Container maxWidth="xs">
+          <br/>      
           <form onSubmit={onSubmit}>
             <TextField
               autoComplete="name"
@@ -106,9 +129,9 @@ const Add = () => {
                 required
                 value={item.category || ''}              
               >
-                <MenuItem value="Clothing">Clothing</MenuItem>
-                <MenuItem value="Household">Household</MenuItem>
-                <MenuItem value="Accessories">Accessories</MenuItem>
+                {categories.map (category => (
+                    <MenuItem value={category.name}>{category.name}</MenuItem>
+                ))}
               </Select>
             </FormControl>
             <TextField
@@ -135,10 +158,8 @@ const Add = () => {
             <input
               accept="image/png, image/jpeg"            
               label="Upload Image"
-              name="imgFile"      
               onChange={onChgImg}
               placeholder="Upload Image"   
-              ref={inputEl}         
               required
               type="file"
             />

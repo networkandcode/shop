@@ -1,10 +1,10 @@
 import { Box, Container} from '@material-ui/core';
 import { useEffect } from 'react';
 import Copyright from '../components/Copyright';
+import Head from '../components/Head';
 import Header from '../components/Header';
 import { AuthProvider } from '../hooks/useAuth';
 import '../styles/globals.css';
-
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -15,17 +15,20 @@ function MyApp({ Component, pageProps }) {
     }
   }, []);
   return (
-    <AuthProvider>       
-     <Container>
-        <Header id="#"/>
-     </Container>
-     <Container>
-        <Component {...pageProps}/>
-        <Box mt={2}>
-          <br/>
-          <Copyright/>
-        </Box>
-     </Container>
+    <AuthProvider>
+     <Head/>
+     <div>
+       <Container style={{backgroundColor: `#042F59`}}>
+          <Header id="#"/>
+       </Container>
+       <div>
+          <Component {...pageProps}/>
+          <Box mt={2}>
+            <br/>
+            <Copyright/>
+          </Box>
+       </div>
+     </div>
     </AuthProvider>    
   )
 }
