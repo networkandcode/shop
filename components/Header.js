@@ -6,6 +6,7 @@ import {
 import {
   Home,
   PowerSettingsNew,
+  ShoppingCart,
   WhatsApp,
   YouTube
 } from '@material-ui/icons';
@@ -35,6 +36,7 @@ return (
           {' '}
           <a href="https://youtube.com/c/SafaMarwaNihal" target="_blank"><YouTube/></a>          
           {' '}
+          <Link href="/cart"><a><ShoppingCart/></a></Link>
         {auth.userAuthData &&(            
               <PowerSettingsNew onClick={() => auth.signOut()}/>
         )}

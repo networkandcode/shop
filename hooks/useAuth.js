@@ -2,7 +2,8 @@ import {
     useEffect,
     useState,
     useContext,
-    createContext
+    createContext,
+    React
 } from 'react';
 import { auth, db, storage } from '../utils/firebase';
 
@@ -19,6 +20,40 @@ const useAuthProvider = () => {
     const [ userAuthData, setUserAuthData] = useState({})
     const [ categories, setCategories ] = useState([])
     const [ items, setItems ] = useState([])
+    const [ cartItems, setCartItems ] = useState([])
+    const [ totalPrice, setTotalPrice ] = useState(0)
+
+    useEffect(() => {
+        var cartItemsV = items.map(item => {
+            const { id } = item;
+            if(localStorage.getItem(id) > 0){
+                return {...item, qty: localStorage.getItem(id)};
+            };
+        },[]);
+        setCartItems(cartItemsV);
+    },[ items ]);
+
+    const updateCartItems = () => {
+        var cartItemsV = items.map(item => {
+            const { id } = item;
+            if(localStorage.getItem(id) > 0){
+                return {...item, qty: localStorage.getItem(id)};
+            };
+        },[]);
+        setCartItems(cartItemsV);
+    };
+
+    useEffect(() => {
+        var totalPriceV = 0;
+        cartItems.map(item => {
+            if(item){
+                totalPriceV += item.qty * item.price
+            }
+            setTotalPrice(totalPriceV);
+            console.log(totalPriceV);
+            localStorage.setItem('totalPrice', totalPriceV);
+        });
+    },[ cartItems ]);
 
     const signIn = async({ email, password }) => {
         return await auth
@@ -87,7 +122,7 @@ const useAuthProvider = () => {
         });
     }
     const handleAuthStateChanged = (user) => {
-        setUserAuthData(user);      
+        setUserAuthData(user);
     };
     useEffect(() => {
         const fetchCategories = async() => {
@@ -102,15 +137,19 @@ const useAuthProvider = () => {
         const unsub = auth.onAuthStateChanged(handleAuthStateChanged);
         return () => unsub();
     }, []);
+
     return {
         addCategory,
         addItem,
+        cartItems,
         categories,
         deleteCategory,
         deleteItem,
         items,
         signIn,
         signOut,
+        totalPrice,
+        updateCartItems,
         userAuthData
     };
 };
