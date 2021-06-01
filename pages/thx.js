@@ -13,6 +13,7 @@ const Thx = ({ customer }) => {
             <br/> 
             Thanks for your order, {customer.name}.
             We will ship your order soon.
+            <small> Please note that your favorites and cart items are cleared. </small>
         </Typography>
     );
 };

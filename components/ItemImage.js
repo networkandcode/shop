@@ -17,6 +17,7 @@ import {
   Typography, 
 } from '@material-ui/core';
 import { Add, Close, DeleteForever, FavoriteBorder, KeyboardArrowUp, Remove, ShoppingCart, WhatsApp } from '@material-ui/icons';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -25,13 +26,12 @@ const ItemImage = ({item}) => {
   const [openDialog, setOpenDialog] = useState(false)
   return(
     <>
-      <CardMedia
-        component="img"
+      <Image
         alt={item.slug}
-        height={150}
-        image={item.imgURL || "https://source.unsplash.com/weekly?water"}
+        height={80}
+        src={item.imgURL || "https://source.unsplash.com/weekly?water"}
         onClick={() => setOpenDialog(true)}
-        title={item.name}
+        width={80}
       />
       <Dialog fullScreen onClose={() => {setOpenDialog(false)}} open={openDialog}>
           <Close onClick={() => { setOpenDialog(false) } }/>

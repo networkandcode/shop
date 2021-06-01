@@ -26,8 +26,8 @@ const CheckoutPage = ({ session }) => {
     return(
         <Container>
             <br/>
-            <form onSubmit={ handleSubmit }>
-                    <Button color="primary" fullWidth type="submit" variant="outlined">
+            <form style={{textAlign: `center`}}  onSubmit={ handleSubmit }>
+                    <Button color="primary" justifyContent="center" style={{ maxWidth: `500px` }} type="submit" variant="outlined">
                       <Typography gutterBottom variant="h5">
                           Pay now
                       </Typography>

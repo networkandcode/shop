@@ -22,6 +22,7 @@ const useAuthProvider = () => {
     const [ items, setItems ] = useState([])
     const [ cartItems, setCartItems ] = useState([])
     const [ totalPrice, setTotalPrice ] = useState(0)
+    const [ favs, setFavs ] = useState([]);
 
     useEffect(() => {
         var cartItemsV = items.map(item => {
@@ -42,6 +43,25 @@ const useAuthProvider = () => {
         },[]);
         setCartItems(cartItemsV);
     };
+    const updateFavs = (id, fav) => {
+        if(id && fav){
+            if(!favs.includes(id)){
+                const tempAdd = [...favs, id];
+                setFavs([...favs, id]);
+                localStorage.setItem('favs', JSON.stringify(tempAdd));
+            };
+        } else if(id && !fav){
+          if(favs.includes(id)){
+              var temp = [...favs];
+              const idx = temp.indexOf(id);
+              if(idx !== -1){
+                  temp.splice(idx, 1);
+                  setFavs(temp);
+                  localStorage.setItem('favs', JSON.stringify(temp));
+              }
+          }
+      }
+    }
 
     useEffect(() => {
         var totalPriceV = 0;
@@ -50,10 +70,12 @@ const useAuthProvider = () => {
                 totalPriceV += item.qty * item.price
             }
             setTotalPrice(totalPriceV);
-            console.log(totalPriceV);
             localStorage.setItem('totalPrice', totalPriceV);
         });
     },[ cartItems ]);
+    useEffect(() => {
+        setFavs(JSON.parse(localStorage.getItem('favs')) || []);
+    },[]);
 
     const signIn = async({ email, password }) => {
         return await auth
@@ -145,11 +167,13 @@ const useAuthProvider = () => {
         categories,
         deleteCategory,
         deleteItem,
+        favs,
         items,
         signIn,
         signOut,
         totalPrice,
         updateCartItems,
+        updateFavs,
         userAuthData
     };
 };

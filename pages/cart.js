@@ -58,7 +58,7 @@ const Cart = () => {
     return (
             auth.totalPrice > 0 ?(
         <div>
-        <TableContainer component={ Paper }>
+        <TableContainer component={ Paper } style={{ padding: `auto`, margin: `auto`, marginTop: `0`, maxWidth: `600px`}}>
             <Typography style={{ padding: `10px` }} variant="h6">
                 Please review your order.
             </Typography>
@@ -87,7 +87,7 @@ const Cart = () => {
         <br/>
         <Container>
             { auth.totalPrice > 0 && (
-            <Typography style={{ textAlign: `right` }} variant="subtitle1">
+            <Typography style={{ textAlign: `center` }} variant="subtitle1">
             <Link href={`/checkout?p=${auth.totalPrice}`}>
                 <a>
                     <Button color="primary" variant="outlined">

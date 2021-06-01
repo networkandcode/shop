@@ -60,7 +60,7 @@ const EachItem = (props) => {
 
     const [ item, setItem ] = useState(props.item);
     const [ qty, setQty ] = useState(0);
-    const [ fav, setFav ] = useState(false);
+    const [ fav, setFav ] = useState(true);
 
     const deleteItem = async(item) => {
         await auth.deleteItem(item).then((resp) => {
@@ -69,14 +69,18 @@ const EachItem = (props) => {
     };
     const handleChange = e => {
         e.preventDefault();
-        const { id } = item;    
-        localStorage.setItem(id, e.target.value);
-        setQty(e.target.value);        
+        const { id } = item;
+        if(e.target.value > 0){
+            localStorage.setItem(id, e.target.value);
+            setQty(e.target.value);
+        }
         auth.updateCartItems();
     };
-    const handleFavorite = e => {
+    const rmFav = e => {
         e.preventDefault();
-        setFav(!fav);
+        const { id } = item;
+        setFav(false);
+        auth.updateFavs(id, false);
     };
     useEffect(() => {
         if(item){
@@ -86,73 +90,56 @@ const EachItem = (props) => {
             };
         };
     },[]);
-    useEffect(() => {
-        if(item){
-            const { id } = item;
-            if(auth.favs && auth.favs.includes(id)){
-                if(!fav) setFav(true);
-            } else {
-                if(fav) setFav(false);
-            }
-        }
-    },[]);
-    useEffect(() => {
-        console.log('update fav');
-        if(item){
-            const { id } = item;
-            auth.updateFavs(id, fav);
-        }
-    },[fav]);
 
     return(
       <>
-        {item && item.imgURL && (
+        {fav && item && item.imgURL && (
           <Grid item key={item.id} xs={6} sm={4}>
             <Card>
               <CardActionArea>
                 <ItemImage item={item}/>
               </CardActionArea>
               <CardContent>
-                <Typography variant="body1" component="p">
-                    <Grid container justify="space-between">
-                        <Grid item xs={8}>
-                            {item.name}  {' '}
-                        </Grid>
-                        <Grid item style={{ textAlign: `right` }} xs={4}>
-                            { fav ? <Favorite style={{color: `pink`}} onClick={handleFavorite}/> : <FavoriteBorder onClick={handleFavorite} style={{color: `pink`}}/> }
-                        </Grid>
-                    </Grid>
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  <Grid container justify="space-between">
-                      <Grid item xs={8}>
-                          { item.description }
+                  <Typography variant="body1" component="p">
+                      <Grid container justify="space-between">
+                          <Grid item xs={8}>
+                              {item.name}  {' '}
+                          </Grid>
+                          <Grid item style={{ textAlign: `right` }} xs={4}>
+                              { fav ? <Favorite style={{color: `pink`}} onClick={rmFav}/> : <FavoriteBorder onClick={rmFav}/> }
+                          </Grid>
                       </Grid>
-                      <Grid item style={{ textAlign: `right` }} xs={4}>
-                          <FormControl>
-                            <select
-                              onChange={handleChange}
-                              value={ qty }
-                            >
-                              <option value={0}>0</option>
-                              <option value={1}>1</option>
-                              <option value={2}>2</option>
-                              <option value={3}>3</option>
-                              <option value={4}>4</option>
-                              <option value={5}>5</option>
-                            </select>
-                          </FormControl>
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" component="p">
+                      <Grid container justify="space-between">
+                          <Grid item xs={8}>
+                              { item.description }
+                          </Grid>
+                          <Grid item style={{ textAlign: `right` }} xs={4}>
+                              <FormControl>
+                                <select
+                                  onChange={handleChange}
+                                  value={ qty }
+                                >
+                                  <option value={0}>0</option>
+                                  <option value={1}>1</option>
+                                  <option value={2}>2</option>
+                                  <option value={3}>3</option>
+                                  <option value={4}>4</option>
+                                  <option value={5}>5</option>
+                                </select>
+                              </FormControl>
+                          </Grid>
                       </Grid>
-                  </Grid>
-                </Typography>
+                  </Typography>
               </CardContent>
               <CardActions>
                 <Grid container justify="space-between">
                   <Grid item>
                       Rs.{item.price}
                   </Grid>
-                  <Grid item>
-                    {auth.userAuthData && (<DeleteForever onClick={() => deleteItem(item)}/>)}
+                  <Grid item style={{ textAlign: `right`, float: `right` }}>
+                    {auth.userAuthData && (<DeleteForever onClick={() => deleteItem(item)}/>)}                    
                     {' '}
                     <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://safamarwa.store, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp/></a>
                     {' '}
@@ -169,33 +156,21 @@ const EachItem = (props) => {
     )
 }
 
-const items = (props) => {
-  const router = useRouter();
-  const auth = useAuth();
-  const [ items, setItems ] = useState([]);
-  const [ refresh, setRefresh ] = useState(false);
+const Favorites = (props) => {
+    const router = useRouter();
+    const auth = useAuth();
+    const [ items, setItems ] = useState([]);
+    const [ refresh, setRefresh ] = useState(false);
 
-  useEffect(() => {
-      const { c } = router.query;
-      if(c){
-        var i = [];
-        auth.items.map(item => {
-            if (item.category === c) {
-                i.push(item);
-            }
-        })
-        setItems(i);
-      }
-  }, [auth, router]);
   return (
     <Container mt={0}>
     <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>
-        {items.map((item, idx) => (
-          <EachItem key={idx} item={item}/>
+        {auth.items.map((item, idx) => (
+          auth.favs.includes(item.id) && <EachItem key={idx} item={item}/>
         ))}
     </Grid>
     </Container>
   );
 };
 
-export default items;
+export default Favorites;
