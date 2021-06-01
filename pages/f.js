@@ -70,10 +70,8 @@ const EachItem = (props) => {
     const handleChange = e => {
         e.preventDefault();
         const { id } = item;
-        if(e.target.value > 0){
-            localStorage.setItem(id, e.target.value);
-            setQty(e.target.value);
-        }
+        localStorage.setItem(id, e.target.value);
+        setQty(e.target.value);
         auth.updateCartItems();
     };
     const rmFav = e => {
