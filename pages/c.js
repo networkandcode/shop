@@ -1,201 +1,60 @@
-import { db } from '../utils/firebase';
+import Categories from '../components/Categories';
+import Items from '../components/Items';
 import { useAuth } from '../hooks/useAuth';
 import {
-    Button,
-    Grid, 
-    Card, 
-    CardActionArea, 
-    CardActions,
-    CardContent, 
-    CardMedia,
-    Container,
-    Dialog,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
     Typography,
 } from '@material-ui/core';
-import { Add,
-    Close,
-    DeleteForever,
-    Favorite,
-    FavoriteBorder,
-    KeyboardArrowUp,
-    Remove,
-    ShoppingCart,
-    WhatsApp
-} from '@material-ui/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const ItemImage = ({item}) => {
-  const [openDialog, setOpenDialog] = useState(false)
-  return(
-    <>
-      <CardMedia
-        component="img"
-        alt={item.slug}
-        height="150"
-        image={item.imgURL || "https://source.unsplash.com/weekly?water"}
-        onClick={() => setOpenDialog(true)}
-        title={item.name}
-      />
-      <Dialog fullScreen onClose={() => {setOpenDialog(false)}} open={openDialog}>
-          <Close onClick={() => { setOpenDialog(false) } }/>
-          <img
-              src={item.imgURL || "https://source.unsplash.com/weekly?water"}
-              style={{ height: `auto`, maxWidth: `100%` }}
-          />
-      </Dialog>
-    </>
-  )
-}
-
-const EachItem = (props) => {
-    const auth = useAuth();
-    const router = useRouter();
-
-    const [ item, setItem ] = useState(props.item);
-    const [ qty, setQty ] = useState(0);
-    const [ fav, setFav ] = useState(false);
-
-    const deleteItem = async(item) => {
-        await auth.deleteItem(item).then((resp) => {
-            setItem({});
-        });
-    };
-    const handleChange = e => {
-        e.preventDefault();
-        const { id } = item;    
-        localStorage.setItem(id, e.target.value);
-        setQty(e.target.value);        
-        auth.updateCartItems();
-    };
-    const handleFavorite = e => {
-        e.preventDefault();
-        setFav(!fav);
-    };
-    useEffect(() => {
-        if(item){
-            const { id } = item;
-            if(id){
-                setQty(localStorage.getItem(id) || 0);
-            };
-        };
-    },[]);
-    useEffect(() => {
-        if(item){
-            const { id } = item;
-            if(auth.favs && auth.favs.includes(id)){
-                if(!fav) setFav(true);
-            } else {
-                if(fav) setFav(false);
-            }
-        }
-    },[]);
-    useEffect(() => {
-        console.log('update fav');
-        if(item){
-            const { id } = item;
-            auth.updateFavs(id, fav);
-        }
-    },[fav]);
-
-    return(
-      <>
-        {item && item.imgURL && (
-          <Grid item key={item.id} xs={6} sm={4}>
-            <Card>
-              <CardActionArea>
-                <ItemImage item={item}/>
-              </CardActionArea>
-              <CardContent>
-                <Typography variant="body1" component="p">
-                    <Grid container justify="space-between">
-                        <Grid item xs={8}>
-                            {item.name}  {' '}
-                        </Grid>
-                        <Grid item style={{ textAlign: `right` }} xs={4}>
-                            { fav ? <Favorite style={{color: `pink`}} onClick={handleFavorite}/> : <FavoriteBorder onClick={handleFavorite} style={{color: `pink`}}/> }
-                        </Grid>
-                    </Grid>
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  <Grid container justify="space-between">
-                      <Grid item xs={8}>
-                          { item.description }
-                      </Grid>
-                      <Grid item style={{ textAlign: `right` }} xs={4}>
-                          <FormControl>
-                            <select
-                              onChange={handleChange}
-                              value={ qty }
-                            >
-                              <option value={0}>0</option>
-                              <option value={1}>1</option>
-                              <option value={2}>2</option>
-                              <option value={3}>3</option>
-                              <option value={4}>4</option>
-                              <option value={5}>5</option>
-                            </select>
-                          </FormControl>
-                      </Grid>
-                  </Grid>
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Grid container justify="space-between">
-                  <Grid item>
-                      Rs.{item.price}
-                  </Grid>
-                  <Grid item>
-                    {auth.userAuthData && (<DeleteForever onClick={() => deleteItem(item)}/>)}
-                    {' '}
-                    <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://safamarwa.store, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp/></a>
-                    {' '}
-                    <Link href="/cart"><a><ShoppingCart/></a></Link>
-                    {' '}
-                    <a href="#"> <KeyboardArrowUp color="disabled"/> </a>
-                  </Grid>
-                </Grid>
-              </CardActions>
-            </Card>
-          </Grid>
-      )}
-      </>
-    )
-}
-
-const items = (props) => {
+const Category = () => {
   const router = useRouter();
   const auth = useAuth();
   const [ items, setItems ] = useState([]);
   const [ refresh, setRefresh ] = useState(false);
+  const [category, setCategory] = useState('');
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-      const { c } = router.query;
+      const c = router.query.c;
+      setCategory(c);
+      console.log(c);
       if(c){
         var i = [];
         auth.items.map(item => {
             if (item.category === c) {
+                console.log(item);
                 i.push(item);
             }
         })
         setItems(i);
+        var temp = [];
+        for(var i=0; i<auth.categories.length; i++){
+            const name = auth.categories[i].name;
+            if(name.startsWith(c + '/')){
+                temp.push(auth.categories[i]);
+            }
+        }
+        setCategories([...temp]);
       }
   }, [auth, router]);
   return (
-    <Container mt={0}>
-    <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>
-        {items.map((item, idx) => (
-          <EachItem key={idx} item={item}/>
-        ))}
-    </Grid>
-    </Container>
+    <div style={{ padding: `20px` }}>
+        <Typography gutterBottom style={{color: `#042F59`}} variant="h5">
+            <Link href="/"><a> Home </a></Link>
+            { category.split('/').map(i => (
+                <Link href={`/c?c=${i}`}><a> >> {i}</a></Link>
+            ))}
+        </Typography>
+        {categories.length > 0 && (
+            <div style={{marginBottom: `20px`}}>
+                <Categories categories={categories}/>
+            </div>
+        )}
+        <Items items={items}/>
+    </div>
   );
 };
 
-export default items;
+export default Category;

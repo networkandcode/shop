@@ -1,4 +1,3 @@
-import { db } from '../utils/firebase';
 import { useAuth } from '../hooks/useAuth';
 import {
     Button,

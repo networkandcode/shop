@@ -1,4 +1,5 @@
 import { useAuth } from '../hooks/useAuth'
+import { db } from '../utils/firebase';
 import { Card, CardActionArea, CardContent, CardMedia, Container, Dialog, Grid, Typography } from '@material-ui/core'
 import { Close, DeleteForever, KeyboardArrowUp } from '@material-ui/icons'
 import Link from 'next/link';
@@ -58,26 +59,18 @@ const EachCategory = (props) => {
     )
 }
 
-const Categories = () => {
-    const auth = useAuth();
-    const router = useRouter();
-    const [ categories, setCategories ] = useState([]);
-    useEffect(() => {
-        const {sub} = router.query;
-        var temp = [];
-        auth.categories.forEach(i => {
-            if(!i.name.includes('/')){
-                temp.push(i);
-            }
-        });
-        setCategories(temp);
-    },[auth, router])
+const Categories = ({categories}) => {
     return (
-        <Grid container spacing={2} style={{padding: `10px`}}>
-            {categories.map((category, idx) => (
-                <EachCategory category={category} key={idx}/>
-            ))}
-        </Grid>
+          <div>
+              <Typography gutterBottom style={{color: `#042F59`}} variant="h6">
+                  Sub categories<small>({categories.length})</small>
+              </Typography>
+              <Grid container spacing={2}>
+                  {categories.map((category, idx) => (
+                      <EachCategory category={category} key={idx}/>
+                  ))}
+              </Grid>
+          </div>
     )
 }
 

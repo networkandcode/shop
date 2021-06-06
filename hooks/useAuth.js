@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 import {
     useEffect,
     useState,
@@ -88,10 +89,10 @@ const useAuthProvider = () => {
                 return { error };
             });
     };
-    const signOut = async() => {        
+    const signOut = async() => {
         return auth.signOut().then(() => setUserAuthData({}));
     };
-    const addItem = async(item, imgURL) => {        
+    const addItem = async(item, imgURL) => {
         const { name, description, category, price } = item
         const dbData = { name, description: description || '', category, price, imgURL }
         return await db
@@ -99,25 +100,58 @@ const useAuthProvider = () => {
          .add(dbData)
          .then(() => {
             setItems([...items, item]);
-            return 'Item added to database, and Images uploaded to storage';
+            return 'Item added to database, and Image uploaded to storage';
          })
          .catch((error) => {
             return { error };
          });
     };
     const addCategory = async(item, imgURL) => {
-        const { name } = item;
-        const dbData = { name, imgURL }
-        return await db
-         .collection('categories')
-         .add(dbData)
-         .then(() => {
-            setCategories([...categories, dbData])
-            return 'Category added to database, and Images uploaded to storage';
-         })
-         .catch((error) => {
-            return { error };
-         });
+        //if(!item.parentCategory){
+            var { name, parentCategory } = item;
+            if(parentCategory){
+                name = parentCategory + '/' + name;
+            }
+            const dbData = { name, imgURL }
+            return await db
+             .collection('categories')
+             .add(dbData)
+             .then(() => {
+                setCategories([...categories, dbData])
+                return 'Category added to database, and Image uploaded to storage';
+             })
+             .catch((error) => {
+                return { error };
+             });
+        /*} else{
+            const { parentCategory, name} = item;
+            console.log(item);
+            var temp = [];
+            var id = '';
+            categories.forEach(i => {
+                if(i.name !== parentCategory){
+                    console.log(i);
+                    temp.push(i)
+                } else{
+                    id = i.id;
+                    console.log(i, id);
+                    i['categories']
+                        ? i['categories'].push({name, imgURL})
+                        : i['categories'] = [{name, imgURL}];
+                    temp.push(i);
+                }
+            });
+            console.log(temp);
+            return await db.collection('categories').doc(id).update({
+                categories: firebase.firestore.FieldValue.arrayUnion({name, imgURL})
+            }).then(() => {
+                setCategories([...temp]);
+                return 'Category added to database, and Image uploaded to storage';
+            })
+            .catch((error) => {
+                return { error };
+            });
+        }*/
     };
 
     const deleteItem = async(item) => {

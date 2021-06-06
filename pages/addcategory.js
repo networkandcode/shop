@@ -4,27 +4,30 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
-    Select,  
+    Select,
     TextField
 } from '@material-ui/core';
 import firebase from 'firebase';
 import 'firebase/storage';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Status from '../components/Status'; 
+import Status from '../components/Status';
 import { useAuth } from '../hooks/useAuth';
+import { db } from '../utils/firebase';
 
 const Add = () => {
     const router = useRouter();
     const auth = useAuth();
     const [item, setItem] = useState({});
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState({    
+    const [status, setStatus] = useState({
       message: '',
       error: ''
     })
-    const onChange = e => {  
-      const {name, value} = e.target;  
+    const [categories, setCategories] = useState([]);
+
+    const onChange = e => {
+      const {name, value} = e.target;
       setItem({...item, [name]: value });
       setLoading(false);
       setStatus({
@@ -43,15 +46,19 @@ const Add = () => {
         setLoading(true);
         // upload image to storage
         const storageRef = firebase.storage().ref();
-        const fileRef = storageRef.child(`${item.category}/${item.imgFile.name}`);
+        var imgPath = `${item.category}/${item.imgFile.name}`;
+        if(item.parentCategory){
+            imgPath = item.parentCategory + '/' + imgPath;
+        }
+        const fileRef = storageRef.child(imgPath);
         const imgURL = await fileRef.put(item.imgFile).then(async()=>(await fileRef.getDownloadURL()))
         console.log(imgURL);
         addCategoryToDB(imgURL);
     }
     const addCategoryToDB = async(imgURL) => {
         if (imgURL){
-          await auth.addCategory(item, imgURL).then(response => {   
-              response.error 
+          await auth.addCategory(item, imgURL).then(response => {
+              response.error
                 ? setStatus({...status, ['error']: response.error.message})
                 : setStatus({...status, ['message']: response});
           })
@@ -59,53 +66,70 @@ const Add = () => {
         setLoading(false);
         setItem({});
     }
-    useEffect(() => {      
-      if(!auth.userAuthData){        
+
+    useEffect(() => {
+      if(!auth.userAuthData){
         router.push('/signin');
+      } else{
+          setCategories(auth.categories);
       }
     },[auth, router]);
-    
+
     return (
 
-        <Container maxWidth="xs">      
+        <Container maxWidth="xs">
           <br/>
           <form onSubmit={onSubmit}>
             <TextField
               autoComplete="name"
-              id="name"     
+              id="name"
               InputLabelProps={{
                 shrink: true,
-              }}  
-              label="Name of the Category"       
+              }}
+              label="Name of the Category"
               margin="normal"
               name="name"
               onChange={onChange}
-              placeholder="Name of the Category"  
-              required      
+              placeholder="Name of the Category"
+              required
               value={item.name || ''}
               variant="outlined"
               fullWidth
             />
+            <FormControl fullWidth margin="normal" required>
+              <InputLabel id="categoryLabel">Parent category</InputLabel>
+              <Select
+                id="categorySelect"
+                labelId="categoryLabel"
+                name="parentCategory"
+                onChange={onChange}
+                value={item.parentCategory || ''}
+              >
+                {categories.map (category => (
+                    <MenuItem value={category.name}>{category.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <small>
               Upload Image <br/>
             </small>
             <input
-              accept="image/png, image/jpeg"            
+              accept="image/png, image/jpeg"
               label="Upload Image"
               onChange={onChgImg}
-              placeholder="Upload Image"   
+              placeholder="Upload Image"
               required
               type="file"
             />
-            <br/>            
+            <br/>
             <Status loading={loading} status={status}/>
-            <br/>          
+            <br/>
             <Button
                 color="primary"
                 fullWidth
                 margin="normal"
                 type="submit"
-                variant="contained"              
+                variant="contained"
             >
               Save
             </Button>

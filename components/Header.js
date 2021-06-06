@@ -24,13 +24,11 @@ return (
               <Typography style={{ fontFamily: `Monospace`  }} variant="h3" component="h1"> Safa Marwa </Typography>
               <Typography component="p" variant="subtitle1"> Welcome to our website. </Typography>
               <Typography component="p" paragraph variant="subtitle2"> We sell Men, Women and Kids clothing, Household products, accessories etc. </Typography>
+              <Typography style={{color: `white`}} component="p" paragraph variant="subtitle2"> <strong> COD is available in Nagercoil and Trivandrum. </strong> </Typography>
           </Grid>   
       </Grid> 
       <Grid container spacing={2} >
-        <Grid item xs={4}>          
-          <Typography style={{color: `white`}} component="p" paragraph variant="subtitle2"> <strong> COD is available in Nagercoil and Trivandrum. </strong> </Typography>
-        </Grid>
-        <Grid item style={{ color: `white`, textAlign: `right` }} xs={8}>          
+        <Grid item style={{ color: `white`, textAlign: `right` }} xs={12}>          
           <Link href="/"><a><Home fontSize="large"/></a></Link>
           {' '}          
           <a href="https://api.whatsapp.com/send?phone=919500542709" target="_blank"><WhatsApp fontSize="large"/></a>          

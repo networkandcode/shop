@@ -13,23 +13,22 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import Status from '../components/Status'; 
 import { useAuth } from '../hooks/useAuth';
-import { db } from '../utils/firebase';
 
 const Add = () => {
-    const inputEl = useRef(null);                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+    const inputEl = useRef(null);
     const router = useRouter();
     const auth = useAuth();
     const [item, setItem] = useState({});
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState({    
+    const [status, setStatus] = useState({
       message: '',
       error: ''
     })
     const [categories, setCategories] = useState([])
-    const onChange = e => {  
-      const {name, value} = e.target;  
-      console.log(name);
-      console.log(value);
+    const [allCategories, setAllCategories] = useState([])
+
+    const onChange = e => {
+      const {name, value} = e.target;
       setItem({...item, [name]: value });
       setLoading(false);
       setStatus({
@@ -55,8 +54,8 @@ const Add = () => {
     }
     const addItemToDB = async(imgURL) => {
         if (imgURL){
-          await auth.addItem(item, imgURL).then(response => {   
-              response.error 
+          await auth.addItem(item, imgURL).then(response => {
+              response.error
                 ? setStatus({...status, ['error']: response.error.message})
                 : setStatus({...status, ['message']: response});
           })
@@ -64,35 +63,37 @@ const Add = () => {
         setLoading(false);
         setItem({});
     }
-    useEffect(() => {      
-      if(!auth.userAuthData){        
+    useEffect(() => {
+      if(!auth.userAuthData){
         router.push('/signin');
+      } else{
+          setCategories(auth.categories);
       }
     },[auth, router]);
     useEffect(() => {
-          const fetchCategories = async () => {
-            const categoriesCollection = await db.collection("categories").get();
-            setCategories(
-              categoriesCollection.docs.map((doc) => {
-                return doc.data();
-              })
-            );
-          };
-          fetchCategories();
-      }, []);
-        
-    
+        var temp = [];
+        categories.forEach(i => {
+            temp.push(i.name);
+            if(i.categories){
+                i.categories.forEach(j => {
+                    temp.push(`${i.name}/${j.name}`)
+                });
+            }
+        });
+        setAllCategories([...temp]);
+    },[categories]);
+
     return (
         <Container maxWidth="xs">
-          <br/>      
+          <br/>
           <form onSubmit={onSubmit}>
             <TextField
               autoComplete="name"
-              id="name"     
+              id="name"
               InputLabelProps={{
                 shrink: true,
-              }}  
-              label="Name of the Item"       
+              }}
+              label="Name of the Item"
               margin="normal"
               name="name"
               onChange={onChange}
@@ -117,20 +118,20 @@ const Add = () => {
               onChange={onChange}
               placeholder="Description of the Item"            
               value={item.description || ''}
-              variant="outlined"          
-            />          
+              variant="outlined"
+            />
             <FormControl fullWidth margin="normal" required>
               <InputLabel id="categoryLabel">Category</InputLabel>
-              <Select               
-                id="categorySelect" 
-                labelId="categoryLabel"               
+              <Select
+                id="categorySelect"
+                labelId="categoryLabel"
                 name="category"
                 onChange={onChange}
                 required
-                value={item.category || ''}              
+                value={item.category || ''}
               >
-                {categories.map (category => (
-                    <MenuItem value={category.name}>{category.name}</MenuItem>
+                {allCategories.map (category => (
+                    <MenuItem value={category}>{category.replace('/', ' >> ')}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -138,7 +139,7 @@ const Add = () => {
               autoComplete="price"
               fullWidth
               helperText=""
-              id="price"      
+              id="price"
               InputLabelProps={{
                 shrink: true,
               }}

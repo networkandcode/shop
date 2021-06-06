@@ -18,9 +18,9 @@ function MyApp({ Component, pageProps }) {
     <AuthProvider>
      <Head/>
      <div>
-       <Container style={{backgroundColor: `#042F59`}}>
+       <div style={{backgroundColor: `#042F59`, padding: `20px`}}>
           <Header id="#"/>
-       </Container>
+       </div>
        <div>
           <Component {...pageProps}/>
           <Box mt={2}>
