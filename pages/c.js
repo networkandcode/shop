@@ -19,16 +19,15 @@ const Category = () => {
   useEffect(() => {
       const c = router.query.c;
       setCategory(c);
-      console.log(c);
+
       if(c){
         var i = [];
         auth.items.map(item => {
             if (item.category === c) {
-                console.log(item);
                 i.push(item);
             }
         })
-        setItems(i);
+        setItems([...i]);
         var temp = [];
         for(var i=0; i<auth.categories.length; i++){
             const name = auth.categories[i].name;
@@ -43,8 +42,10 @@ const Category = () => {
     <div style={{ padding: `20px` }}>
         <Typography gutterBottom style={{color: `#042F59`}} variant="h5">
             <Link href="/"><a> Home </a></Link>
-            { category.split('/').map(i => (
-                <Link href={`/c?c=${i}`}><a> >> {i}</a></Link>
+            { category && category.split('/').map((i, idx) => (
+                <Link key={`/c?c=${i}`} href={`/c?c=${category.split('/').slice(0,idx+1).join('/')}`}>
+                    <a> >> {i}</a>
+                </Link>
             ))}
         </Typography>
         {categories.length > 0 && (

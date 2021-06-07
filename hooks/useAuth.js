@@ -93,18 +93,42 @@ const useAuthProvider = () => {
         return auth.signOut().then(() => setUserAuthData({}));
     };
     const addItem = async(item, imgURL) => {
-        const { name, description, category, price } = item
-        const dbData = { name, description: description || '', category, price, imgURL }
-        return await db
-         .collection('items')
-         .add(dbData)
-         .then(() => {
-            setItems([...items, item]);
-            return 'Item added to database, and Image uploaded to storage';
-         })
-         .catch((error) => {
-            return { error };
-         });
+        const { id, category, description, name, price } = item
+        var dbData = { name, description: description || '', category, price}
+        if(imgURL){
+            dbData = {...dbData, imgURL};
+        }
+        console.log(dbData);
+        if(id){
+            console.log(id);
+            return await db
+                .collection('items')
+                .doc(id)
+                .set(dbData, {merge: true})
+                .then(() => {
+                    var temp = [];
+                    items.forEach(i => {
+                        if(i.id === id){
+                            temp.push(i);
+                        }
+                    });
+                    setItems([...temp]);
+                    return 'Item saved to database';
+                 }).catch((error) => {
+                    return { error };
+                 });
+        } else{
+            return await db
+                .collection('items')
+                .add(dbData)
+                .then(() => {
+                    setItems([...items, item]);
+                    return 'Item added to database, and Image uploaded to storage';
+                })
+                .catch((error) => {
+                    return { error };
+                });
+        }
     };
     const addCategory = async(item, imgURL) => {
         //if(!item.parentCategory){

@@ -39,14 +39,14 @@ const EachCategory = (props) => {
                           <Grid item>
                               <Link href={`/c?c=${category.name}`}>
                                   <a>
-                                      <Typography gutterBottom style={{color:`#042F59`}} variant="body1" component="p">
+                                      <Typography gutterBottom variant="body1" component="p">
                                           {category.name}
                                       </Typography>
                                   </a>
                               </Link>
                           </Grid>
                           <Grid item>
-                              {auth.userAuthData && (<DeleteForever onClick={() => deleteCategory(category.id)}/>)}
+                              {auth.userAuthData && (<DeleteForever color="disabled" onClick={() => deleteCategory(category.id)}/>)}
                               <a href="#"> <KeyboardArrowUp color="disabled"/> </a>
                           </Grid>
                       </Grid>

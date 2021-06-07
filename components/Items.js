@@ -1,3 +1,4 @@
+import EditItem from '../components/EditItem';
 import { db } from '../utils/firebase';
 import { useAuth } from '../hooks/useAuth';
 import {
@@ -97,7 +98,6 @@ const EachItem = (props) => {
         }
     },[]);
     useEffect(() => {
-        console.log('update fav');
         if(item){
             const { id } = item;
             auth.updateFavs(id, fav);
@@ -113,20 +113,24 @@ const EachItem = (props) => {
                 <ItemImage item={item}/>
               </CardActionArea>
               <CardContent>
-                <Typography variant="body1" component="p">
                     <Grid container justify="space-between">
                         <Grid item xs={8}>
+                <Typography variant="body1">
+
                             {item.name}  {' '}
+                </Typography>
+
                         </Grid>
                         <Grid item style={{ textAlign: `right` }} xs={4}>
                             { fav ? <Favorite style={{color: `pink`}} onClick={handleFavorite}/> : <FavoriteBorder onClick={handleFavorite} style={{color: `pink`}}/> }
                         </Grid>
                     </Grid>
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
                   <Grid container justify="space-between">
                       <Grid item xs={8}>
+                <Typography variant="body2" color="textSecondary">
+
                           { item.description }
+                </Typography>
                       </Grid>
                       <Grid item style={{ textAlign: `right` }} xs={4}>
                           <FormControl>
@@ -144,7 +148,6 @@ const EachItem = (props) => {
                           </FormControl>
                       </Grid>
                   </Grid>
-                </Typography>
               </CardContent>
               <CardActions>
                 <Grid container justify="space-between">
@@ -152,7 +155,12 @@ const EachItem = (props) => {
                       Rs.{item.price}
                   </Grid>
                   <Grid item>
-                    {auth.userAuthData && (<DeleteForever onClick={() => deleteItem(item)}/>)}
+                    {auth.userAuthData && (
+                        <>
+                            <EditItem item={item}/>
+                            <DeleteForever color="disabled" onClick={() => deleteItem(item)}/>
+                        </>
+                    )}
                     {' '}
                     <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://safamarwa.store, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp/></a>
                     {' '}
@@ -193,8 +201,8 @@ const items = (props) => {
           Items <small>({items.length})</small>
       </Typography>
       <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>
-          {items.map((item, idx) => (
-            <EachItem key={idx} item={item}/>
+          {items.map(item => (
+            <EachItem key={item.id} item={item}/>
           ))}
       </Grid>
     </div>
