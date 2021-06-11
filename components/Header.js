@@ -1,4 +1,10 @@
 import {
+  AppBar,
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
   Grid,
   Typography,
   Button
@@ -13,37 +19,63 @@ import {
 } from '@material-ui/icons';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 const Header = () => {
   const auth = useAuth();
+  const [linkColor, setLinkColor] = useState({});
+  const handleLinks = (linkName) => {
+    setLinkColor({[linkName]: "hotpink"})
+  }
 return (
   <>
-      <Grid container style={{paddingTop: `10px`, backgroundColor: `#042F59`, color: `#ffffff`}}>
-          <Grid item xs={12} sm={12}>
-              <Typography style={{ fontFamily: `Monospace`  }} variant="h3" component="h1"> Safa Marwa </Typography>
-              <Typography component="p" variant="subtitle1"> Welcome to our website. </Typography>
-              <Typography component="p" paragraph variant="subtitle2"> We sell Men, Women and Kids clothing, Household products, accessories etc. </Typography>
-              <Typography style={{color: `white`}} component="p" paragraph variant="subtitle2"> <strong> COD is available in Nagercoil and Trivandrum. </strong> </Typography>
-          </Grid>   
-      </Grid> 
+      <AppBar style={{backgroundColor: `dimgray`, padding: `0.5px`}}>
       <Grid container spacing={2} >
-        <Grid item style={{ color: `white`, textAlign: `right` }} xs={12}>          
-          <Link href="/"><a><Home fontSize="large"/></a></Link>
-          {' '}          
-          <a href="https://api.whatsapp.com/send?phone=919500542709" target="_blank"><WhatsApp fontSize="large"/></a>          
+        <Grid item style={{ color: `white`, textAlign: `right` }} xs={12}>
+          <Link href="/"><a><Home fontSize="large" onClick={() => {handleLinks('home')}}
+            style={{backgroundColor: `${linkColor['home'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
           {' '}
-          <a href="https://youtube.com/c/SafaMarwaNihal" target="_blank"><YouTube fontSize="large"/></a>          
-          {' '}            
-          <Link href="/f"><a><Favorite fontSize="large"/></a></Link>
-          {' '}            
-          <Link href="/cart"><a><ShoppingCart fontSize="large"/></a></Link>
-        {auth.userAuthData &&(            
+          <a href="https://api.whatsapp.com/send?phone=919500542709" target="_blank">
+            <WhatsApp fontSize="large"
+            />
+          </a>
+          {' '}
+          <a href="https://youtube.com/c/SafaMarwaNihal" target="_blank"><YouTube fontSize="large"/></a>
+          {' '}
+          <Link href="/f"><a><Favorite fontSize="large" onClick={()=>{handleLinks('favorites')}} style={{backgroundColor:`${linkColor['favorites'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
+          {' '}
+          <Link href="/cart"><a><ShoppingCart fontSize="large" onClick={()=>{handleLinks('cart')}} style={{backgroundColor: `${linkColor['cart'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
+        {auth.userAuthData &&(
               <PowerSettingsNew fontSize="large" onClick={() => auth.signOut()}/>
         )}
         </Grid>
-      </Grid>             
-  </>    
+      </Grid>
+      </AppBar>
+      <Box mt={3}>
+      <Grid container>
+          <Grid item xs={12} sm={12}>
+            <Card>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  alt="shopping"
+                  height="250"
+                  image="https://source.unsplash.com/featured/?shopping"
+                  title="shopping"
+                />
+              </CardActionArea>
+              <CardContent style={{background: `dimgray`, color: `white`}}>
+                <Typography style={{ fontFamily: `Monospace`  }} variant="h3" component="h1"> Safa Marwa </Typography>
+                <Typography component="p" variant="subtitle1"> Welcome to our website. </Typography>
+                <Typography component="p" paragraph variant="subtitle2"> We sell Men, Women and Kids clothing, Household products, accessories etc. </Typography>
+                <Typography component="p" paragraph variant="subtitle2"> <strong> COD is available in Nagercoil and Trivandrum. </strong> </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+      </Grid>
+      </Box>
+  </>
 )};
 
 export default Header;

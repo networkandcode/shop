@@ -1,5 +1,6 @@
 import { useAuth } from '../hooks/useAuth';
 import {
+    Box,
     Button,
     Grid, 
     Card, 
@@ -7,7 +8,6 @@ import {
     CardActions,
     CardContent, 
     CardMedia,
-    Container,
     Dialog,
     FormControl,
     IconButton,
@@ -160,13 +160,13 @@ const Favorites = (props) => {
     const [ refresh, setRefresh ] = useState(false);
 
   return (
-    <Container mt={0}>
+    <Box p={2}>
     <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>
         {auth.items.map((item, idx) => (
           auth.favs.includes(item.id) && <EachItem key={idx} item={item}/>
         ))}
     </Grid>
-    </Container>
+    </Box>
   );
 };
 

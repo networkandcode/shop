@@ -25,7 +25,6 @@ import { Add,
     FavoriteBorder,
     KeyboardArrowUp,
     Remove,
-    ShoppingCart,
     WhatsApp
 } from '@material-ui/icons';
 import Link from 'next/link';
@@ -164,8 +163,6 @@ const EachItem = (props) => {
                     {' '}
                     <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://safamarwa.store, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp/></a>
                     {' '}
-                    <Link href="/cart"><a><ShoppingCart/></a></Link>
-                    {' '}
                     <a href="#"> <KeyboardArrowUp color="disabled"/> </a>
                   </Grid>
                 </Grid>
@@ -197,7 +194,7 @@ const items = (props) => {
   }, [auth, router]);
   return (
     <div>
-      <Typography gutterBottom style={{color: `#042F59`}} variant="h6">
+      <Typography gutterBottom style={{color: `dimgray`}} variant="h6">
           Items <small>({items.length})</small>
       </Typography>
       <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>

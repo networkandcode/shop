@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
     <AuthProvider>
      <Head/>
      <div>
-       <div style={{backgroundColor: `#042F59`, padding: `20px`}}>
+       <div>
           <Header id="#"/>
        </div>
        <div>

@@ -62,7 +62,7 @@ const EachCategory = (props) => {
 const Categories = ({categories}) => {
     return (
           <div>
-              <Typography gutterBottom style={{color: `#042F59`}} variant="h6">
+              <Typography gutterBottom style={{color: `dimgray`}} variant="h6">
                   Sub categories<small>({categories.length})</small>
               </Typography>
               <Grid container spacing={2}>

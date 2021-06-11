@@ -40,7 +40,7 @@ const Category = () => {
   }, [auth, router]);
   return (
     <div style={{ padding: `20px` }}>
-        <Typography gutterBottom style={{color: `#042F59`}} variant="h5">
+        <Typography gutterBottom style={{color: `dimgray`}} variant="h5">
             <Link href="/"><a> Home </a></Link>
             { category && category.split('/').map((i, idx) => (
                 <Link key={`/c?c=${i}`} href={`/c?c=${category.split('/').slice(0,idx+1).join('/')}`}>
