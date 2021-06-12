@@ -1,9 +1,12 @@
 import ItemImage from '../components/ItemImage';
 import { useAuth } from '../hooks/useAuth';
 import {
+    Box,
     Button,
     Container,
+    MenuItem,
     Paper,
+    Select,
     Table,
     TableBody,
     TableCell,
@@ -12,6 +15,7 @@ import {
     TableRow,
     Typography,
 }  from '@material-ui/core';
+import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -37,16 +41,16 @@ const Row = ({ cartItem }) => {
                 <br/>
                 { cartItem.name } { cartItem.description }
             </TableCell>
-            <TableCell><select onChange={handleChange} value={qty}>
-                  <option value={0}>0</option>
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                  <option value={4}>4</option>
-                  <option value={5}>5</option>
-            </select></TableCell>
+            <TableCell><Select onChange={handleChange} style={{ height: `20px` }} value={qty} variant="outlined">
+                  <MenuItem value={0}>0</MenuItem>
+                  <MenuItem value={1}>1</MenuItem>
+                  <MenuItem value={2}>2</MenuItem>
+                  <MenuItem value={3}>3</MenuItem>
+                  <MenuItem value={4}>4</MenuItem>
+                  <MenuItem value={5}>5</MenuItem>
+            </Select></TableCell>
             <TableCell> { cartItem.price } </TableCell>
-            <TableCell> { qty * cartItem.price } </TableCell>                              
+            <TableCell> { qty * cartItem.price } </TableCell>
         </TableRow>
     );
 };
@@ -54,10 +58,20 @@ const Row = ({ cartItem }) => {
 const Cart = () => {
     const auth = useAuth();
     const router = useRouter();
- 
+
+    const handlePay = async(e) => {
+        e.preventDefault();
+        const res = await axios.post("/api/stripe", auth.cartItems);
+        const { status, data } = res;
+        if(status === 200){
+            const sessionId = data.session.id;
+            router.push(`/checkout?sessionId=${sessionId}`);
+        }
+    }
+
     return (
             auth.totalPrice > 0 ?(
-        <div>
+        <Box mt={3}>
         <TableContainer component={ Paper } style={{ padding: `auto`, margin: `auto`, marginTop: `0`, maxWidth: `600px`}}>
             <Typography style={{ padding: `10px` }} variant="h6">
                 Please review your order.
@@ -85,22 +99,20 @@ const Cart = () => {
             </Container>
         </TableContainer>
         <br/>
-        <Container>
+        <Container style={{ textAlign: `center` }}>
             { auth.totalPrice > 0 && (
-            <Typography style={{ textAlign: `center` }} variant="subtitle1">
-            <Link href={`/checkout?p=${auth.totalPrice}`}>
-                <a>
-                    <Button color="primary" variant="outlined">
-                        Proceed to pay Rs. { auth.totalPrice }
+                <>
+                    <Button color="primary" onClick={handlePay} variant="outlined">
+                        <Typography variant="subtitle1">
+                            Proceed to pay Rs. { auth.totalPrice }
+                        </Typography>
                     </Button>
-                </a>
-            </Link>
-            <br/>
-            <small> Note: All price are in Indian Rupees. </small>
-            </Typography>
+                    <br/>
+                    <small> Note: All price are in Indian Rupees. </small>
+                </>
             )}
         </Container>
-        </div>
+        </Box>
             ): <Typography gutterBottom style={{ textAlign: `center`}} variant="h5"><br/>There are no items in your cart.</Typography>
     );
 };
