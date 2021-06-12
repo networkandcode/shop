@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 const EachCategory = (props) => {
     const auth = useAuth();
     const [ category, setCategory ] = useState(props.category);
+    const [ noOfItems, setNoOfItems ] = useState(0);
     const deleteCategory = async(id) => {
         await auth.deleteCategory(id)
         setCategory({})
@@ -17,10 +18,22 @@ const EachCategory = (props) => {
     const closeDialog = () => {
         setOpenDialog(false);
     };
+
+    useEffect(() => {
+        var temp = 0;
+        auth.items.forEach( i => {
+            console.log(category.name, i.category);
+            if (i.category.startsWith(category.name)){
+                temp = temp + 1;
+            }
+        });
+        setNoOfItems(temp)
+    },[auth]);
+
     return (
         <>
         {category && category.imgURL &&
-        <Grid item key={category.id} style={{backgroundColor: `white`}}  xs={6} sm={4}>
+        <Grid item key={category.id} style={{backgroundColor: `white`}}  xs={12} sm={3}>
         <Card>
               <CardActionArea>
                   <Link href={`/c?c=${category.name}`}>
@@ -35,12 +48,12 @@ const EachCategory = (props) => {
                       </a>
                   </Link>
                   <CardContent>
-                      <Grid container>
+                      <Grid container justify="space-between">
                           <Grid item>
                               <Link href={`/c?c=${category.name}`}>
                                   <a>
                                       <Typography gutterBottom variant="body1" component="p">
-                                          {category.name}
+                                          {category.name}({noOfItems})
                                       </Typography>
                                   </a>
                               </Link>

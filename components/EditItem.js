@@ -17,14 +17,14 @@ const EditItem = (props) => {
     }
 
     return(
-        <div>
-            <Edit onClick={editItem}/>
+        <>
+            <Edit color="disabled" onClick={editItem}/>
             <Dialog open={isDialogOpen} onClose={onDialogClose}>
                 <Close onClick={onDialogClose}/>
                 <ItemForm item={item}/>
                 <br/>
             </Dialog>
-        </div>
+        </>
     );
 }
 

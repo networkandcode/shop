@@ -3,11 +3,11 @@ import { db } from '../utils/firebase';
 import { useAuth } from '../hooks/useAuth';
 import {
     Button,
-    Grid, 
-    Card, 
-    CardActionArea, 
+    Grid,
+    Card,
+    CardActionArea,
     CardActions,
-    CardContent, 
+    CardContent,
     CardMedia,
     Container,
     Dialog,
@@ -106,54 +106,57 @@ const EachItem = (props) => {
     return(
       <>
         {item && item.imgURL && (
-          <Grid item key={item.id} xs={6} sm={4}>
+          <Grid item key={item.id} xs={12} sm={3}>
             <Card>
               <CardActionArea>
                 <ItemImage item={item}/>
               </CardActionArea>
               <CardContent>
-                    <Grid container justify="space-between">
-                        <Grid item xs={8}>
-                <Typography variant="body1">
-
-                            {item.name}  {' '}
-                </Typography>
-
-                        </Grid>
-                        <Grid item style={{ textAlign: `right` }} xs={4}>
-                            { fav ? <Favorite style={{color: `pink`}} onClick={handleFavorite}/> : <FavoriteBorder onClick={handleFavorite} style={{color: `pink`}}/> }
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Typography variant="body1">
+                                {item.name}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                                      { item.description }
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                                      { item.category.split('/').join(' >> ') }
+                            </Typography>
                         </Grid>
                     </Grid>
-                  <Grid container justify="space-between">
-                      <Grid item xs={8}>
-                <Typography variant="body2" color="textSecondary">
-
-                          { item.description }
-                </Typography>
-                      </Grid>
-                      <Grid item style={{ textAlign: `right` }} xs={4}>
+                    <br/>
+                    <Grid alignItems="center" container justify="space-between">
+                        <Grid item>
+                            <Typography>
+                                Rs. { item.price }
+                            </Typography>
+                        </Grid>
+                        <Grid item>
                           <FormControl>
-                            <select
+                            <Select
                               onChange={handleChange}
+                              style={{ height: `20px` }}
                               value={ qty }
+                              variant="outlined"
                             >
-                              <option value={0}>0</option>
-                              <option value={1}>1</option>
-                              <option value={2}>2</option>
-                              <option value={3}>3</option>
-                              <option value={4}>4</option>
-                              <option value={5}>5</option>
-                            </select>
+                              <MenuItem value={0}>0</MenuItem>
+                              <MenuItem value={1}>1</MenuItem>
+                              <MenuItem value={2}>2</MenuItem>
+                              <MenuItem value={3}>3</MenuItem>
+                              <MenuItem value={4}>4</MenuItem>
+                              <MenuItem value={5}>5</MenuItem>
+                            </Select>
                           </FormControl>
-                      </Grid>
-                  </Grid>
+                        </Grid>
+                        <Grid item>
+                          { fav ? <Favorite style={{color: `pink`}} onClick={handleFavorite}/> : <FavoriteBorder onClick={handleFavorite} style={{color: `pink`}}/> }
+                        </Grid>
+                    </Grid>
               </CardContent>
               <CardActions>
-                <Grid container justify="space-between">
-                  <Grid item>
-                      Rs.{item.price}
-                  </Grid>
-                  <Grid item>
+                <Grid container>
+                  <Grid item style={{textAlign: `right`}} xs={12}>
                     {auth.userAuthData && (
                         <>
                             <EditItem item={item}/>
@@ -161,7 +164,7 @@ const EachItem = (props) => {
                         </>
                     )}
                     {' '}
-                    <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://safamarwa.store, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp/></a>
+                    <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://safamarwa.store, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp color="disabled"/></a>
                     {' '}
                     <a href="#"> <KeyboardArrowUp color="disabled"/> </a>
                   </Grid>
@@ -185,13 +188,14 @@ const items = (props) => {
       if(c){
         var i = [];
         auth.items.map(item => {
-            if (item.category === c) {
+            if (item.category.startsWith(c)) {
                 i.push(item);
             }
         })
         setItems(i);
       }
   }, [auth, router]);
+
   return (
     <div>
       <Typography gutterBottom style={{color: `dimgray`}} variant="h6">

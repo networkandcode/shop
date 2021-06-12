@@ -25,7 +25,6 @@ const ItemForm = (props) => {
       error: ''
     })
     const [categories, setCategories] = useState([])
-    const [allCategories, setAllCategories] = useState([])
 
     const onChange = e => {
       const {name, value} = e.target;
@@ -35,7 +34,6 @@ const ItemForm = (props) => {
         message: '',
         error: ''
       });
-      console.log(item);
     }
     const onChgImg = (e) => {
         e.preventDefault();
@@ -64,25 +62,18 @@ const ItemForm = (props) => {
         setLoading(false);
         //setItem({});
     }
+
     useEffect(() => {
       if(!auth.userAuthData){
         router.push('/signin');
       } else{
-          setCategories(auth.categories);
+          var temp = [];
+          auth.categories.forEach(i => {
+              temp.push(i);
+          });
+          setCategories([...temp]);
       }
     },[auth, router]);
-    useEffect(() => {
-        var temp = [];
-        categories.forEach(i => {
-            temp.push(i.name);
-            if(i.categories){
-                i.categories.forEach(j => {
-                    temp.push(`${i.name}/${j.name}`)
-                });
-            }
-        });
-        setAllCategories([...temp]);
-    },[categories]);
 
     return (
         <Container maxWidth="xs">
@@ -131,8 +122,8 @@ const ItemForm = (props) => {
                 required
                 value={item.category || ''}
               >
-                {allCategories.map (category => (
-                    <MenuItem value={category}>{category.replace('/', ' >> ')}</MenuItem>
+                {categories.map (category => (
+                    <MenuItem key={category.id} value={category.name}>{category.name.replace('/', ' >> ')}</MenuItem>
                 ))}
               </Select>
             </FormControl>

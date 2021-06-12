@@ -98,18 +98,16 @@ const useAuthProvider = () => {
         if(imgURL){
             dbData = {...dbData, imgURL};
         }
-        console.log(dbData);
         if(id){
-            console.log(id);
             return await db
                 .collection('items')
                 .doc(id)
                 .set(dbData, {merge: true})
                 .then(() => {
-                    var temp = [];
-                    items.forEach(i => {
+                    var temp = [...items];
+                    temp.forEach((i, idx) => {
                         if(i.id === id){
-                            temp.push(i);
+                            temp[idx] = dbData;
                         }
                     });
                     setItems([...temp]);
@@ -147,35 +145,6 @@ const useAuthProvider = () => {
              .catch((error) => {
                 return { error };
              });
-        /*} else{
-            const { parentCategory, name} = item;
-            console.log(item);
-            var temp = [];
-            var id = '';
-            categories.forEach(i => {
-                if(i.name !== parentCategory){
-                    console.log(i);
-                    temp.push(i)
-                } else{
-                    id = i.id;
-                    console.log(i, id);
-                    i['categories']
-                        ? i['categories'].push({name, imgURL})
-                        : i['categories'] = [{name, imgURL}];
-                    temp.push(i);
-                }
-            });
-            console.log(temp);
-            return await db.collection('categories').doc(id).update({
-                categories: firebase.firestore.FieldValue.arrayUnion({name, imgURL})
-            }).then(() => {
-                setCategories([...temp]);
-                return 'Category added to database, and Image uploaded to storage';
-            })
-            .catch((error) => {
-                return { error };
-            });
-        }*/
     };
 
     const deleteItem = async(item) => {
