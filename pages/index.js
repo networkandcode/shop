@@ -21,7 +21,6 @@ const EachCategory = (props) => {
     useEffect(() => {
         var temp = 0;
         auth.items.forEach( i => {
-            console.log(category.name, i.category);
             if (i.category.startsWith(category.name)){
                 temp = temp + 1;
             }
