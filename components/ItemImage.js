@@ -17,7 +17,6 @@ import {
   Typography, 
 } from '@material-ui/core';
 import { Add, Close, DeleteForever, FavoriteBorder, KeyboardArrowUp, Remove, ShoppingCart, WhatsApp } from '@material-ui/icons';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -26,12 +25,12 @@ const ItemImage = ({item}) => {
   const [openDialog, setOpenDialog] = useState(false)
   return(
     <>
-      <Image
-        alt={item.slug}
-        height={80}
+      <img
+        alt={item.name}
+        height="80px"
         src={item.imgURL || "https://source.unsplash.com/weekly?water"}
         onClick={() => setOpenDialog(true)}
-        width={80}
+        width="80px"
       />
       <Dialog fullScreen onClose={() => {setOpenDialog(false)}} open={openDialog}>
           <Close onClick={() => { setOpenDialog(false) } }/>

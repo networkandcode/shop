@@ -34,7 +34,7 @@ const EachCategory = (props) => {
         <>
         {category && category.imgURL &&
         <Grid item key={category.id} style={{backgroundColor: `white`}}  xs={6} sm={3}>
-        <Card style={{ border: `0.1px solid dimgray`, borderRadius: `5px`, boxShadow: `2px 2px` }}>
+        <Card style={{ border: `0.1px solid dimgray`, borderRadius: `5px`, boxShadow: `2px 2px`, height: `230px` }}>
               <CardActionArea>
                   <div style={{ textAlign: `center` }}>
                     <Link href={`/c?c=${category.name}`}>
@@ -49,8 +49,8 @@ const EachCategory = (props) => {
                     </Link>
                   </div>
                   <CardContent>
-                      <Grid container justify="space-between">
-                          <Grid item>
+                      <Grid container>
+                          <Grid item sm={8} xs={12}>
                               <Link href={`/c?c=${category.name}`}>
                                   <a>
                                       <Typography gutterBottom variant="body1" component="p">
@@ -59,7 +59,7 @@ const EachCategory = (props) => {
                                   </a>
                               </Link>
                           </Grid>
-                          <Grid item>
+                          <Grid item sm={4} style={{ textAlign: `right` }} xs={12}>
                               {auth.userAuthData && (<DeleteForever color="disabled" onClick={() => deleteCategory(category.id)}/>)}
                               <a href="#"> <KeyboardArrowUp color="disabled"/> </a>
                           </Grid>

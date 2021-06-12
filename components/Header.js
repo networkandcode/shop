@@ -44,8 +44,9 @@ return (
           <a href="https://youtube.com/c/SafaMarwaNihal" target="_blank"><YouTube /></a>
           {' '}
           <Link href="/f"><a><Favorite  onClick={()=>{handleLinks('favorites')}} style={{backgroundColor:`${linkColor['favorites'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
-          {' '}
+          <small> { auth.favs.length > 0 && auth.favs.length } </small>
           <Link href="/cart"><a><ShoppingCart  onClick={()=>{handleLinks('cart')}} style={{backgroundColor: `${linkColor['cart'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
+          <small> { auth.totalPrice > 0 && `Rs. ${auth.totalPrice}` } </small>
         {auth.userAuthData &&(
               <PowerSettingsNew  onClick={() => auth.signOut()}/>
         )}

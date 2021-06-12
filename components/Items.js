@@ -100,7 +100,7 @@ const EachItem = (props) => {
       <>
         {item && item.imgURL && (
           <Grid item key={item.id} xs={6} sm={3}>
-            <Card style={{ border: `0.1px solid dimgray`, borderRadius: `5px`, boxShadow: `2px 2px` }}>
+            <Card style={{ border: `0.1px solid dimgray`, borderRadius: `5px`, boxShadow: `2px 2px`, height: `350px` }}>
               <CardActionArea>
                 <div style={{ textAlign: `center` }}>
                   <ItemImage item={item}/>
@@ -144,9 +144,6 @@ const EachItem = (props) => {
                             </Select>
                           </FormControl>
                         </Grid>
-                        <Grid item>
-                          { fav ? <Favorite style={{color: `pink`}} onClick={handleFavorite}/> : <FavoriteBorder onClick={handleFavorite} style={{color: `pink`}}/> }
-                        </Grid>
                     </Grid>
               </CardContent>
               <CardActions>
@@ -158,9 +155,8 @@ const EachItem = (props) => {
                             <DeleteForever color="disabled" onClick={() => deleteItem(item)}/>
                         </>
                     )}
-                    {' '}
+                    { fav ? <Favorite style={{color: `pink`}} onClick={handleFavorite}/> : <FavoriteBorder onClick={handleFavorite} style={{color: `pink`}}/> }
                     <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://safamarwa.store, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp color="disabled"/></a>
-                    {' '}
                     <a href="#"> <KeyboardArrowUp color="disabled"/> </a>
                   </Grid>
                 </Grid>

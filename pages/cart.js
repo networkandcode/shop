@@ -75,10 +75,11 @@ const Cart = () => {
         <TableContainer component={ Paper } style={{ padding: `auto`, margin: `auto`, marginTop: `0`, maxWidth: `600px`}}>
             <Typography style={{ padding: `10px` }} variant="h6">
                 Please review your order.
+                <br/>
+                <small>
+                    Note: The item will be removed from the cart if the quantity is set to 0.
+                </small>
             </Typography>
-            <small style={{ padding: `10px` }}>
-                Note: The item will be removed from the cart if the quantity is set to 0.
-            </small>
             <Container>
                 <Table>
                     <TableHead>
