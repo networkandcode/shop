@@ -34,14 +34,14 @@ const ItemImage = ({item}) => {
   const [openDialog, setOpenDialog] = useState(false)
   return(
     <>
-      <CardMedia
-        component="img"
-        alt={item.slug}
-        height="150"
-        image={item.imgURL || "https://source.unsplash.com/weekly?water"}
-        onClick={() => setOpenDialog(true)}
-        title={item.name}
-      />
+      <div style={{ textAlign: `center` }}>
+        <img
+          alt={item.name}
+          style={{ maxHeight: `150px` }}
+          src={item.imgURL || "https://source.unsplash.com/weekly?water"}
+          onClick={() => setOpenDialog(true)}
+        />
+      </div>
       <Dialog fullScreen onClose={() => {setOpenDialog(false)}} open={openDialog}>
           <Close onClick={() => { setOpenDialog(false) } }/>
           <img
@@ -92,7 +92,7 @@ const EachItem = (props) => {
       <>
         {fav && item && item.imgURL && (
           <Grid item key={item.id} xs={6} sm={4}>
-            <Card>
+            <Card style={{ border: `0.1px solid dimgray` }}>
               <CardActionArea>
                 <ItemImage item={item}/>
               </CardActionArea>

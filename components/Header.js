@@ -33,21 +33,21 @@ return (
       <AppBar style={{backgroundColor: `dimgray`, padding: `0.5px`}}>
       <Grid container spacing={2} >
         <Grid item style={{ color: `white`, textAlign: `right` }} xs={12}>
-          <Link href="/"><a><Home fontSize="large" onClick={() => {handleLinks('home')}}
+          <Link href="/"><a><Home onClick={() => {handleLinks('home')}}
             style={{backgroundColor: `${linkColor['home'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
           {' '}
           <a href="https://api.whatsapp.com/send?phone=919500542709" target="_blank">
-            <WhatsApp fontSize="large"
+            <WhatsApp
             />
           </a>
           {' '}
-          <a href="https://youtube.com/c/SafaMarwaNihal" target="_blank"><YouTube fontSize="large"/></a>
+          <a href="https://youtube.com/c/SafaMarwaNihal" target="_blank"><YouTube /></a>
           {' '}
-          <Link href="/f"><a><Favorite fontSize="large" onClick={()=>{handleLinks('favorites')}} style={{backgroundColor:`${linkColor['favorites'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
+          <Link href="/f"><a><Favorite  onClick={()=>{handleLinks('favorites')}} style={{backgroundColor:`${linkColor['favorites'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
           {' '}
-          <Link href="/cart"><a><ShoppingCart fontSize="large" onClick={()=>{handleLinks('cart')}} style={{backgroundColor: `${linkColor['cart'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
+          <Link href="/cart"><a><ShoppingCart  onClick={()=>{handleLinks('cart')}} style={{backgroundColor: `${linkColor['cart'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
         {auth.userAuthData &&(
-              <PowerSettingsNew fontSize="large" onClick={() => auth.signOut()}/>
+              <PowerSettingsNew  onClick={() => auth.signOut()}/>
         )}
         </Grid>
       </Grid>
@@ -60,13 +60,13 @@ return (
                 <CardMedia
                   component="img"
                   alt="shopping"
-                  height="250"
+                  height="150"
                   image="https://source.unsplash.com/featured/?shopping"
                   title="shopping"
                 />
               </CardActionArea>
               <CardContent style={{background: `dimgray`, color: `white`}}>
-                <Typography style={{ fontFamily: `Monospace`  }} variant="h3" component="h1"> Safa Marwa </Typography>
+                <Typography style={{ fontFamily: `Monospace`, textShadow: `1px 1px`  }} variant="h3" component="h1"> Safa Marwa </Typography>
                 <Typography component="p" variant="subtitle1"> Welcome to our website. </Typography>
                 <Typography component="p" paragraph variant="subtitle2"> We sell Men, Women and Kids clothing, Household products, accessories etc. </Typography>
                 <Typography component="p" paragraph variant="subtitle2"> <strong> COD is available in Nagercoil and Trivandrum. </strong> </Typography>

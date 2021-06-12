@@ -33,20 +33,21 @@ const EachCategory = (props) => {
     return (
         <>
         {category && category.imgURL &&
-        <Grid item key={category.id} style={{backgroundColor: `white`}}  xs={12} sm={3}>
-        <Card>
+        <Grid item key={category.id} style={{backgroundColor: `white`}}  xs={6} sm={3}>
+        <Card style={{ border: `0.1px solid dimgray`, borderRadius: `5px`, boxShadow: `2px 2px` }}>
               <CardActionArea>
-                  <Link href={`/c?c=${category.name}`}>
-                      <a>
-                          <CardMedia
-                              component="img"
-                              alt={category.name}
-                              height="150"
-                              image={category.imgURL || "https://source.unsplash.com/weekly?water"}
-                              title={category.name}
-                          />
-                      </a>
-                  </Link>
+                  <div style={{ textAlign: `center` }}>
+                    <Link href={`/c?c=${category.name}`}>
+                        <a>
+                            <img
+                                component="img"
+                                alt={category.name}
+                                style={{ maxHeight: `150px` }}
+                                src={category.imgURL || "https://source.unsplash.com/weekly?water"}
+                            />
+                        </a>
+                    </Link>
+                  </div>
                   <CardContent>
                       <Grid container justify="space-between">
                           <Grid item>

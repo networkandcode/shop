@@ -29,7 +29,7 @@ const CheckoutPage = ({ session }) => {
             <form style={{textAlign: `center`}}  onSubmit={ handleSubmit }>
                     <Button color="primary" justifyContent="center" style={{ maxWidth: `500px` }} type="submit" variant="outlined">
                       <Typography gutterBottom variant="h5">
-                          Pay now
+                          Proceed to payment gateway
                       </Typography>
                     </Button>
             </form>
@@ -40,7 +40,6 @@ const CheckoutPage = ({ session }) => {
 export const getServerSideProps = async ctx => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
     line_items: [
       {
         price_data: {
@@ -53,6 +52,10 @@ export const getServerSideProps = async ctx => {
         quantity: 1,
       },
     ],
+    payment_method_types: ['card'],
+    shipping_address_collection: {
+      allowed_countries: ['IN']
+    },
     mode: 'payment',
     success_url: process.env.STRIPE_SUCCESS_URL + "?session_id={CHECKOUT_SESSION_ID}",
     cancel_url: process.env.STRIPE_CANCEL_URL
