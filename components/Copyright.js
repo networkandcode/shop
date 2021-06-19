@@ -6,11 +6,11 @@ const Copyright = () => (
         {'Copyright © '}
         <Link href="/">
             <a>
-                www.safamarwa.store
-            </a>            
+                { process.env.NEXT_PUBLIC_MY_DOMAIN }
+            </a>
         </Link>
         {' '}
-        2020 - 
+        2020 -
         {' '}
         {new Date().getFullYear()}
         {'.'}

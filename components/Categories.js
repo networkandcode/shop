@@ -32,8 +32,8 @@ const EachCategory = (props) => {
     return (
         <>
         {category && category.imgURL &&
-        <Grid item key={category.id} style={{backgroundColor: `white`}}  xs={6} sm={3}>
-        <Card style={{ border: `0.1px solid dimgray`, borderRadius: `5px`, boxShadow: `2px 2px`, height: `230px` }}>
+        <Grid item key={category.id} style={{backgroundColor: `${process.env.NEXT_PUBLIC_THEME_COLOR_SEC}`}}  xs={6} sm={3}>
+        <Card style={{ border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR }`, borderRadius: `5px`, boxShadow: `2px 2px`, height: `230px` }}>
               <CardActionArea>
                   <div style={{ textAlign: `center` }}>
                     <Link href={`/c?c=${category.name}`}>
@@ -75,7 +75,7 @@ const EachCategory = (props) => {
 const Categories = ({categories}) => {
     return (
           <div>
-              <Typography gutterBottom style={{color: `dimgray`}} variant="h6">
+              <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
                   Sub categories<small>({categories.length})</small>
               </Typography>
               <Grid container spacing={2}>

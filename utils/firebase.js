@@ -5,23 +5,24 @@ import 'firebase/storage';
 
 if (!firebase.apps.length) {
   try {
-    firebase.initializeApp({        
-      apiKey: "AIzaSyCPs4hjuEiD8viikfaB94E6Pt0ugfwF5n8",
-      authDomain: "safamarwa-b7ce7.firebaseapp.com",
-      projectId: "safamarwa-b7ce7",
-      storageBucket: "safamarwa-b7ce7.appspot.com",
-      messagingSenderId: "1062178643192",
-      appId: "1:1062178643192:web:94c1e052b759a9f57d6f0d",
-      measurementId: "G-R7HTCNTNBY"
-    });
+    var firebaseConfig = {
+        apiKey: "AIzaSyArdLoByBNulFarJU73Sz3zLP4l7LT7oWM",
+        authDomain: "benuccimilano-eec7d.firebaseapp.com",
+        projectId: "benuccimilano-eec7d",
+        storageBucket: "benuccimilano-eec7d.appspot.com",
+        messagingSenderId: "244987086556",
+        appId: "1:244987086556:web:46703cac12c34fd7de5619",
+        measurementId: "G-WNDVX58ZQM"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
   } catch (error) {
-    console.log('Firebase admin initialization error', error.stack);
+    console.log('Firebase initialization error', error.stack);
   }
 }
 const app = firebase.app();
 const auth = firebase.auth();
-const db = firebase.firestore();
 const storage = firebase.storage();
 const now = firebase.firestore.Timestamp.now();
-export { app, auth, db, storage, now };
+export { app, auth, storage, now };
 console.log(app.name ? 'Firebase Mode Activated!' : 'Firebase not working :(');

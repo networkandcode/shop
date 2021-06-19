@@ -92,7 +92,7 @@ const EachItem = (props) => {
       <>
         {fav && item && item.imgURL && (
           <Grid item key={item.id} xs={6} sm={4}>
-            <Card style={{ border: `0.1px solid dimgray` }}>
+            <Card style={{ border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR }` }}>
               <CardActionArea>
                 <ItemImage item={item}/>
               </CardActionArea>
@@ -138,7 +138,7 @@ const EachItem = (props) => {
                   <Grid item style={{ textAlign: `right`, float: `right` }}>
                     {auth.userAuthData && (<DeleteForever onClick={() => deleteItem(item)}/>)}                    
                     {' '}
-                    <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://safamarwa.store, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp/></a>
+                    <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://${process.env.NEXT_MY_DOMAIN}, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp/></a>
                     {' '}
                     <Link href="/cart"><a><ShoppingCart/></a></Link>
                     {' '}
@@ -161,7 +161,7 @@ const Favorites = (props) => {
 
   return (
     <Box p={2}>
-    <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>
+    <Grid container spacing={2}>
         {auth.items.map((item, idx) => (
           auth.favs.includes(item.id) && <EachItem key={idx} item={item}/>
         ))}

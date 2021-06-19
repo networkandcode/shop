@@ -39,6 +39,7 @@ const ItemForm = (props) => {
         e.preventDefault();
         setItem({...item, imgFile: e.target.files[0]});
     }
+
     const onSubmit = async(e) => {
         e.preventDefault();
         // clear status and show waiting
@@ -53,14 +54,21 @@ const ItemForm = (props) => {
         }
         addItemToDB(imgURL);
     }
+
     const addItemToDB = async(imgURL) => {
-        await auth.addItem(item, imgURL).then(response => {
-            response.error
-              ? setStatus({...status, ['error']: response.error.message})
-              : setStatus({...status, ['message']: response});
-        })
+        if (imgURL){
+            const record = {...item, imgURL};
+            await axios.post("/api/db", { operation: 'insert', record, table: 'items' })
+                .then(result => {
+                    if(result.data.error){
+                        setStatus({ ...status, ['error']: result.data.error });
+                    } else{
+                        setStatus({ ...status, ['message']: result.data.message });
+                        auth.addItem(record);
+                    }
+                });
+        }
         setLoading(false);
-        //setItem({});
     }
 
     useEffect(() => {

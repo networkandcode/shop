@@ -11,8 +11,8 @@ const Head = () => (
                 content="width=device-width, initial-scale=1.0"
             />
             <meta httpEquiv="x-ua-compatible" content="ie=edge" />
-            <meta property="og:image" content="/safamarwa.jpeg"/>
-            <title>Safa Marwa. Welcome to our website. We sell Men, Women and Kids clothing, Household products, accessories etc.</title>
+            <meta property="og:image" content="/ogimage.jpeg"/>
+            <title>{ process.env.NEXT_PUBLIC_HTML_TITLE }</title>
         </NextHead>
     </>
 )

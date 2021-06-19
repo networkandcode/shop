@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import axios from 'axios';
 import {
     useEffect,
     useState,
@@ -6,12 +6,23 @@ import {
     createContext,
     React
 } from 'react';
-import { auth, db, storage } from '../utils/firebase';
+import dbDelete from '../utils/dbDelete';
+import dbFetch from '../utils/dbFetch';
+import { auth, storage } from '../utils/firebase';
+import firebase from 'firebase';
+
+const hdbCredential = {
+    password: process.env.NEXT_PUBLIC_HDB_PASSWORD,
+    schema: process.env.NEXT_PUBLIC_HDB_SCHEMA,
+    url: process.env.NEXT_PUBLIC_HDB_URL,
+    username: process.env.NEXT_PUBLIC_HDB_USERNAME
+}
+const { password, schema, url, username } = hdbCredential;
 
 const authContext = createContext({ userAuthData: {} });
 const { Provider } = authContext;
 export const AuthProvider = ({children}) => {
-    const auth = useAuthProvider();    
+    const auth = useAuthProvider();
     return <Provider value={auth}>{children}</Provider>;
 }
 export const useAuth = () => {
@@ -81,7 +92,7 @@ const useAuthProvider = () => {
     const signIn = async({ email, password }) => {
         return await auth
             .signInWithEmailAndPassword(email, password)
-            .then((response) => {                
+            .then((response) => {
                 setUserAuthData({...userAuthData, ...response.user});
                 return response.user;
             })
@@ -89,99 +100,88 @@ const useAuthProvider = () => {
                 return { error };
             });
     };
+
     const signOut = async() => {
         return auth.signOut().then(() => setUserAuthData({}));
     };
-    const addItem = async(item, imgURL) => {
-        const { id, category, description, name, price } = item
-        var dbData = { name, description: description || '', category, price}
-        if(imgURL){
-            dbData = {...dbData, imgURL};
-        }
+
+    const addItem = async(record) => {
+        const { id } = record;
         if(id){
-            return await db
-                .collection('items')
-                .doc(id)
-                .set(dbData, {merge: true})
-                .then(() => {
-                    var temp = [...items];
-                    temp.forEach((i, idx) => {
-                        if(i.id === id){
-                            temp[idx] = dbData;
-                        }
-                    });
-                    setItems([...temp]);
-                    return 'Item saved to database';
-                 }).catch((error) => {
-                    return { error };
-                 });
+            var temp = [...items];
+            temp.forEach((i, idx) => {
+                if(i.id === id){
+                    temp[idx] = record;
+                }
+            });
+            setItems([...temp]);
         } else{
-            return await db
-                .collection('items')
-                .add(dbData)
-                .then(() => {
-                    setItems([...items, item]);
-                    return 'Item added to database, and Image uploaded to storage';
-                })
-                .catch((error) => {
-                    return { error };
-                });
+            setItems([...items, record]);
         }
-    };
-    const addCategory = async(item, imgURL) => {
-        //if(!item.parentCategory){
-            var { name, parentCategory } = item;
-            if(parentCategory){
-                name = parentCategory + '/' + name;
-            }
-            const dbData = { name, imgURL }
-            return await db
-             .collection('categories')
-             .add(dbData)
-             .then(() => {
-                setCategories([...categories, dbData])
-                return 'Category added to database, and Image uploaded to storage';
-             })
-             .catch((error) => {
-                return { error };
-             });
     };
 
-    const deleteItem = async(item) => {
-        db.collection("items").doc(item.id).delete().then(() => {
-            setItems(prevState => {
-                var copyItems = [...prevState];
-                copyItems.map( (i, idx) => {
-                    if(i.name === item.name){
-                        copyItems.splice(idx, 1);
-                    }
-                })
-                return copyItems;
-            });
-            return 'Item deleted from database';
-        }).catch((error) => {
-           return { error };
-        });
-    }
+    const addCategory = async(record) => {
+        setCategories([...categories, data]);
+    };
+
     const deleteCategory = async(id) => {
-        db.collection("categories").doc(id).delete().then(() => {
-            return 'Category deleted from database';
-        }).catch((error) => {
-           return { error };
-        });
+        await dbDelete(id, 'categories')
+            .then(result => {
+                if(!result.error) {
+                    var temp = [];
+                    categories.forEach(i => {
+                        if(i.id !== id) {
+                            temp.push(i);
+                        }
+                    });
+                    setCategories(temp);
+                }
+                return result;
+            }).catch(error => {
+                return error;
+            });
     }
+
+    const deleteItem = async(id) => {
+        var temp = [];
+        items.forEach(i => {
+            if(i.id !== id) {
+                temp.push(i);
+            }
+        });
+        setItems(temp);
+    }
+
     const handleAuthStateChanged = (user) => {
         setUserAuthData(user);
     };
+
+
+    const fetchCategories = async() => {
+        return await dbFetch('categories')
+            .then(result => {
+                if(!result.error) {
+                    setCategories(result);
+                }
+            })
+            .catch( error => console.log(error) );
+    }
+
+    const fetchItems = async() => {
+        return await dbFetch('items')
+            .then(result => {
+                if(!result.error) {
+                    setItems(result);
+                }
+            })
+            .catch( error => console.log(error) );
+    }
+
     useEffect(() => {
-        const fetchCategories = async() => {
-            const categoriesCollection = await db.collection("categories").orderBy("name").get()
-            setCategories( categoriesCollection.docs.map(doc => ({...doc.data(), id: doc.id})) )
-            const itemsCollection = await db.collection("items").orderBy("name").get()
-            setItems( itemsCollection.docs.map(doc => ({...doc.data(), id: doc.id})) )
-        }
-        fetchCategories()
+        fetchCategories();
+        fetchItems();
     },[]);
+
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(handleAuthStateChanged);
         return () => unsub();

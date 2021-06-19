@@ -1,3 +1,6 @@
+import Status from '../components/Status';
+import { useAuth } from '../hooks/useAuth';
+import { db } from '../utils/firebase';
 import {
     Button,
     Container,
@@ -7,13 +10,11 @@ import {
     Select,
     TextField
 } from '@material-ui/core';
+import axios from 'axios';
 import firebase from 'firebase';
 import 'firebase/storage';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Status from '../components/Status';
-import { useAuth } from '../hooks/useAuth';
-import { db } from '../utils/firebase';
 
 const Add = () => {
     const router = useRouter();
@@ -55,13 +56,24 @@ const Add = () => {
         console.log(imgURL);
         addCategoryToDB(imgURL);
     }
+
     const addCategoryToDB = async(imgURL) => {
         if (imgURL){
-          await auth.addCategory(item, imgURL).then(response => {
-              response.error
-                ? setStatus({...status, ['error']: response.error.message})
-                : setStatus({...status, ['message']: response});
-          })
+            var { name, parentCategory } = item;
+            if ( parentCategory ) {
+                name = parentCategory + '/' + name;
+            }
+            const record = {name, imgURL};
+
+            await axios.post("/api/db", { operation: 'insert', record, table: 'categories' })
+                .then(result => {
+                    if(result.data.error){
+                        setStatus({ ...status, ['error']: result.data.error });
+                    } else{
+                        setStatus({ ...status, ['message']: result.data.message });
+                        auth.addCategory(record);
+                    }
+                });
         }
         setLoading(false);
         setItem({});
@@ -96,7 +108,7 @@ const Add = () => {
               variant="outlined"
               fullWidth
             />
-            <FormControl fullWidth margin="normal" required>
+            <FormControl fullWidth margin="normal">
               <InputLabel id="categoryLabel">Parent category</InputLabel>
               <Select
                 id="categorySelect"
@@ -106,7 +118,9 @@ const Add = () => {
                 value={item.parentCategory || ''}
               >
                 {categories.map (category => (
-                    <MenuItem value={category.name}>{category.name}</MenuItem>
+                    <MenuItem key={category.id} value={category.name}>
+                        {category.name.split('/').join(' >> ')}
+                    </MenuItem>
                 ))}
               </Select>
             </FormControl>

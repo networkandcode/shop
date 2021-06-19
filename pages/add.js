@@ -7,6 +7,7 @@ import {
     Select,  
     TextField
 } from '@material-ui/core';
+import axios from 'axios';
 import firebase from 'firebase';
 import 'firebase/storage';
 import { useRouter } from 'next/router';
@@ -25,7 +26,6 @@ const Add = () => {
       error: ''
     })
     const [categories, setCategories] = useState([])
-    const [allCategories, setAllCategories] = useState([])
 
     const onChange = e => {
       const {name, value} = e.target;
@@ -54,11 +54,16 @@ const Add = () => {
     }
     const addItemToDB = async(imgURL) => {
         if (imgURL){
-          await auth.addItem(item, imgURL).then(response => {
-              response.error
-                ? setStatus({...status, ['error']: response.error.message})
-                : setStatus({...status, ['message']: response});
-          })
+            const record = {...item, imgURL};
+            await axios.post("/api/db", { operation: 'insert', record, table: 'items' })
+                .then(result => {
+                  if(result.data.error){
+                        setStatus({ ...status, ['error']: result.data.error });
+                    } else{
+                        setStatus({ ...status, ['message']: result.data.message });
+                        auth.addItem(record);
+                    }
+                });
         }
         setLoading(false);
         setItem({});
@@ -67,12 +72,8 @@ const Add = () => {
       if(!auth.userAuthData){
         router.push('/signin');
       } else{
-          setCategories(auth.categories);
-      }
-    },[auth, router]);
-    useEffect(() => {
         var temp = [];
-        categories.forEach(i => {
+        auth.categories.forEach(i => {
             temp.push(i.name);
             if(i.categories){
                 i.categories.forEach(j => {
@@ -80,8 +81,9 @@ const Add = () => {
                 });
             }
         });
-        setAllCategories([...temp]);
-    },[categories]);
+        setCategories([...temp]);
+      }
+    },[auth, router]);
 
     return (
         <Container maxWidth="xs">
@@ -98,7 +100,7 @@ const Add = () => {
               name="name"
               onChange={onChange}
               placeholder="Name of the Item"  
-              required      
+              required
               value={item.name || ''}
               variant="outlined"
               fullWidth
@@ -130,7 +132,7 @@ const Add = () => {
                 required
                 value={item.category || ''}
               >
-                {allCategories.map (category => (
+                {categories.map (category => (
                     <MenuItem value={category}>{category.replace('/', ' >> ')}</MenuItem>
                 ))}
               </Select>

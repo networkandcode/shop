@@ -55,16 +55,23 @@ const EachItem = (props) => {
     const [ qty, setQty ] = useState(0);
     const [ fav, setFav ] = useState(false);
 
-    const deleteItem = async(item) => {
-        await auth.deleteItem(item).then((resp) => {
-            setItem({});
-        });
+    const deleteItem = async() => {
+            await axios.post("/api/db", { operation: 'delete', record: item, table: 'items' })
+                .then(result => {
+                  if(result.data.error){
+                        setStatus({ ...status, ['error']: result.data.error });
+                    } else{
+                        setStatus({ ...status, ['message']: result.data.message });
+                        auth.deleteItem(item.id);
+                        setItem({});
+                    }
+                });
     };
     const handleChange = e => {
         e.preventDefault();
-        const { id } = item;    
+        const { id } = item;
         localStorage.setItem(id, e.target.value);
-        setQty(e.target.value);        
+        setQty(e.target.value);
         auth.updateCartItems();
     };
     const handleFavorite = e => {
@@ -100,7 +107,7 @@ const EachItem = (props) => {
       <>
         {item && item.imgURL && (
           <Grid item key={item.id} xs={6} sm={3}>
-            <Card style={{ border: `0.1px solid dimgray`, borderRadius: `5px`, boxShadow: `2px 2px`, height: `350px` }}>
+            <Card style={{ border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR }`, borderRadius: `5px`, boxShadow: `2px 2px`, height: `350px` }}>
               <CardActionArea>
                 <div style={{ textAlign: `center` }}>
                   <ItemImage item={item}/>
@@ -152,11 +159,11 @@ const EachItem = (props) => {
                     {auth.userAuthData && (
                         <>
                             <EditItem item={item}/>
-                            <DeleteForever color="disabled" onClick={() => deleteItem(item)}/>
+                            <DeleteForever color="disabled" onClick={deleteItem}/>
                         </>
                     )}
                     { fav ? <Favorite style={{color: `pink`}} onClick={handleFavorite}/> : <FavoriteBorder onClick={handleFavorite} style={{color: `pink`}}/> }
-                    <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://safamarwa.store, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp color="disabled"/></a>
+                    <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://${process.env.NEXT_PUBLIC_MY_DOMAIN}, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp color="disabled"/></a>
                     <a href="#"> <KeyboardArrowUp color="disabled"/> </a>
                   </Grid>
                 </Grid>
@@ -189,7 +196,7 @@ const items = (props) => {
 
   return (
     <div>
-      <Typography gutterBottom style={{color: `dimgray`}} variant="h6">
+      <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
           Items <small>({items.length})</small>
       </Typography>
       <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>

@@ -31,8 +31,8 @@ const EachCategory = (props) => {
     return (
         <>
         {category && category.imgURL && (noOfItems > 0) &&
-        <Grid item key={category.id} style={{backgroundColor: `white`}}  xs={6} sm={3}>
-        <Card style={{ border: `0.1px solid dimgray`, borderRadius: `5px`, boxShadow: `2px 2px`, height: `250px` }}>
+        <Grid item key={category.id} style={{backgroundColor: `${process.env.NEXT_PUBLIC_THEME_COLOR_SEC}`}}  xs={6} sm={3}>
+        <Card style={{ border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR }`, borderRadius: `5px`, boxShadow: `2px 2px`, height: `250px` }}>
               <CardActionArea>
                   <div style={{ textAlign: `center` }}>
                     <Link href={`/c?c=${category.name}`}>
@@ -71,19 +71,23 @@ const EachCategory = (props) => {
 }
 
 const Categories = () => {
+
     const auth = useAuth();
     const router = useRouter();
     const [ categories, setCategories ] = useState([]);
+
     useEffect(() => {
         const {sub} = router.query;
         var temp = [];
         auth.categories.forEach(i => {
             if(!i.name.includes('/')){
+            console.log(i);
                 temp.push(i);
             }
         });
         setCategories(temp);
     },[auth, router])
+
     return (
         <Grid container spacing={2} style={{padding: `10px`}}>
             {categories.map((category, idx) => (
@@ -91,6 +95,7 @@ const Categories = () => {
             ))}
         </Grid>
     )
+
 }
 
 export default Categories

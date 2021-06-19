@@ -38,9 +38,10 @@ const Category = () => {
         setCategories([...temp]);
       }
   }, [auth, router]);
+
   return (
     <div style={{ padding: `20px` }}>
-        <Typography gutterBottom style={{color: `dimgray`}} variant="h5">
+        <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
             <Link href="/"><a> Home </a></Link>
             { category && category.split('/').map((i, idx) => (
                 <Link key={`/c?c=${i}`} href={`/c?c=${category.split('/').slice(0,idx+1).join('/')}`}>
