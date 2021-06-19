@@ -1,16 +1,28 @@
-import { password, schema, url, username } from '../../utils/dbCredentials';
 import axios from 'axios';
 
 const db = async(req, res) => {
+    const username = process.env.HDB_USERNAME;
+    const password = process.env.HDB_PASSWORD;
+
+    const url = process.env.NEXT_PUBLIC_HDB_URL;
+    const schema = process.env.NEXT_PUBLIC_HDB_SCHEMA;
 
     const { operation, record, table } = req.body;
     const headers = { 'Content-Type': 'application/json' };
-    const data = JSON.stringify({
+
+    var dataObject = {
         operation,
         schema,
-        table,
-        "records": [ record ]
-    });
+        table
+    };
+
+    if(operation === 'delete'){
+        dataObject = { ...dataObject, hash_values: [ record.id ] }
+    } else{
+        dataObject = { ...dataObject, records: [ record ] }
+    }
+
+    const data = JSON.stringify(dataObject);
 
     const config = {
         auth: {
@@ -27,8 +39,6 @@ const db = async(req, res) => {
         .then(response => {
             if(response.status === 200){
                 res.status(200).json({ message: response.data.message });
-            /*} else{
-                res.status(response.status).json({ error: response.data.message });*/
             }
         })
         .catch(error => {

@@ -1,6 +1,9 @@
-import { password, schema, url, username } from './dbCredentials.js';
-
 const dbFetch = async(table) => {
+    const password = process.env.NEXT_PUBLIC_HDB_PASSWORD;
+    const schema = process.env.NEXT_PUBLIC_HDB_SCHEMA;
+    const url = process.env.NEXT_PUBLIC_HDB_URL;
+    const username = process.env.NEXT_PUBLIC_HDB_USERNAME;
+
     var myHeaders = new Headers({
         "Authorization": `Basic ${window.btoa(`${username}:${password}`)}`
     });

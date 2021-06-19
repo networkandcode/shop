@@ -10,10 +10,20 @@ const EachCategory = (props) => {
     const auth = useAuth();
     const [ category, setCategory ] = useState(props.category);
     const [ noOfItems, setNoOfItems ] = useState(0);
+
     const deleteCategory = async(id) => {
-        await auth.deleteCategory(id)
-        setCategory({})
+        await axios.post("/api/db", { operation: 'delete', record: category, table: 'categories' })
+            .then(result => {
+              if(result.data.error){
+                    setStatus({ ...status, ['error']: result.data.error });
+                } else{
+                    setStatus({ ...status, ['message']: result.data.message });
+                    auth.deleteCategory(id);
+                    setCategory({});
+                }
+            });
     };
+
     const [ openDialog, setOpenDialog ] = useState(false)
     const closeDialog = () => {
         setOpenDialog(false);

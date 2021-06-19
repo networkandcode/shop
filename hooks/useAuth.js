@@ -121,25 +121,17 @@ const useAuthProvider = () => {
     };
 
     const addCategory = async(record) => {
-        setCategories([...categories, data]);
+        setCategories([...categories, record]);
     };
 
     const deleteCategory = async(id) => {
-        await dbDelete(id, 'categories')
-            .then(result => {
-                if(!result.error) {
-                    var temp = [];
-                    categories.forEach(i => {
-                        if(i.id !== id) {
-                            temp.push(i);
-                        }
-                    });
-                    setCategories(temp);
-                }
-                return result;
-            }).catch(error => {
-                return error;
-            });
+        var temp = [];
+        categories.forEach(i => {
+            if(i.id !== id) {
+                temp.push(i);
+            }
+        });
+        setCategories(temp);
     }
 
     const deleteItem = async(id) => {

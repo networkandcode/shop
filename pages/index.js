@@ -1,6 +1,7 @@
 import { useAuth } from '../hooks/useAuth'
 import { Card, CardActionArea, CardContent, CardMedia, Container, Dialog, Grid, Typography } from '@material-ui/core'
 import { Close, DeleteForever, KeyboardArrowUp } from '@material-ui/icons'
+import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -9,10 +10,19 @@ const EachCategory = (props) => {
     const auth = useAuth();
     const [ category, setCategory ] = useState(props.category);
     const [ noOfItems, setNoOfItems ] = useState(0);
+
     const deleteCategory = async(id) => {
-        await auth.deleteCategory(id)
-        setCategory({})
+        await axios.post(
+            "/api/db",
+            { operation: 'delete', record: category, table: 'categories' }
+        ).then(result => {
+            if(!result.data.error){
+                auth.deleteCategory(id);
+                setCategory({});
+            }
+        });
     };
+
     const [ openDialog, setOpenDialog ] = useState(false)
     const closeDialog = () => {
         setOpenDialog(false);
@@ -20,7 +30,7 @@ const EachCategory = (props) => {
 
     useEffect(() => {
         var temp = 0;
-        auth.items.forEach( i => {
+        auth.items.length > 0 && auth.items.forEach( i => {
             if (i.category.startsWith(category.name)){
                 temp = temp + 1;
             }
@@ -79,9 +89,8 @@ const Categories = () => {
     useEffect(() => {
         const {sub} = router.query;
         var temp = [];
-        auth.categories.forEach(i => {
+        auth.categories.length > 0 && auth.categories.forEach(i => {
             if(!i.name.includes('/')){
-            console.log(i);
                 temp.push(i);
             }
         });

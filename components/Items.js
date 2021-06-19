@@ -27,6 +27,7 @@ import { Add,
     Remove,
     WhatsApp
 } from '@material-ui/icons';
+import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -58,13 +59,10 @@ const EachItem = (props) => {
     const deleteItem = async() => {
             await axios.post("/api/db", { operation: 'delete', record: item, table: 'items' })
                 .then(result => {
-                  if(result.data.error){
-                        setStatus({ ...status, ['error']: result.data.error });
-                    } else{
-                        setStatus({ ...status, ['message']: result.data.message });
-                        auth.deleteItem(item.id);
-                        setItem({});
-                    }
+                  if(!result.data.error){
+                      auth.deleteItem(item.id);
+                      setItem({});
+                  }
                 });
     };
     const handleChange = e => {
