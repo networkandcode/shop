@@ -1,24 +1,28 @@
+import ItemAttributes from '../components/ItemAttributes';
+import Status from '../components/Status';
+import { useAuth } from '../hooks/useAuth';
+
 import {
     Button,
     Container,
     FormControl,
     InputLabel,
     MenuItem,
-    Select,  
+    Select,
     TextField
 } from '@material-ui/core';
+
 import axios from 'axios';
 import firebase from 'firebase';
 import 'firebase/storage';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import Status from '../components/Status'; 
-import { useAuth } from '../hooks/useAuth';
 
 const Add = () => {
     const inputEl = useRef(null);
     const router = useRouter();
     const auth = useAuth();
+
     const [item, setItem] = useState({});
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({
@@ -36,10 +40,21 @@ const Add = () => {
         error: ''
       });
     }
+
+    const onChangeAttributes = attributes => {
+        setItem({...item, attributes});
+        setLoading(false);
+        setStatus({
+            message: '',
+            error: ''
+        });
+    }
+
     const onChgImg = (e) => {
         e.preventDefault();
         setItem({...item, imgFile: e.target.files[0]});
     }
+
     const onSubmit = async(e) => {
         e.preventDefault();
         // clear status and show waiting
@@ -137,6 +152,7 @@ const Add = () => {
                 ))}
               </Select>
             </FormControl>
+            {item.category && <ItemAttributes item={item} onChangeAttributes={onChangeAttributes}/>}
             <TextField
               autoComplete="price"
               fullWidth
@@ -145,7 +161,7 @@ const Add = () => {
               InputLabelProps={{
                 shrink: true,
               }}
-              label="Price in Rupee"                  
+              label="Price in Rupee"
               margin="normal"
               name="price"
               onChange={onChange}
@@ -166,15 +182,15 @@ const Add = () => {
               required
               type="file"
             />
-            <br/>            
+            <br/>
             <Status loading={loading} status={status}/>
-            <br/>          
+            <br/>
             <Button
                 color="primary"
                 fullWidth
                 margin="normal"
                 type="submit"
-                variant="contained"              
+                variant="contained"
             >
               Save
             </Button>

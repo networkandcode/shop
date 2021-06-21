@@ -30,6 +30,7 @@ export const useAuth = () => {
 };
 const useAuthProvider = () => {
     const [ userAuthData, setUserAuthData] = useState({})
+    const [ attributes, setAttributes ] = useState([])
     const [ categories, setCategories ] = useState([])
     const [ items, setItems ] = useState([])
     const [ cartItems, setCartItems ] = useState([])
@@ -148,6 +149,15 @@ const useAuthProvider = () => {
         setUserAuthData(user);
     };
 
+    const fetchAttributes = async() => {
+        return await dbFetch('attributes')
+            .then(result => {
+                if(!result.error) {
+                    setAttributes(result);
+                }
+            })
+            .catch( error => console.log(error) );
+    }
 
     const fetchCategories = async() => {
         return await dbFetch('categories')
@@ -170,6 +180,7 @@ const useAuthProvider = () => {
     }
 
     useEffect(() => {
+        fetchAttributes();
         fetchCategories();
         fetchItems();
     },[]);
@@ -182,6 +193,7 @@ const useAuthProvider = () => {
     return {
         addCategory,
         addItem,
+        attributes,
         cartItems,
         categories,
         deleteCategory,

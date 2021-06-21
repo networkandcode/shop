@@ -2,6 +2,7 @@ import EditItem from '../components/EditItem';
 import { db } from '../utils/firebase';
 import { useAuth } from '../hooks/useAuth';
 import {
+    Box,
     Button,
     Grid,
     Card,
@@ -28,6 +29,7 @@ import { Add,
     WhatsApp
 } from '@material-ui/icons';
 import axios from 'axios';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -36,13 +38,17 @@ const ItemImage = ({item}) => {
   const [openDialog, setOpenDialog] = useState(false)
   return(
     <>
-      <img alt={ item.name } onClick={() => setOpenDialog(true)} src={item.imgURL || "https://source.unsplash.com/weekly?water"} style={{ maxHeight: `150px` }}/>
+      <CardMedia
+          alt={item.name}
+          component="img"
+          height="200"
+          image={item.imgURL}
+          onClick={() => setOpenDialog(true)}
+          title={item.name}
+      />
       <Dialog fullScreen onClose={() => {setOpenDialog(false)}} open={openDialog}>
           <Close onClick={() => { setOpenDialog(false) } }/>
-          <img
-              src={item.imgURL || "https://source.unsplash.com/weekly?water"}
-              style={{ height: `auto`, maxWidth: `100%` }}
-          />
+          <EachItem fullScreen={true} item={item} key={item.id} smSize={12} xsSize={12}/>
       </Dialog>
     </>
   )
@@ -65,6 +71,7 @@ const EachItem = (props) => {
                   }
                 });
     };
+
     const handleChange = e => {
         e.preventDefault();
         const { id } = item;
@@ -72,6 +79,7 @@ const EachItem = (props) => {
         setQty(e.target.value);
         auth.updateCartItems();
     };
+
     const handleFavorite = e => {
         e.preventDefault();
         setFav(!fav);
@@ -104,41 +112,70 @@ const EachItem = (props) => {
     return(
       <>
         {item && item.imgURL && (
-          <Grid item key={item.id} xs={6} sm={3}>
-            <Card style={{ border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR }`, borderRadius: `5px`, boxShadow: `2px 2px`, height: `350px` }}>
+          <Grid item key={item.id} xs={props.xsSize} sm={props.smSize}>
+            <Card
+                style={{
+                    border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR_SEC }`,
+                    borderRadius: `5px`,
+                    boxShadow: `0.5px 0.5px`,
+                    height: `300px`
+                }}
+            >
               <CardActionArea>
                 <div style={{ textAlign: `center` }}>
                   <ItemImage item={item}/>
                 </div>
               </CardActionArea>
               <CardContent>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <Typography variant="body1">
-                                {item.name}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                                      { item.description }
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                                      { item.category.split('/').join(' >> ') }
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                    <br/>
-                    <Grid alignItems="center" container justify="space-between">
-                        <Grid item>
-                            <Typography>
-                                Rs. { item.price }
-                            </Typography>
-                        </Grid>
-                        <Grid item>
-                          <FormControl>
+                  <Grid container justify="space-between">
+                      <Grid item xs={10}>
+                          <Typography variant="body1">
+                              {item.name}
+                          </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                          {fav
+                              ? <Favorite
+                                    style={{color: process.env.NEXT_PUBLIC_THEME_COLOR }}
+                                    onClick={handleFavorite}
+                              />
+                              : <FavoriteBorder
+                                  onClick={handleFavorite}
+                                  style={{color: process.env.NEXT_PUBLIC_THEME_COLOR }}
+                              />
+                          }
+                      </Grid>
+                  </Grid>
+                  <Grid container justify="space-between">
+                      <Grid item>
+                          <Typography variant="body1">
+                              Rs. { item.price }
+                          </Typography>
+                      </Grid>
+                      <Grid item>
+                          {auth.userAuthData && (
+                              <>
+                                  <EditItem item={item}/>
+                                  <DeleteForever color="disabled" onClick={deleteItem}/>
+                              </>
+                          )}
+                      </Grid>
+                  </Grid>
+              </CardContent>
+              {props.fullScreen &&
+              <CardActions>
+                <Grid container>
+                  <Grid item xs={12}>
+                          <Typography gutterBottom variant="body2" color="textSecondary">
+                              Description: { item.description }
+                          </Typography>
+                          <FormControl fullWidth margin="normal" required>
+                            <InputLabel id="qtyLabel">quantity</InputLabel>
                             <Select
+                              id="qtyId"
+                              labelId="qtyLabel"
                               onChange={handleChange}
-                              style={{ height: `20px` }}
                               value={ qty }
-                              variant="outlined"
                             >
                               <MenuItem value={0}>0</MenuItem>
                               <MenuItem value={1}>1</MenuItem>
@@ -148,24 +185,24 @@ const EachItem = (props) => {
                               <MenuItem value={5}>5</MenuItem>
                             </Select>
                           </FormControl>
-                        </Grid>
-                    </Grid>
-              </CardContent>
-              <CardActions>
-                <Grid container>
-                  <Grid item style={{textAlign: `right`}} xs={12}>
-                    {auth.userAuthData && (
-                        <>
-                            <EditItem item={item}/>
-                            <DeleteForever color="disabled" onClick={deleteItem}/>
-                        </>
-                    )}
-                    { fav ? <Favorite style={{color: `pink`}} onClick={handleFavorite}/> : <FavoriteBorder onClick={handleFavorite} style={{color: `pink`}}/> }
-                    <a target="_blank" href={`https://api.whatsapp.com/send?phone=919500542709&text=Hi, I am interested in ${item.name} listed for Rs.${item.price} at https://${process.env.NEXT_PUBLIC_MY_DOMAIN}, item image: ` + encodeURIComponent(item.imgURL)}><WhatsApp color="disabled"/></a>
-                    <a href="#"> <KeyboardArrowUp color="disabled"/> </a>
+                          {item.attributes && Object.keys(item.attributes).map(key => (
+                              <FormControl fullWidth key={key} margin="normal" required>
+                                <InputLabel id={`${key}Label`}>{key}</InputLabel>
+                                <Select
+                                  id={`${key}Select`}
+                                  labelId={`${key}Label`}
+                                  onChange={handleChange}
+                                >
+                                  {item.attributes[key].map( i => (
+                                      <MenuItem key={i} value={i}>{i}</MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+                          ))}
                   </Grid>
                 </Grid>
               </CardActions>
+              }
             </Card>
           </Grid>
       )}
@@ -199,7 +236,7 @@ const items = (props) => {
       </Typography>
       <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>
           {items.map(item => (
-            <EachItem key={item.id} item={item}/>
+            <EachItem fullScreen={false} item={item} key={item.id} smSize={3} xsSize={6}/>
           ))}
       </Grid>
     </div>

@@ -3,9 +3,11 @@ import { useAuth } from '../hooks/useAuth';
 import { db } from '../utils/firebase';
 import {
     Button,
+    Chip,
     Container,
     FormControl,
     InputLabel,
+    ListItemText,
     MenuItem,
     Select,
     TextField
@@ -26,6 +28,7 @@ const Add = () => {
       error: ''
     })
     const [categories, setCategories] = useState([]);
+    const [attributes, setAttributes] = useState([]);
 
     const onChange = e => {
       const {name, value} = e.target;
@@ -59,11 +62,11 @@ const Add = () => {
 
     const addCategoryToDB = async(imgURL) => {
         if (imgURL){
-            var { name, parentCategory } = item;
+            var { name, attributes, parentCategory } = item;
             if ( parentCategory ) {
                 name = parentCategory + '/' + name;
             }
-            const record = {name, imgURL};
+            const record = {name, attributes, imgURL};
 
             await axios.post("/api/db", { operation: 'insert', record, table: 'categories' })
                 .then(result => {
@@ -84,6 +87,8 @@ const Add = () => {
         router.push('/signin');
       } else{
           setCategories(auth.categories);
+          console.log(attributes);
+          setAttributes(auth.attributes);
       }
     },[auth, router]);
 
@@ -124,6 +129,31 @@ const Add = () => {
                 ))}
               </Select>
             </FormControl>
+            {attributes && <FormControl fullWidth margin="normal" required>
+                <InputLabel id="attributesLabel">Attributes</InputLabel>
+                <Select
+                    id="attributesSelect"
+                    labelId="attributesLabel"
+                    multiple
+                    name="attributes"
+                    onChange={onChange}
+                    renderValue={selected => (
+                        <div>
+                            {selected.map(value => (
+                                <Chip key={value} label={value}/>
+                            ))}
+                        </div>
+                    )}
+                    size={attributes.length}
+                    value={item.attributes || []}
+                >
+                    {attributes.map(attribute => (
+                        <MenuItem key={attribute.id} value={attribute.name}>
+                            <ListItemText primary={attribute.name}/>
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>}
             <small>
               Upload Image <br/>
             </small>
