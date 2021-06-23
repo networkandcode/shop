@@ -21,7 +21,7 @@ const EditItem = (props) => {
             <Edit color="disabled" onClick={editItem}/>
             <Dialog open={isDialogOpen} onClose={onDialogClose}>
                 <Close onClick={onDialogClose}/>
-                <ItemForm item={item}/>
+                <ItemForm isNewItem={false} item={item}/>
                 <br/>
             </Dialog>
         </>

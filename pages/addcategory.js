@@ -21,14 +21,16 @@ import { useEffect, useState } from 'react';
 const Add = () => {
     const router = useRouter();
     const auth = useAuth();
+
+    const [attributes, setAttributes] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [item, setItem] = useState({});
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({
       message: '',
       error: ''
     })
-    const [categories, setCategories] = useState([]);
-    const [attributes, setAttributes] = useState([]);
+    const [varAttributes, setVarAttributes] = useState([]);
 
     const onChange = e => {
       const {name, value} = e.target;
@@ -39,10 +41,12 @@ const Add = () => {
         error: ''
       });
     }
+
     const onChgImg = (e) => {
         e.preventDefault();
         setItem({...item, imgFile: e.target.files[0]});
     }
+
     const onSubmit = async(e) => {
         e.preventDefault();
         // clear status and show waiting
@@ -86,14 +90,13 @@ const Add = () => {
       if(!auth.userAuthData){
         router.push('/signin');
       } else{
-          setCategories(auth.categories);
-          console.log(attributes);
           setAttributes(auth.attributes);
+          setCategories(auth.categories);
+          setVarAttributes(auth.varAttributes);
       }
     },[auth, router]);
 
     return (
-
         <Container maxWidth="xs">
           <br/>
           <form onSubmit={onSubmit}>
@@ -129,8 +132,34 @@ const Add = () => {
                 ))}
               </Select>
             </FormControl>
+            {varAttributes && <FormControl fullWidth margin="normal" required>
+                <InputLabel id="varAttributesLabel">Variable Attributes</InputLabel>
+                <Select
+                    id="varAttributesSelect"
+                    labelId="varAttributesLabel"
+                    multiple
+                    name="varAttributes"
+                    onChange={onChange}
+                    renderValue={selected => (
+                        <div>
+                            {selected.map(value => (
+                                <Chip key={value} label={value}/>
+                            ))}
+                        </div>
+                    )}
+                    size={varAttributes.length}
+                    value={item.varAttributes || []}
+                >
+                    {varAttributes.map(attribute => (
+                        <MenuItem key={attribute.id} value={attribute.name}>
+                            <ListItemText primary={attribute.name}/>
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>}
+
             {attributes && <FormControl fullWidth margin="normal" required>
-                <InputLabel id="attributesLabel">Attributes</InputLabel>
+                <InputLabel id="attributesLabel">Fixed Attributes</InputLabel>
                 <Select
                     id="attributesSelect"
                     labelId="attributesLabel"
@@ -154,6 +183,7 @@ const Add = () => {
                     ))}
                 </Select>
             </FormControl>}
+
             <small>
               Upload Image <br/>
             </small>

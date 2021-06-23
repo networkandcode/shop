@@ -10,9 +10,9 @@ const Copyright = () => (
             </a>
         </Link>
         {' '}
-        2020 -
+        2021 -
         {' '}
-        {new Date().getFullYear()}
+        {new Date().getFullYear() + 1}
         {'.'}
         <br/>
         <br/>

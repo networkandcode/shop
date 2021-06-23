@@ -1,3 +1,6 @@
+import ItemAttributes from '../components/ItemAttributes';
+import Status from '../components/Status';
+import { useAuth } from '../hooks/useAuth';
 import {
     Button,
     Container,
@@ -7,17 +10,16 @@ import {
     Select,
     TextField
 } from '@material-ui/core';
+import axios from 'axios';
 import firebase from 'firebase';
 import 'firebase/storage';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import Status from '../components/Status';
-import { useAuth } from '../hooks/useAuth';
 
 const ItemForm = (props) => {
     const inputEl = useRef(null);
     const router = useRouter();
-    const auth = useAuth();
+    const state = useAuth();
     const [item, setItem] = useState(props.item);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({
@@ -35,6 +37,16 @@ const ItemForm = (props) => {
         error: ''
       });
     }
+
+    const onChangeAttributes = attributes => {
+        setItem({...item, attributes});
+        setLoading(false);
+        setStatus({
+            message: '',
+            error: ''
+        });
+    }
+
     const onChgImg = (e) => {
         e.preventDefault();
         setItem({...item, imgFile: e.target.files[0]});
@@ -56,15 +68,32 @@ const ItemForm = (props) => {
     }
 
     const addItemToDB = async(imgURL) => {
+        console.log(item);
         if (imgURL){
-            const record = {...item, imgURL};
-            await axios.post("/api/db", { operation: 'insert', record, table: 'items' })
-                .then(result => {
-                    if(result.data.error){
-                        setStatus({ ...status, ['error']: result.data.error });
+            var operation;
+            var record = {...item, imgURL};
+
+            console.log(props);
+
+            if(props.isNewItem) {
+                operation = 'insert';
+            } else{
+                operation = 'update';
+            }
+
+            await axios.post("/api/db", { operation, record, table: 'items' })
+                .then(res => {
+                    if(res.data.error){
+                        setStatus({ ...status, ['error']: res.data.error });
                     } else{
-                        setStatus({ ...status, ['message']: result.data.message });
-                        auth.addItem(record);
+                        record = { ...record, id: res.data.id };
+                        setStatus({ ...status, ['message']: res.data.message });
+                        state.addItem(record);
+
+                        // if its a new item, clear the form, after adding
+                        if(props.isNewItem){
+                            setItem({})
+                        }
                     }
                 });
         }
@@ -72,16 +101,16 @@ const ItemForm = (props) => {
     }
 
     useEffect(() => {
-      if(!auth.userAuthData){
+      if(!state.userAuthData){
         router.push('/signin');
       } else{
           var temp = [];
-          auth.categories.forEach(i => {
+          state.categories.forEach(i => {
               temp.push(i);
           });
           setCategories([...temp]);
       }
-    },[auth, router]);
+    },[state, router]);
 
     return (
         <Container maxWidth="xs">
@@ -131,10 +160,16 @@ const ItemForm = (props) => {
                 value={item.category || ''}
               >
                 {categories.map (category => (
-                    <MenuItem key={category.id} value={category.name}>{category.name.replace('/', ' >> ')}</MenuItem>
+                    <MenuItem
+                        key={category.id}
+                        value={category.name}
+                    >
+                        { category.name.split('/').join(' >> ') }
+                    </MenuItem>
                 ))}
               </Select>
             </FormControl>
+            {item.category && <ItemAttributes item={item} onChangeAttributes={onChangeAttributes}/>}
             <TextField
               autoComplete="price"
               fullWidth

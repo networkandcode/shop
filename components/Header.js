@@ -30,8 +30,7 @@ const Header = () => {
     setLinkColor({[linkName]: "hotpink"})
   }
 return (
-  <>
-      <AppBar style={{ backgroundColor: `${process.env.NEXT_PUBLIC_THEME_COLOR}`, padding: `0.5px`}}>
+  <AppBar style={{ backgroundColor: `${process.env.NEXT_PUBLIC_THEME_COLOR}`, padding: `0.5px`}}>
       <Grid container spacing={2} >
         <Grid item xs={12}>
             <Alert severity="info">This is a demo site !!!</Alert>
@@ -56,34 +55,7 @@ return (
         )}
         </Grid>
       </Grid>
-      </AppBar>
-      <Box mt={3}>
-      <Grid container>
-          <Grid item xs={12} sm={12}>
-            <Card>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="shopping"
-                  height="150"
-                  image="https://source.unsplash.com/featured/?shopping"
-                  title="shopping"
-                />
-              </CardActionArea>
-              <CardContent style={{background: `${ process.env.NEXT_PUBLIC_THEME_COLOR }`, color: `${process.env.NEXT_PUBLIC_THEME_COLOR_SEC}`}}>
-                  <Typography style={{ fontFamily: `Monospace`, textShadow: `1px 1px`  }} variant="h3" component="h1"> { process.env.NEXT_PUBLIC_COMPANY_NAME } </Typography>
-                  <Typography component="p" paragraph variant="subtitle1"> 
-                      { process.env.NEXT_PUBLIC_SUB_TITLE_1 }
-                  </Typography>
-                  <Typography component="p" paragraph variant="subtitle2">
-                      { process.env.NEXT_PUBLIC_SUB_TITLE_2 }
-                  </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-      </Grid>
-      </Box>
-  </>
+  </AppBar>
 )};
 
 export default Header;

@@ -69,6 +69,7 @@ const Auth = () => {
     return(        
         <Container component="main" maxWidth="xs">
             <CssBaseline/>            
+            <br/>
             <div className={styles.paper}>
                 <Avatar className={styles.avatar}>
                     <LockOutlined className={styles.avatar}/>

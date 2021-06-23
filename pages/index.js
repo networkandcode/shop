@@ -1,3 +1,4 @@
+import Banner from '../components/Banner';
 import Categories from '../components/Categories';
 import { useAuth } from '../hooks/useAuth'
 import { Card, CardActionArea, CardContent, CardMedia, Container, Dialog, Grid, Typography } from '@material-ui/core'
@@ -25,13 +26,16 @@ const Home = () => {
     },[auth, router])
 
     return (
-        <div style={{ padding: `20px` }}>
-            {categories.length > 0 && (
-                <div style={{marginBottom: `20px`}}>
-                    <Categories categories={categories}/>
-                </div>
-            )}
-        </div>
+        <>
+            <Banner/>
+            <div style={{ padding: `20px` }}>
+                {categories.length > 0 && (
+                    <div style={{marginBottom: `20px`}}>
+                        <Categories categories={categories}/>
+                    </div>
+                )}
+            </div>
+        </>
     )
 }
 

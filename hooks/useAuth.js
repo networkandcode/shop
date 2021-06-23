@@ -33,6 +33,7 @@ const useAuthProvider = () => {
     const [ attributes, setAttributes ] = useState([])
     const [ categories, setCategories ] = useState([])
     const [ items, setItems ] = useState([])
+    const [ varAttributes, setVarAttributes ] = useState([])
     const [ cartItems, setCartItems ] = useState([])
     const [ totalPrice, setTotalPrice ] = useState(0)
     const [ favs, setFavs ] = useState([]);
@@ -108,6 +109,7 @@ const useAuthProvider = () => {
 
     const addItem = async(record) => {
         const { id } = record;
+
         if(id){
             var temp = [...items];
             temp.forEach((i, idx) => {
@@ -150,10 +152,20 @@ const useAuthProvider = () => {
     };
 
     const fetchAttributes = async() => {
-        return await dbFetch('attributes')
+        await dbFetch('attributes')
             .then(result => {
                 if(!result.error) {
                     setAttributes(result);
+                }
+            })
+            .catch( error => console.log(error) );
+    }
+
+    const fetchVarAttributes = async() => {
+        await dbFetch('variable_attributes')
+            .then(result => {
+                if(!result.error) {
+                    setVarAttributes(result);
                 }
             })
             .catch( error => console.log(error) );
@@ -183,6 +195,7 @@ const useAuthProvider = () => {
         fetchAttributes();
         fetchCategories();
         fetchItems();
+        fetchVarAttributes();
     },[]);
 
     useEffect(() => {
@@ -205,6 +218,7 @@ const useAuthProvider = () => {
         totalPrice,
         updateCartItems,
         updateFavs,
-        userAuthData
+        userAuthData,
+        varAttributes
     };
 };

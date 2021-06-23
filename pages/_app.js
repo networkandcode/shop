@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
        <div>
           <Header id="#"/>
        </div>
-       <div>
+       <div style={{ marginTop: `90px` }}>
           <Component {...pageProps}/>
           <Box mt={2}>
             <br/>
@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }) {
           </Box>
        </div>
      </div>
-    </AuthProvider>    
+    </AuthProvider>
   )
 }
 

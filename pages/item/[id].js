@@ -55,7 +55,7 @@ const ItemImage = ({item, mediaHt}) => {
   )
 }
 
-const EachItem = (props) => {
+const Item = () => {
     const auth = useAuth();
     const router = useRouter();
 
@@ -133,7 +133,7 @@ const EachItem = (props) => {
             >
               <CardActionArea>
                 <div style={{ textAlign: `center` }}>
-                  <ItemImage item={item} mediaHt={props.fullScreen ? "50%" : "200"}/>
+                  <ItemImage item={item} mediaHt={props.fullScreen ? "100%" : "200"}/>
                 </div>
               </CardActionArea>
               <CardContent>
@@ -217,37 +217,4 @@ const EachItem = (props) => {
     )
 }
 
-const items = (props) => {
-  const router = useRouter();
-  const auth = useAuth();
-  const [ items, setItems ] = useState([]);
-  const [ refresh, setRefresh ] = useState(false);
-
-  useEffect(() => {
-      const { c } = router.query;
-      if(c){
-        var i = [];
-        auth.items.map(item => {
-            if (item.category.startsWith(c)) {
-                i.push(item);
-            }
-        })
-        setItems(i);
-      }
-  }, [auth, router]);
-
-  return (
-    <div>
-      <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
-          Items <small>({items.length})</small>
-      </Typography>
-      <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>
-          {items.map(item => (
-            <EachItem fullScreen={false} item={item} key={item.id} smSize={3} xsSize={6}/>
-          ))}
-      </Grid>
-    </div>
-  );
-};
-
-export default items;
+export default Item;

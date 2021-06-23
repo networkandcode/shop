@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const db = async(req, res) => {
+const deleteCategory = async(req, res) => {
     const username = process.env.HDB_USERNAME;
     const password = process.env.HDB_PASSWORD;
 
@@ -10,18 +10,10 @@ const db = async(req, res) => {
     const { operation, record, table } = req.body;
     const headers = { 'Content-Type': 'application/json' };
 
-    var dataObject = {
+    const dataObject = {
         operation,
-        schema,
-        table
+        sql: `DELETE FROM ${schema}.${table} where name = '${record.name}' OR name LIKE '${record.name}/%'`
     };
-
-    if(operation === 'delete'){
-        dataObject = { ...dataObject, hash_values: [ record.id ] }
-    } else{
-        dataObject = { ...dataObject, records: [ record ] }
-    }
-
     const data = JSON.stringify(dataObject);
 
     const config = {
@@ -38,17 +30,16 @@ const db = async(req, res) => {
     await axios(config)
         .then(response => {
             if(response.status === 200){
-                console.log(response.data.skipped_hashes[0]);
-                res.status(200).json({
-                    id: response.data.skipped_hashes[0],
-                    message: response.data.message
-                });
+                res.status(200).json({ message: response.data.message });
+            } else{
+                res.status(response.status).json({ error: response.data.message });
             }
         })
         .catch(error => {
-            console.log(error);
-            res.status(409).json({ error });
+            console.log(error.response.status);
+            console.log(error.response.data);
+            res.status(error.response.status).json({ error: error.response.data.error });
         });
 }
 
-export default db;
+export default deleteCategory;

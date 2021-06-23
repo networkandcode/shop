@@ -13,7 +13,7 @@ import {
     Grid,
     Typography
 } from '@material-ui/core';
-import { Close, DeleteForever, KeyboardArrowUp } from '@material-ui/icons'
+import { Close, DeleteForever } from '@material-ui/icons'
 
 import axios from 'axios';
 import Link from 'next/link';
@@ -31,16 +31,20 @@ const EachCategory = (props) => {
     });
 
     const deleteCategory = async(id) => {
-        await axios.post("/api/db", { operation: 'delete', record: category, table: 'categories' })
-            .then(result => {
-              if(result.data.error){
-                    setStatus({ ...status, ['error']: result.data.error });
-                } else{
-                    setStatus({ ...status, ['message']: result.data.message });
-                    auth.deleteCategory(id);
-                    setCategory({});
-                }
-            });
+        setLoading(true);
+        await axios.post( "/api/deleteCategory", {
+            operation: 'sql',
+            record: category,
+            table: 'categories'
+        }).then(result => {
+            if(result.data.error){
+                setStatus({ ...status, ['error']: result.data.error });
+            } else{
+                setStatus({ ...status, ['message']: result.data.message });
+                auth.deleteCategory(id);
+                setCategory({});
+            }
+        });
     };
 
     const [ openDialog, setOpenDialog ] = useState(false)
@@ -65,8 +69,7 @@ const EachCategory = (props) => {
                     style={{
                         border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR_SEC }`,
                         borderRadius: `5px`,
-                        boxShadow: `0.5px 0.5px`,
-                        height: `300px`
+                        boxShadow: `0.5px 0.5px`
                     }}
                 >
                     <CardActionArea>
@@ -84,19 +87,22 @@ const EachCategory = (props) => {
                           </Link>
                         </div>
                         <CardContent>
-                            <Grid container>
-                                <Grid item sm={8} xs={12}>
+                            <Grid container justify="space-between">
+                                <Grid item xs={10}>
                                     <Link href={`/c?c=${category.name}`}>
                                         <a>
-                                            <Typography gutterBottom variant="body1" component="p">
-                                                {category.name}({noOfItems})
+                                            <Typography
+                                                gutterBottom
+                                                variant="body1"
+                                                component="p"
+                                            >
+                                                {category.name.split('/').reverse()[0]}({noOfItems})
                                             </Typography>
                                         </a>
                                     </Link>
                                 </Grid>
-                                <Grid item sm={4} style={{ textAlign: `right` }} xs={12}>
+                                <Grid item xs={2}>
                                     {auth.userAuthData && (<DeleteForever color="disabled" onClick={() => deleteCategory(category.id)}/>)}
-                                    <a href="#"> <KeyboardArrowUp color="disabled"/> </a>
                                 </Grid>
                             </Grid>
                         </CardContent>

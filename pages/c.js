@@ -40,7 +40,7 @@ const Category = () => {
   }, [auth, router]);
 
   return (
-    <div style={{ padding: `20px` }}>
+    <div style={{ marginTop: `40px`, padding: `20px` }}>
         <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
             <Link href="/"><a> Home </a></Link>
             { category && category.split('/').map((i, idx) => (
