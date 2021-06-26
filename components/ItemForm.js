@@ -1,4 +1,5 @@
 import ItemAttributes from '../components/ItemAttributes';
+import ItemVarAttributes from '../components/ItemVarAttributes';
 import Status from '../components/Status';
 import { useAuth } from '../hooks/useAuth';
 import {
@@ -20,6 +21,7 @@ const ItemForm = (props) => {
     const inputEl = useRef(null);
     const router = useRouter();
     const state = useAuth();
+
     const [item, setItem] = useState(props.item);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({
@@ -47,6 +49,15 @@ const ItemForm = (props) => {
         });
     }
 
+    const onChangeVarAttributes = varAttributes => {
+        setItem({...item, varAttributes});
+        setLoading(false);
+        setStatus({
+            message: '',
+            error: ''
+        });
+    }
+
     const onChgImg = (e) => {
         e.preventDefault();
         setItem({...item, imgFile: e.target.files[0]});
@@ -54,9 +65,11 @@ const ItemForm = (props) => {
 
     const onSubmit = async(e) => {
         e.preventDefault();
+
         // clear status and show waiting
         setStatus({});
         setLoading(true);
+
         // upload image to storage
         const storageRef = firebase.storage().ref();
         var imgURL;
@@ -68,12 +81,9 @@ const ItemForm = (props) => {
     }
 
     const addItemToDB = async(imgURL) => {
-        console.log(item);
         if (imgURL){
             var operation;
             var record = {...item, imgURL};
-
-            console.log(props);
 
             if(props.isNewItem) {
                 operation = 'insert';
@@ -86,13 +96,13 @@ const ItemForm = (props) => {
                     if(res.data.error){
                         setStatus({ ...status, ['error']: res.data.error });
                     } else{
-                        record = { ...record, id: res.data.id };
                         setStatus({ ...status, ['message']: res.data.message });
-                        state.addItem(record);
-
-                        // if its a new item, clear the form, after adding
-                        if(props.isNewItem){
-                            setItem({})
+                        if(operation === 'insert'){
+                            record = { ...record, id: res.data.id };
+                            state.insertItem(record);
+                            setItem({});
+                        } else if(operation === 'update'){
+                            state.updateItem(record);
                         }
                     }
                 });
@@ -170,6 +180,7 @@ const ItemForm = (props) => {
               </Select>
             </FormControl>
             {item.category && <ItemAttributes item={item} onChangeAttributes={onChangeAttributes}/>}
+            {item.category && <ItemVarAttributes item={item} onChangeVarAttributes={onChangeVarAttributes}/>}
             <TextField
               autoComplete="price"
               fullWidth
@@ -178,7 +189,7 @@ const ItemForm = (props) => {
               InputLabelProps={{
                 shrink: true,
               }}
-              label="Price in Rupee"                  
+              label="Price in Rupee"
               margin="normal"
               name="price"
               onChange={onChange}

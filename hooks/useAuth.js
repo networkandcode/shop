@@ -17,6 +17,7 @@ const hdbCredential = {
     url: process.env.NEXT_PUBLIC_HDB_URL,
     username: process.env.NEXT_PUBLIC_HDB_USERNAME
 }
+
 const { password, schema, url, username } = hdbCredential;
 
 const authContext = createContext({ userAuthData: {} });
@@ -25,10 +26,13 @@ export const AuthProvider = ({children}) => {
     const auth = useAuthProvider();
     return <Provider value={auth}>{children}</Provider>;
 }
+
 export const useAuth = () => {
     return useContext(authContext);
 };
+
 const useAuthProvider = () => {
+
     const [ userAuthData, setUserAuthData] = useState({})
     const [ attributes, setAttributes ] = useState([])
     const [ categories, setCategories ] = useState([])
@@ -38,58 +42,82 @@ const useAuthProvider = () => {
     const [ totalPrice, setTotalPrice ] = useState(0)
     const [ favs, setFavs ] = useState([]);
 
-    useEffect(() => {
-        var cartItemsV = items.map(item => {
-            const { id } = item;
-            if(localStorage.getItem(id) > 0){
-                return {...item, qty: localStorage.getItem(id)};
-            };
-        },[]);
-        setCartItems(cartItemsV);
-    },[ items ]);
+    const updateCartItems = async(record) => {
 
-    const updateCartItems = () => {
-        var cartItemsV = items.map(item => {
-            const { id } = item;
-            if(localStorage.getItem(id) > 0){
-                return {...item, qty: localStorage.getItem(id)};
-            };
-        },[]);
-        setCartItems(cartItemsV);
+         if(cartItems.some(i => i.hash === record.hash)) {
+             var temp = [...cartItems];
+             for(var j=0; j<temp.length; j++) {
+                 if(temp[j].hash === record.hash) {
+                     if(record.cartAttributes.qty === 0) {
+                         temp.splice(j, 1);
+                         const dataObject = {
+                           operation: 'delete',
+                           hash_values: [ record.hash ],
+                           table: 'cart_items'
+                         };
+                         await axios.post('/api/cart', dataObject);
+
+                     } else{
+
+                         temp[j] = record;
+                         const dataObject = {
+                           operation: 'update',
+                           records: [ record ],
+                           table: 'cart_items'
+                         };
+                         await axios.post('/api/cart', dataObject);
+
+                     }
+                     setCartItems([...temp]);
+                     break;
+                 }
+             }
+         } else if(record.cartAttributes.qty !== 0) {
+             const dataObject = { operation: 'insert', records: [ record ], table: 'cart_items' };
+             await axios.post('/api/cart', dataObject);
+             setCartItems([...cartItems, record]);
+         }
     };
-    const updateFavs = (id, fav) => {
-        if(id && fav){
-            if(!favs.includes(id)){
-                const tempAdd = [...favs, id];
-                setFavs([...favs, id]);
-                localStorage.setItem('favs', JSON.stringify(tempAdd));
+
+    const updateFavs = async(id, fav) => {
+        if(id && fav) {
+            // add item id to favorites
+            if(!favs.includes(id)) {
+                const temp = [...favs, id];
+                console.log('ding');
+                setFavs(temp);
+                const record = { id: userAuthData.uid, favorites: temp };
+                await axios.post('/api/db', { operation: 'upsert', record, table: 'favorites' });
             };
-        } else if(id && !fav){
-          if(favs.includes(id)){
+          // remove item id from favorites
+        } else if(id && !fav) {
+          if(favs.includes(id)) {
               var temp = [...favs];
               const idx = temp.indexOf(id);
-              if(idx !== -1){
+              if(idx !== -1) {
                   temp.splice(idx, 1);
+                  console.log('dong');
                   setFavs(temp);
-                  localStorage.setItem('favs', JSON.stringify(temp));
+                  const record = { id: userAuthData.uid, favorites: temp };
+                  await axios.post('/api/db', {
+                      operation: 'upsert',
+                      record,
+                      table: 'favorites'
+                  });
               }
           }
-      }
+        }
     }
 
     useEffect(() => {
         var totalPriceV = 0;
         cartItems.map(item => {
-            if(item){
-                totalPriceV += item.qty * item.price
+            if(item) {
+                totalPriceV += item.cartAttributes.qty * item.price
             }
-            setTotalPrice(totalPriceV);
-            localStorage.setItem('totalPrice', totalPriceV);
         });
+        setTotalPrice(totalPriceV);
     },[ cartItems ]);
-    useEffect(() => {
-        setFavs(JSON.parse(localStorage.getItem('favs')) || []);
-    },[]);
 
     const signIn = async({ email, password }) => {
         return await auth
@@ -107,20 +135,18 @@ const useAuthProvider = () => {
         return auth.signOut().then(() => setUserAuthData({}));
     };
 
-    const addItem = async(record) => {
-        const { id } = record;
+    const insertItem = async(record) => {
+        setItems([...items, record]);
+    };
 
-        if(id){
-            var temp = [...items];
-            temp.forEach((i, idx) => {
-                if(i.id === id){
-                    temp[idx] = record;
-                }
-            });
-            setItems([...temp]);
-        } else{
-            setItems([...items, record]);
-        }
+    const updateItem = async(record) => {
+        var temp = [...items];
+        temp.forEach((i, idx) => {
+            if(i.id === record.id) {
+                temp[idx] = record;
+            }
+        });
+        setItems([...temp]);
     };
 
     const addCategory = async(record) => {
@@ -157,8 +183,36 @@ const useAuthProvider = () => {
                 if(!result.error) {
                     setAttributes(result);
                 }
-            })
-            .catch( error => console.log(error) );
+            }).catch( error => console.log(error) );
+    }
+
+    const fetchCartItems = async() => {
+        const dataObject = {
+          get_attributes: [ '*' ],
+          operation: 'search_by_value',
+          search_attribute: 'email',
+          search_value: userAuthData.email,
+          table: 'cart_items'
+        }
+
+        await axios.post('/api/cart', dataObject).then(result => {
+            if(!result.error) {
+                setCartItems(result.data.cartItems);
+            }
+        }).catch( error => console.log('error', error) );
+    }
+
+    const fetchFavorites = async() => {
+        await axios.post('/api/favorites', {
+            get_attributes: [ 'favorites' ],
+            operation: 'search_by_hash',
+            record: { id: userAuthData.uid },
+            table: 'favorites'
+        }).then(result => {
+            if(!result.error) {
+                setFavs(result.data.favorites);
+            }
+        }).catch( error => console.log('error', error) );
     }
 
     const fetchVarAttributes = async() => {
@@ -191,12 +245,25 @@ const useAuthProvider = () => {
             .catch( error => console.log(error) );
     }
 
+    // global data fetched by read_only_user via client
     useEffect(() => {
-        fetchAttributes();
         fetchCategories();
         fetchItems();
-        fetchVarAttributes();
     },[]);
+
+    // global data fetched by super_user via server
+    useEffect(() => {
+        fetchAttributes();
+        fetchVarAttributes();
+    }, []);
+
+    // private data fetched by super_user via server
+    useEffect(() => {
+        if(userAuthData.uid) {
+            fetchCartItems();
+            fetchFavorites();
+        }
+    }, [ userAuthData ]);
 
     useEffect(() => {
         const unsub = auth.onAuthStateChanged(handleAuthStateChanged);
@@ -205,7 +272,7 @@ const useAuthProvider = () => {
 
     return {
         addCategory,
-        addItem,
+        insertItem,
         attributes,
         cartItems,
         categories,
@@ -218,6 +285,7 @@ const useAuthProvider = () => {
         totalPrice,
         updateCartItems,
         updateFavs,
+        updateItem,
         userAuthData,
         varAttributes
     };

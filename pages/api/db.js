@@ -1,13 +1,9 @@
 import axios from 'axios';
+import { username, password, url, schema } from '../../utils/dbCredentials';
 
 const db = async(req, res) => {
-    const username = process.env.HDB_USERNAME;
-    const password = process.env.HDB_PASSWORD;
 
-    const url = process.env.NEXT_PUBLIC_HDB_URL;
-    const schema = process.env.NEXT_PUBLIC_HDB_SCHEMA;
-
-    const { operation, record, table } = req.body;
+    const { conditions, get_attributes, operation, record, table } = req.body;
     const headers = { 'Content-Type': 'application/json' };
 
     var dataObject = {
@@ -16,10 +12,20 @@ const db = async(req, res) => {
         table
     };
 
-    if(operation === 'delete'){
+    if(operation === 'delete' || operation === 'search_by_hash') {
         dataObject = { ...dataObject, hash_values: [ record.id ] }
-    } else{
+    }
+
+    if(operation === 'insert' || operation === 'update' || operation === 'upsert'){
         dataObject = { ...dataObject, records: [ record ] }
+    }
+
+    if(operation === 'search_by_hash') {
+        dataObject = { ...dataObject, get_attributes };
+    }
+
+    if(operation === 'search_by_conditions'){
+        dataObject = { ...dataObject, conditions };
     }
 
     const data = JSON.stringify(dataObject);
@@ -38,16 +44,19 @@ const db = async(req, res) => {
     await axios(config)
         .then(response => {
             if(response.status === 200){
-                console.log(response.data.skipped_hashes[0]);
-                res.status(200).json({
-                    id: response.data.skipped_hashes[0],
+                var object = {
                     message: response.data.message
-                });
+                };
+
+                if(operation === 'insert'){
+                    object = { ...object, id: response.data.inserted_hashes[0] };
+                }
+
+                res.status(200).json(object);
             }
         })
         .catch(error => {
-            console.log(error);
-            res.status(409).json({ error });
+            res.status(409).json({ error: error.response.data.error });
         });
 }
 

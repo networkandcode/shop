@@ -29,33 +29,34 @@ const Header = () => {
   const handleLinks = (linkName) => {
     setLinkColor({[linkName]: "hotpink"})
   }
-return (
-  <AppBar style={{ backgroundColor: `${process.env.NEXT_PUBLIC_THEME_COLOR}`, padding: `0.5px`}}>
-      <Grid container spacing={2} >
-        <Grid item xs={12}>
-            <Alert severity="info">This is a demo site !!!</Alert>
+
+  return (
+    <AppBar style={{ backgroundColor: `${process.env.NEXT_PUBLIC_THEME_COLOR}`, padding: `0.5px`}}>
+        <Grid container spacing={2} >
+          <Grid item xs={12}>
+              <Alert severity="info">This is a demo site !!!</Alert>
+          </Grid>
+          <Grid item style={{ color: `${process.env.NEXT_PUBLIC_THEME_COLOR_SEC}`, textAlign: `right` }} xs={12}>
+            <Link href="/"><a><Home onClick={() => {handleLinks('home')}}
+              style={{backgroundColor: `${linkColor['home'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
+            {' '}
+            <a href="https://api.whatsapp.com/send?phone=919500542709" target="_blank">
+              <WhatsApp
+              />
+            </a>
+            {' '}
+            <a href={ process.env.NEXT_PUBLIC_YOUTUBE_URL } target="_blank"><YouTube /></a>
+            {' '}
+            <Link href="/f"><a><Favorite  onClick={()=>{handleLinks('favorites')}} style={{backgroundColor:`${linkColor['favorites'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
+            <small> { auth.favs.length > 0 && auth.favs.length } </small>
+            <Link href="/cart"><a><ShoppingCart  onClick={()=>{handleLinks('cart')}} style={{backgroundColor: `${linkColor['cart'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
+            <small> { auth.totalPrice > 0 && `Rs. ${auth.totalPrice}` } </small>
+          {auth.userAuthData &&(
+                <PowerSettingsNew  onClick={() => auth.signOut()}/>
+          )}
+          </Grid>
         </Grid>
-        <Grid item style={{ color: `${process.env.NEXT_PUBLIC_THEME_COLOR_SEC}`, textAlign: `right` }} xs={12}>
-          <Link href="/"><a><Home onClick={() => {handleLinks('home')}}
-            style={{backgroundColor: `${linkColor['home'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
-          {' '}
-          <a href="https://api.whatsapp.com/send?phone=919500542709" target="_blank">
-            <WhatsApp
-            />
-          </a>
-          {' '}
-          <a href={ process.env.NEXT_PUBLIC_YOUTUBE_URL } target="_blank"><YouTube /></a>
-          {' '}
-          <Link href="/f"><a><Favorite  onClick={()=>{handleLinks('favorites')}} style={{backgroundColor:`${linkColor['favorites'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
-          <small> { auth.favs.length > 0 && auth.favs.length } </small>
-          <Link href="/cart"><a><ShoppingCart  onClick={()=>{handleLinks('cart')}} style={{backgroundColor: `${linkColor['cart'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
-          <small> { auth.totalPrice > 0 && `Rs. ${auth.totalPrice}` } </small>
-        {auth.userAuthData &&(
-              <PowerSettingsNew  onClick={() => auth.signOut()}/>
-        )}
-        </Grid>
-      </Grid>
-  </AppBar>
+    </AppBar>
 )};
 
 export default Header;

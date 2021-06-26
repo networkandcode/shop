@@ -1,43 +1,32 @@
-import { db } from '../utils/firebase';
-import { useAuth } from '../hooks/useAuth';
+import EachItem from './EachItem';
 import {
-  Button,
-  Grid, 
-  Card, 
-  CardActionArea, 
-  CardActions,
-  CardContent, 
-  CardMedia,
-  Container,
-  Dialog,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography, 
+    CardMedia,
+    Container,
+    Dialog
 } from '@material-ui/core';
-import { Add, Close, DeleteForever, FavoriteBorder, KeyboardArrowUp, Remove, ShoppingCart, WhatsApp } from '@material-ui/icons';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import {
+    Close
+} from '@material-ui/icons';
+import { useState } from 'react';
 
-const ItemImage = ({item}) => {
+const ItemImage = ({item, mediaHt}) => {
   const [openDialog, setOpenDialog] = useState(false)
   return(
     <>
-      <img
-        alt={item.name}
-        height="80px"
-        src={item.imgURL || "https://source.unsplash.com/weekly?water"}
-        onClick={() => setOpenDialog(true)}
-        width="80px"
+      <CardMedia
+          alt={item.name}
+          component="img"
+          height={mediaHt}
+          image={item.imgURL}
+          onClick={() => setOpenDialog(true)}
+          title={item.name}
       />
       <Dialog fullScreen onClose={() => {setOpenDialog(false)}} open={openDialog}>
+          <Container maxWidth="xs">
           <Close onClick={() => { setOpenDialog(false) } }/>
-          <img
-              src={item.imgURL || "https://source.unsplash.com/weekly?water"}
-              style={{ height: `auto`, maxWidth: `100%` }}
-          />
+          <EachItem fullScreen={true} item={item} key={item.id} smSize={12} xsSize={12}/>
+          <br/>
+          </Container>
       </Dialog>
     </>
   )

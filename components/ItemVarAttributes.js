@@ -13,24 +13,24 @@ const availableAttributes = (props) => {
     const auth = useAuth();
     const item =  props.item;
     const [availableAttributes, setAvailableAttributes] = useState([]);
-    const [selectedAttributes, setSelectedAttributes] = useState(item.attributes || []);
+    const [selectedAttributes, setSelectedAttributes] = useState(item.varAttributes || []);
 
     const onChange = e => {
         const {name, value} = e.target;
         const temp = {...selectedAttributes, [name]: value };
         setSelectedAttributes(temp);
-        props.onChangeAttributes(temp);
+        props.onChangeVarAttributes(temp);
     }
 
     useEffect(() => {
         for(var i=0; i<auth.categories.length; i++){
             if(auth.categories[i].name === item.category){
-                const attrs = auth.categories[i].attributes;
+                const attrs = auth.categories[i].varAttributes;
                 var temp = [];
 
-                for(var i=0; i<auth.attributes.length; i++){
-                    if(attrs && attrs.includes(auth.attributes[i].name)){
-                        temp.push(auth.attributes[i]);
+                for(var i=0; i<auth.varAttributes.length; i++){
+                    if(attrs && attrs.includes(auth.varAttributes[i].name)){
+                        temp.push(auth.varAttributes[i]);
                     }
                 }
 
@@ -43,14 +43,22 @@ const availableAttributes = (props) => {
     return(
         availableAttributes.map (availableAttribute => (
             <FormControl fullWidth key={availableAttribute.id}  margin="normal" required>
-                <InputLabel id={`${availableAttribute.name}Label`}>{availableAttribute.name}</InputLabel>
+                <InputLabel id={`${availableAttribute.name}Label`}>{availableAttribute.name}(choice)</InputLabel>
                 <Select
                     id={`${availableAttribute.name}Select`}
                     labelId={`${availableAttribute.name}Label`}
+                    multiple
                     name={availableAttribute.name}
                     onChange={onChange}
+                    renderValue={selected => (
+                        <div>
+                            {selected.map(value => (
+                                <Chip key={value} label={value}/>
+                            ))}
+                        </div>
+                    )}
                     size={availableAttribute.values.length}
-                    value={selectedAttributes[availableAttribute.name] || ''}
+                    value={selectedAttributes[availableAttribute.name] || []}
                 >
                     {availableAttribute.values.map(v => (
                     <MenuItem key={v} value={v}>

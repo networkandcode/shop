@@ -66,11 +66,10 @@ const Add = () => {
 
     const addCategoryToDB = async(imgURL) => {
         if (imgURL){
-            var { name, attributes, parentCategory } = item;
-            if ( parentCategory ) {
-                name = parentCategory + '/' + name;
+            var record = {...item, imgURL};
+            if ( record.parentCategory ) {
+                record.name = record.parentCategory + '/' + record.name;
             }
-            const record = {name, attributes, imgURL};
 
             await axios.post("/api/db", { operation: 'insert', record, table: 'categories' })
                 .then(result => {
