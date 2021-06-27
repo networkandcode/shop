@@ -259,7 +259,7 @@ const useAuthProvider = () => {
 
     // private data fetched by super_user via server
     useEffect(() => {
-        if(userAuthData.uid) {
+        if(userAuthData && userAuthData.uid) {
             fetchCartItems();
             fetchFavorites();
         }
