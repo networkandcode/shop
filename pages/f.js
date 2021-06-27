@@ -10,6 +10,8 @@ const Favorites = (props) => {
     const router = useRouter();
     const auth = useAuth();
 
+    console.log(auth.favs);
+
     return (
         <Box p={2}>
             <Grid container spacing={2}>

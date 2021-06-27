@@ -36,7 +36,7 @@ const EachItem = (props) => {
     const auth = useAuth();
     const router = useRouter();
 
-    const [ cartAttributes, setCartAttributes ] = useState({ qty: 0 });
+    const cartAttributes = props.item.cartAttributes || {};
     const [ item, setItem ] = useState(props.item);
     const [ fav, setFav ] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -62,7 +62,10 @@ const EachItem = (props) => {
     const handleChange = e => {
         e.preventDefault();
         const {name, value} = e.target;
-        setCartAttributes({...cartAttributes, [name]: value});
+        setItem({
+          ...item,
+          cartAttributes:{...cartAttributes, [name]: value}
+        });
     };
 
     const handleFavorite = e => {
@@ -209,12 +212,9 @@ const EachItem = (props) => {
                           onChange={handleChange}
                           value={ cartAttributes['qty'] }
                         >
-                          <MenuItem value={0}>0</MenuItem>
-                          <MenuItem value={1}>1</MenuItem>
-                          <MenuItem value={2}>2</MenuItem>
-                          <MenuItem value={3}>3</MenuItem>
-                          <MenuItem value={4}>4</MenuItem>
-                          <MenuItem value={5}>5</MenuItem>
+                          {[0, 1, 2, 3, 4, 5].map(i => (
+                            <MenuItem key={i} value={i}> {i} </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </Grid>

@@ -1,0 +1,2 @@
+- Multiple Images for each Item
+- Light & Dark Modes

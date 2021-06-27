@@ -26,50 +26,49 @@ const Row = (props) => {
   const [cartItem, setCartItem] = useState(props.cartItem);
   const cartAttributes = props.cartItem.cartAttributes;
 
+  console.log(cartItem);
+
   const handleChange = e => {
-  e.preventDefault();
-  const { name, value } = e.target;
-  const temp = {
-    ...cartItem,
-    cartAttributes:{...cartAttributes, [name]: value}
-  };
-  setCartItem({...temp});
-  auth.updateCartItems(temp);
+    e.preventDefault();
+    const { name, value } = e.target;
+    const temp = {
+      ...cartItem,
+      cartAttributes:{...cartAttributes, [name]: value}
+    };
+    setCartItem({...temp});
+    auth.updateCartItems(temp);
   };
 
   return (
     <TableRow>
       <TableCell>
-      <EachItem fullScreen={false} item={cartItem} key={cartItem.id} smSize={12} xsSize={12}/>
+        <EachItem fullScreen={false} item={cartItem} key={cartItem.id} smSize={12} xsSize={12}/>
       </TableCell>
       <TableCell>
-          {cartItem.varAttributes && Object.keys(cartItem.varAttributes).map(v => (
-        <div key={cartItem.id + v}>{v}<br/><Select
-        name={v}
-        onChange={handleChange}
-        style={{ height: `20px` }}
-        value={cartItem.cartAttributes[v]}
-        variant="outlined"
-        >
-        {cartItem.varAttributes[v].map(i => (
-          <MenuItem key={cartItem.id + i} value={i}>{i}</MenuItem>
+        {cartItem.varAttributes && Object.keys(cartItem.varAttributes).map(v => (
+          <div key={cartItem.id + v}>{v}<br/><Select
+            name={v}
+            onChange={handleChange}
+            style={{ height: `20px` }}
+            value={cartItem.cartAttributes[v]}
+            variant="outlined"
+          >
+          {cartItem.varAttributes[v].map(i => (
+            <MenuItem key={cartItem.id + i} value={i}>{i}</MenuItem>
+          ))}
+          </Select><br/></div>
         ))}
-        </Select><br/></div>
-      ))}
-      Qty<br/>
-      <Select
-        name="qty"
-        onChange={handleChange}
-        style={{ height: `20px` }}
-        value={cartItem.cartAttributes.qty}
-        variant="outlined"
-      >
-        <MenuItem value={0}>0</MenuItem>
-        <MenuItem value={1}>1</MenuItem>
-        <MenuItem value={2}>2</MenuItem>
-        <MenuItem value={3}>3</MenuItem>
-        <MenuItem value={4}>4</MenuItem>
-        <MenuItem value={5}>5</MenuItem>
+        Qty<br/>
+        <Select
+          name="qty"
+          onChange={handleChange}
+          style={{ height: `20px` }}
+          value={cartItem.cartAttributes.qty}
+          variant="outlined"
+        >
+          {[0, 1, 2, 3, 4, 5].map(i => (
+            <MenuItem key={i} value={i}> {i} </MenuItem>
+          ))}
       </Select>
       </TableCell>
       <TableCell> { cartItem.price } </TableCell>
