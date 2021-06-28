@@ -131,7 +131,7 @@ const Add = () => {
                 ))}
               </Select>
             </FormControl>
-            {varAttributes && <FormControl fullWidth margin="normal" required>
+            {varAttributes && <FormControl fullWidth margin="normal">
                 <InputLabel id="varAttributesLabel">Variable Attributes</InputLabel>
                 <Select
                     id="varAttributesSelect"
@@ -157,7 +157,7 @@ const Add = () => {
                 </Select>
             </FormControl>}
 
-            {attributes && <FormControl fullWidth margin="normal" required>
+            {attributes && <FormControl fullWidth margin="normal">
                 <InputLabel id="attributesLabel">Fixed Attributes</InputLabel>
                 <Select
                     id="attributesSelect"

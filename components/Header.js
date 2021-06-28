@@ -45,7 +45,7 @@ const Header = () => {
               />
             </a>
             {' '}
-            <a href={ process.env.NEXT_PUBLIC_YOUTUBE_URL } target="_blank"><YouTube /></a>
+            {process.env.NEXT_PUBLIC_YOUTUBE_URL && <a href={ process.env.NEXT_PUBLIC_YOUTUBE_URL } target="_blank"><YouTube /></a>}
             {' '}
             <Link href="/f"><a><Favorite  onClick={()=>{handleLinks('favorites')}} style={{backgroundColor:`${linkColor['favorites'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
             <small> { auth.favs.length > 0 && auth.favs.length } </small>

@@ -24,6 +24,7 @@ import { useEffect, useState } from 'react';
 const Row = (props) => {
   const auth = useAuth();
   const [cartItem, setCartItem] = useState(props.cartItem);
+  const [item, setItem] = useState({});
   const cartAttributes = props.cartItem.cartAttributes;
 
   console.log(cartItem);
@@ -42,7 +43,14 @@ const Row = (props) => {
   return (
     <TableRow>
       <TableCell>
-        <EachItem fullScreen={false} item={cartItem} key={cartItem.id} smSize={12} xsSize={12}/>
+        <EachItem
+          fullScreen={false}
+          item={cartItem}
+          key={cartItem.id}
+          mediaHt={100}
+          smSize={12}
+          xsSize={12}
+        />
       </TableCell>
       <TableCell>
         {cartItem.varAttributes && Object.keys(cartItem.varAttributes).map(v => (
@@ -91,52 +99,54 @@ const Cart = () => {
     }
   }
 
+  console.log(auth.cartItems);
+
   return (
-  auth.totalPrice > 0 ?(
-    <Box mt={3}>
-    <TableContainer component={ Paper } style={{ padding: `auto`, margin: `auto`, marginTop: `0`, maxWidth: `600px`}}>
-      <Typography style={{ padding: `10px` }} variant="h6">
-      Please review your order.
-      <br/>
-      <small>
-        Note: The item will be removed from the cart if the quantity is set to 0.
-      </small>
-      </Typography>
-      <Container>
-      <Table>
-        <TableHead>
-        <TableRow>
-          <TableCell> Item </TableCell>
-          <TableCell> Choice </TableCell>
-          <TableCell> PPU </TableCell>
-          <TableCell> Price </TableCell>
-        </TableRow>
-        </TableHead>
-        <TableBody>
-        { auth.cartItems && auth.cartItems.map(cartItem => (
-          cartItem && Object.keys(cartItem).length > 0 &&
-          <Row cartItem={cartItem} key={cartItem.hash} />
-        ))}
-        </TableBody>
-      </Table>
-      </Container>
-    </TableContainer>
-    <br/>
-    <Container style={{ textAlign: `center` }}>
-      { auth.totalPrice > 0 && (
-      <>
-        <Button color="primary" onClick={handlePay} variant="outlined">
-        <Typography variant="subtitle1">
-          Proceed to pay Rs. { auth.totalPrice }
-        </Typography>
-        </Button>
-        <br/><br/>
-        <small> Note: PPU means Price Per Unit.<br/>All prices are in Indian Rupees. </small>
-      </>
-      )}
-    </Container>
-    </Box>
-  ): <Typography gutterBottom style={{ textAlign: `center`}} variant="h5"><br/>There are no items in your cart.</Typography>
+    auth.totalPrice > 0 ?(
+      <Box mt={3}>
+        <TableContainer component={ Paper } style={{ padding: `auto`, margin: `auto`, marginTop: `0`, maxWidth: `600px`}}>
+          <Typography style={{ padding: `10px` }} variant="h6">
+            Please review your order.
+            <br/>
+            <small>
+              Note: The item will be removed from the cart if the quantity is set to 0.
+            </small>
+          </Typography>
+          <Container>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell> Item </TableCell>
+                  <TableCell> Choice </TableCell>
+                  <TableCell> PPU </TableCell>
+                  <TableCell> Price </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                { auth.cartItems && auth.cartItems.map(cartItem => (
+                  cartItem && Object.keys(cartItem).length > 0 &&
+                  <Row cartItem={cartItem} key={cartItem.hash} />
+                ))}
+              </TableBody>
+            </Table>
+          </Container>
+        </TableContainer>
+        <br/>
+        <Container style={{ textAlign: `center` }}>
+          { auth.totalPrice > 0 && (
+          <>
+            <Button color="primary" onClick={handlePay} variant="outlined">
+            <Typography variant="subtitle1">
+              Proceed to pay Rs. { auth.totalPrice }
+            </Typography>
+            </Button>
+            <br/><br/>
+            <small> Note: PPU means Price Per Unit.<br/>All prices are in Indian Rupees. </small>
+          </>
+          )}
+        </Container>
+      </Box>
+    ): <Typography gutterBottom style={{ textAlign: `center`}} variant="h5"><br/>There are no items in your cart.</Typography>
   );
 };
 

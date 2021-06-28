@@ -1,3 +1,4 @@
+import CartAttributes from './CartAttributes';
 import EditItem from './EditItem';
 import ItemImage from './ItemImage';
 import Status from './Status';
@@ -33,10 +34,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const EachItem = (props) => {
+
     const auth = useAuth();
     const router = useRouter();
 
-    const cartAttributes = props.item.cartAttributes || {};
     const [ item, setItem ] = useState(props.item);
     const [ fav, setFav ] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -59,41 +60,11 @@ const EachItem = (props) => {
             });
     };
 
-    const handleChange = e => {
-        e.preventDefault();
-        const {name, value} = e.target;
-        setItem({
-          ...item,
-          cartAttributes:{...cartAttributes, [name]: value}
-        });
-    };
-
     const handleFavorite = e => {
         e.preventDefault();
         setFav(!fav);
         auth.updateFavs(item.id, !fav);
     };
-
-    const onSubmit = async(e) => {
-        e.preventDefault();
-        const email = auth.userAuthData.email;
-        const hash = email + item.id;
-        const record = {...item, cartAttributes, email, hash};
-
-        setLoading(true);
-        await axios.post("/api/db", { operation: 'delete', record: item, table: 'items' })
-            .then(result => {
-              if(!result.data.error){
-                  setStatus({ ...status, ['message']: result.data.message });
-                  auth.deleteItem(item.id);
-                  setItem({});
-              } else{
-                  setStatus({ ...status, ['error']: result.data.error });
-              }
-            });
-
-        auth.updateCartItems(record);
-    }
 
     useEffect(() => {
         if(item){
@@ -120,7 +91,7 @@ const EachItem = (props) => {
             >
               <CardActionArea>
                 <div style={{ textAlign: `center` }}>
-                  <ItemImage item={item} mediaHt={props.fullScreen ? "50%" : "200"}/>
+                  <ItemImage item={item} mediaHt={props.mediaHt || props.fullScreen ? "50%" : "200"}/>
                 </div>
               </CardActionArea>
               <CardContent>
@@ -162,7 +133,6 @@ const EachItem = (props) => {
               {props.fullScreen &&
               <CardActions>
               <Container maxWidth="xs">
-                <form onSubmit={onSubmit}>
               <Typography gutterBottom>
                   Description: <br/>
                   {item.description}
@@ -180,60 +150,8 @@ const EachItem = (props) => {
                       </Grid>
                   ))}
                   </Grid>
+                  <CartAttributes item={item}/>
 
-                  <Grid container spacing={2}>
-
-                    {item.varAttributes && Object.keys(item.varAttributes).map(key => (
-                        <Grid item key={key} xs={6}>
-                        <FormControl fullWidth margin="normal" required>
-                          <InputLabel id={`${key}Label`}>{key}</InputLabel>
-                          <Select
-                            id={`${key}Select`}
-                            labelId={`${key}Label`}
-                            name={key}
-                            onChange={handleChange}
-                            value={cartAttributes[key] || ''}
-                          >
-                            {item.varAttributes[key].map( i => (
-                                <MenuItem key={i} value={i}>{i}</MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        </Grid>
-                    ))}
-
-                    <Grid item xs={6}>
-                      <FormControl fullWidth margin="normal" required>
-                        <InputLabel id="qtyLabel">Quantity</InputLabel>
-                        <Select
-                          id="qtyId"
-                          labelId="qtyLabel"
-                          name="qty"
-                          onChange={handleChange}
-                          value={ cartAttributes['qty'] }
-                        >
-                          {[0, 1, 2, 3, 4, 5].map(i => (
-                            <MenuItem key={i} value={i}> {i} </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-
-                  </Grid>
-                <Status loading={loading} status={status}/>
-                <br/>
-                <small>Note: Setting quantity to 0 removes the item from cart.</small>
-                <br/><br/>
-                <Button
-                  color="primary"
-                  fullWidth
-                  margin="normal"
-                  type="submit"
-                  variant="contained"
-                >
-                  Update Cart
-                </Button>
-                </form>
               </Container>
               </CardActions>
               }

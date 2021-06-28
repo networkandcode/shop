@@ -43,11 +43,13 @@ const useAuthProvider = () => {
     const [ favs, setFavs ] = useState([]);
 
     const updateCartItems = async(record) => {
-
-         if(cartItems.some(i => i.hash === record.hash)) {
+      console.log(record);
+         if(cartItems.some(i => i.hash === record.hash)){
+             console.log('some');
              var temp = [...cartItems];
              for(var j=0; j<temp.length; j++) {
                  if(temp[j].hash === record.hash) {
+                     console.log('hash_match');
                      if(record.cartAttributes.qty === 0) {
                          temp.splice(j, 1);
                          const dataObject = {
@@ -59,6 +61,7 @@ const useAuthProvider = () => {
 
                      } else{
 
+                         console.log('update');
                          temp[j] = record;
                          const dataObject = {
                            operation: 'update',
@@ -69,10 +72,12 @@ const useAuthProvider = () => {
 
                      }
                      setCartItems([...temp]);
+                     console.log([...temp]);
                      break;
                  }
              }
          } else if(record.cartAttributes.qty !== 0) {
+             console.log('not 0', record);
              const dataObject = { operation: 'insert', records: [ record ], table: 'cart_items' };
              await axios.post('/api/cart', dataObject);
              setCartItems([...cartItems, record]);
@@ -110,13 +115,18 @@ const useAuthProvider = () => {
     }
 
     useEffect(() => {
-        var totalPriceV = 0;
+
+        var temp = 0;
         cartItems.map(item => {
-            if(item) {
-                totalPriceV += item.cartAttributes.qty * item.price
+            const qty = item.cartAttributes.qty;
+            const price = item.price;
+            if(qty && price) {
+                temp += qty * item.price
             }
         });
-        setTotalPrice(totalPriceV);
+        console.log('price', temp);
+        setTotalPrice(temp);
+
     },[ cartItems ]);
 
     const signIn = async({ email, password }) => {

@@ -1,2 +1,8 @@
-- Multiple Images for each Item
+- Dynamic Price
 - Light & Dark Modes
+- Multiple Images for each Item
+- Orders history
+- Remove unused modules
+- Remove unused files
+- Run Lighthouse test
+- Signout Timer
