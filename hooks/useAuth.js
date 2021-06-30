@@ -129,6 +129,23 @@ const useAuthProvider = () => {
 
     },[ cartItems ]);
 
+    const signUp = async(email, password) => {
+        return await auth
+            .createUserWithEmailAndPassword(email, password)
+            .then((response) => {
+                auth.currentUser.sendEmailVerification(); 
+                setUserAuthData({
+                    ...userAuthData,
+                    email: response.user.email,
+                    emailVerified: response.user.emailVerified
+                });
+                return response.user;
+            })
+            .catch((error) => {
+                return { error };
+            });
+    };
+
     const signIn = async({ email, password }) => {
         return await auth
             .signInWithEmailAndPassword(email, password)
@@ -292,6 +309,7 @@ const useAuthProvider = () => {
         items,
         signIn,
         signOut,
+        signUp,
         totalPrice,
         updateCartItems,
         updateFavs,

@@ -55,8 +55,6 @@ const CartAttributes = (props) => {
 
     const updateCart = async(e) => {
 
-      console.log(cartAttributes);
-
       e.preventDefault();
 
       const email = auth.userAuthData.email;
@@ -76,15 +74,15 @@ const CartAttributes = (props) => {
     }
 
     useEffect(() => {
+      if(auth.userAuthData){
+        const hash = auth.userAuthData.email + item.id;
+        const cartItems = auth.cartItems;
 
-      const hash = auth.userAuthData.email + item.id;
-      const cartItems = auth.cartItems;
-
-      for(var i=0; i<cartItems.length; i++){
-        if(cartItems[i].hash === hash && cartItems[i].cartAttributes){
-          console.log({...cartItems[i].cartAttributes});
-          setCartAttributes({...cartItems[i].cartAttributes});
-          break;
+        for(var i=0; i<cartItems.length; i++){
+          if(cartItems[i].hash === hash && cartItems[i].cartAttributes){
+            setCartAttributes({...cartItems[i].cartAttributes});
+            break;
+          }
         }
       }
 

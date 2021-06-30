@@ -40,20 +40,44 @@ const Header = () => {
             <Link href="/"><a><Home onClick={() => {handleLinks('home')}}
               style={{backgroundColor: `${linkColor['home'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
             {' '}
-            <a href="https://api.whatsapp.com/send?phone=919500542709" target="_blank">
-              <WhatsApp
-              />
-            </a>
+            { process.env.NEXT_PUBLIC_WHATSAPP_NUMBER && (
+              <a href={`https://api.whatsapp.com/send?phone=${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`} target="_blank">
+                <WhatsApp
+                />
+              </a>
+            )}
             {' '}
             {process.env.NEXT_PUBLIC_YOUTUBE_URL && <a href={ process.env.NEXT_PUBLIC_YOUTUBE_URL } target="_blank"><YouTube /></a>}
             {' '}
-            <Link href="/f"><a><Favorite  onClick={()=>{handleLinks('favorites')}} style={{backgroundColor:`${linkColor['favorites'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
-            <small> { auth.favs.length > 0 && auth.favs.length } </small>
-            <Link href="/cart"><a><ShoppingCart  onClick={()=>{handleLinks('cart')}} style={{backgroundColor: `${linkColor['cart'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
-            <small> { auth.totalPrice > 0 && `Rs. ${auth.totalPrice}` } </small>
-          {auth.userAuthData &&(
-                <PowerSettingsNew  onClick={() => auth.signOut()}/>
-          )}
+            { auth.userAuthData
+              ? (
+                <>
+                  <Link href="/f"><a><Favorite
+                    onClick={()=>{handleLinks('favorites')}}
+                    style={{
+                      backgroundColor:`${linkColor['favorites'] || 'inherit'}`,
+                      borderRadius: `50%`
+                    }}
+                  /></a></Link>
+                  <small> { auth.favs.length > 0 && auth.favs.length } </small>
+
+                  <Link href="/cart"><a><ShoppingCart
+                    onClick={()=>{handleLinks('cart')}}
+                    style={{
+                      backgroundColor: `${linkColor['cart'] || 'inherit'}`,
+                      borderRadius: `50%`
+                    }}/>
+                  </a></Link>
+                  <small> { auth.totalPrice > 0 && `Rs. ${auth.totalPrice}` } </small>
+
+                  <PowerSettingsNew  onClick={() => auth.signOut()}/>
+                </>
+              ) : (
+                <Link href="/signin"><a>
+                  <PowerSettingsNew/>
+                </a></Link>
+              )
+            }
           </Grid>
         </Grid>
     </AppBar>

@@ -1,8 +1,10 @@
 - Dynamic Price
 - Light & Dark Modes
+- Limit items per page
 - Multiple Images for each Item
 - Orders history
 - Remove unused modules
 - Remove unused files
 - Run Lighthouse test
 - Signout Timer
+- Uniform indentation: 2 spaces

@@ -30,6 +30,7 @@ import { Add,
     WhatsApp
 } from '@material-ui/icons';
 import axios from 'axios';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -101,6 +102,7 @@ const EachItem = (props) => {
                               {item.name}
                           </Typography>
                       </Grid>
+                      { auth.userAuthData ? (
                       <Grid item xs={2}>
                           {fav
                               ? <Favorite
@@ -113,6 +115,7 @@ const EachItem = (props) => {
                               />
                           }
                       </Grid>
+                      ) : <></> }
                   </Grid>
                   <Grid container justify="space-between">
                       <Grid item>
@@ -150,7 +153,14 @@ const EachItem = (props) => {
                       </Grid>
                   ))}
                   </Grid>
-                  <CartAttributes item={item}/>
+                  { auth.userAuthData
+                    ? <CartAttributes item={item}/>
+                    : (
+                      <Link href="/signin"><a>
+                        <Button color="primary"> Sign in to Buy </Button>
+                      </a></Link>
+                    )
+                  }
 
               </Container>
               </CardActions>

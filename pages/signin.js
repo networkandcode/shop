@@ -36,43 +36,61 @@ const Auth = () => {
     }
     const onSubmit = async(e) => {
         e.preventDefault();
-        const { email, password } = data;      
-        if (email && password) {            
+        const { email, password } = data;
+        if (email && password) {
             setData({...data, ['isLoading']: true, ['error']: ''});          
-            if(data.newUser){                
+            if(data.newUser){
                 await auth.signUp(email, password).then((response) => {     
-                    console.log(response);                                   
                     setData({...data, ['isLoading']: false});
-                    response.error 
+                    response.error
                         ? setData({...data, ['error']: response.error.message})
-                        : router.push('/add');
+                        : router.push('/');
                 });
-            }else{            
+            }else{ 
                 await auth.signIn({email, password}).then((response) => {                    
                     setData({...data, ['isLoading']: false});
                     response.error 
                         ? setData({...data, ['error']: response.error.message})
-                        : router.push('/add');
+                        : router.push('/');
                 });
             }
         } else{
             setData({...data, ['error']: 'Please enter email and password'});
         }
-        
+
     }
-    useEffect(() => {        
-        console.log(auth.userAuthData)
-        if(auth.userAuthData && Object.entries(auth.userAuthData).length > 0){          
-          router.push('/add');
+
+  const resetPassword = async(e) => {
+        e.preventDefault();
+        const { email } = data;
+        if(email){
+            setLoading(true);
+            setStatus({...status, ['error']: ''});
+            const { email } = data;
+            await auth.sendPasswordResetEmail(email).then((response) => {
+                setLoading(false);
+                response.error
+                    ? setData({...data, ['error']: response.error.message})
+                    : setData({...data, ['message']: response});
+            });
+        } else{
+            setData({...data, ['error']: 'Please enter email'});
+        }
+  }
+
+    useEffect(() => {
+        if(auth.userAuthData && Object.entries(auth.userAuthData).length > 0){
+          router.push('/');
         }
     },[auth, router]);
+
     return(        
         <Container component="main" maxWidth="xs">
             <CssBaseline/>            
             <br/>
             <div className={styles.paper}>
                 <Avatar className={styles.avatar}>
-                    <LockOutlined className={styles.avatar}/>
+                    <LockOutlined/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Authentication
@@ -112,18 +130,36 @@ const Auth = () => {
                     {data.error && (
                         <p style={{color: "red"}}>{data.error}</p>
                     )}
-                    <Button   
+
+                    <FormControlLabel
+                        control={
+                        <Checkbox
+                            checked={data.newUser}
+                            color="primary"
+                            name="newUser"
+                            value="newUser"
+                            onChange={onChangeNewUser}
+                        />
+                        }
+                        label="New user"
+                    />
+
+                    {!data.newUser && (
+                        <Button onClick={resetPassword}>Reset password</Button>
+                    )}
+
+                    <Button
                         className={styles.submit}
                         color="primary"
-                        fullWidth             
-                        type="submit"      
+                        fullWidth
+                        type="submit"
                         variant="contained"
                     >
                         {data.newUser ? <>Sign up</> : <>Log in</> }
                     </Button>
                 </form>
-            </div>      
-        </Container>        
+            </div>
+        </Container>
     )
 }
 

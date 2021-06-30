@@ -5,12 +5,15 @@ import {
     Grid,
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const Favorites = (props) => {
     const router = useRouter();
     const auth = useAuth();
 
-    console.log(auth.favs);
+    useEffect(() => {
+      auth.userAuthData || router.push('/');
+    },[ auth, router ]);
 
     return (
         <Box p={2}>

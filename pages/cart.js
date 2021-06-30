@@ -27,8 +27,6 @@ const Row = (props) => {
   const [item, setItem] = useState({});
   const cartAttributes = props.cartItem.cartAttributes;
 
-  console.log(cartItem);
-
   const handleChange = e => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -39,6 +37,11 @@ const Row = (props) => {
     setCartItem({...temp});
     auth.updateCartItems(temp);
   };
+
+  useEffect(() => {
+    console.log(auth.userAuthData);
+    auth.userAuthData || router.push('/');
+  },[ auth, router ]);
 
   return (
     <TableRow>
@@ -98,8 +101,6 @@ const Cart = () => {
       router.push(`/checkout?sessionId=${sessionId}`);
     }
   }
-
-  console.log(auth.cartItems);
 
   return (
     auth.totalPrice > 0 ?(
