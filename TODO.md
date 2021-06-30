@@ -1,6 +1,7 @@
 - Dynamic Price
 - Light & Dark Modes
 - Limit items per page
+- Modular CSS
 - Multiple Images for each Item
 - Orders history
 - Remove unused modules

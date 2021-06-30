@@ -14,6 +14,7 @@ import {
   Home,
   PowerSettingsNew,
   ShoppingCart,
+  SupervisorAccount,
   WhatsApp,
   YouTube
 } from '@material-ui/icons';
@@ -71,6 +72,13 @@ const Header = () => {
                   <small> { auth.totalPrice > 0 && `Rs. ${auth.totalPrice}` } </small>
 
                   <PowerSettingsNew  onClick={() => auth.signOut()}/>
+                  { auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN && 
+                    <Link href="/add">
+                      <a>
+                        <SupervisorAccount/>
+                      </a>
+                    </Link>
+                  }
                 </>
               ) : (
                 <Link href="/signin"><a>

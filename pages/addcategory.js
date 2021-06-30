@@ -16,6 +16,7 @@ import axios from 'axios';
 import firebase from 'firebase';
 import 'firebase/storage';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const Add = () => {
@@ -98,6 +99,17 @@ const Add = () => {
     return (
         <Container maxWidth="xs">
           <br/>
+          <Link href="/add">
+            <a>
+              <Button color="disabled" variant="outlined">
+                Add Item
+              </Button>
+              {' '}
+              <Button color="primary" variant="outlined">
+                Add Category
+              </Button>
+            </a>
+          </Link>
           <form onSubmit={onSubmit}>
             <TextField
               autoComplete="name"
