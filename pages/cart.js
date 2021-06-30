@@ -23,6 +23,8 @@ import { useEffect, useState } from 'react';
 
 const Row = (props) => {
   const auth = useAuth();
+  const router = useRouter();
+
   const [cartItem, setCartItem] = useState(props.cartItem);
   const [item, setItem] = useState({});
   const cartAttributes = props.cartItem.cartAttributes;
@@ -39,7 +41,6 @@ const Row = (props) => {
   };
 
   useEffect(() => {
-    console.log(auth.userAuthData);
     auth.userAuthData || router.push('/');
   },[ auth, router ]);
 

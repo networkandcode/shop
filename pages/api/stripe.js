@@ -2,10 +2,14 @@ import Stripe from 'stripe';
 
 export default async (req, res) => {
     const items = req.body;
+    const email = items[0].email;
+
     var line_items = [];
     items.map(i => {
         if(i){
-            const { category, description, id, imgURL, name, price, qty } = i;
+            const { category, description, id, imgURL, name, price } = i;
+            const qty = i.cartAttributes.qty;
+
             line_items.push({
                 price_data: {
                   currency: 'inr',
@@ -23,6 +27,7 @@ export default async (req, res) => {
     });
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const session = await stripe.checkout.sessions.create({
+        customer_email: email,
         line_items,
         payment_method_types: ['card'],
         shipping_address_collection: {

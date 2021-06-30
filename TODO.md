@@ -3,9 +3,12 @@
 - Limit items per page
 - Modular CSS
 - Multiple Images for each Item
+- Multi currency
 - Orders history
+- Reduce content in hooks/useAuth.js
 - Remove unused modules
 - Remove unused files
 - Run Lighthouse test
+- Search
 - Signout Timer
 - Uniform indentation: 2 spaces
