@@ -6,13 +6,13 @@ import 'firebase/storage';
 if (!firebase.apps.length) {
   try {
     var firebaseConfig = {
-        apiKey: "AIzaSyArdLoByBNulFarJU73Sz3zLP4l7LT7oWM",
-        authDomain: "benuccimilano-eec7d.firebaseapp.com",
-        projectId: "benuccimilano-eec7d",
-        storageBucket: "benuccimilano-eec7d.appspot.com",
-        messagingSenderId: "244987086556",
-        appId: "1:244987086556:web:46703cac12c34fd7de5619",
-        measurementId: "G-WNDVX58ZQM"
+        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+        authDomain: `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseapp.com`,
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        storageBucket: `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.appspot.com`,
+        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+        measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
