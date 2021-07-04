@@ -40,7 +40,7 @@ const Banner = () => {
                           component="img"
                           alt="shopping"
                           height="150"
-                          image="https://source.unsplash.com/featured/?shopping"
+                          image={`https://source.unsplash.com/featured/?${process.env.NEXT_PUBLIC_UNSPLASH_BANNER_TAG}`}
                           title="shopping"
                         />
                       </CardActionArea>

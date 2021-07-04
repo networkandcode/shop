@@ -10,8 +10,10 @@ import {
   Button
 } from '@material-ui/core';
 import {
+  Facebook,
   Favorite,
   Home,
+  LocationOn,
   PowerSettingsNew,
   ShoppingCart,
   SupervisorAccount,
@@ -41,10 +43,21 @@ const Header = () => {
             <Link href="/"><a><Home onClick={() => {handleLinks('home')}}
               style={{backgroundColor: `${linkColor['home'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
             {' '}
+            { process.env.NEXT_PUBLIC_FACEBOOK_URL && (
+              <a href={process.env.NEXT_PUBLIC_FACEBOOK_URL} target="_blank">
+                <Facebook/>
+              </a>
+            )}
+            {' '}
+            { process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL && (
+              <a href={process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL} target="_blank">
+                <LocationOn/>
+              </a>
+            )}
+            {' '}
             { process.env.NEXT_PUBLIC_WHATSAPP_NUMBER && (
               <a href={`https://api.whatsapp.com/send?phone=${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`} target="_blank">
-                <WhatsApp
-                />
+                <WhatsApp/>
               </a>
             )}
             {' '}
