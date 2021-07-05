@@ -205,16 +205,33 @@ const ItemForm = (props) => {
               InputLabelProps={{
                 shrink: true,
               }}
-              label="Price in Rupee"
+              label="Selling price in Rupee"
               margin="normal"
               name="price"
               onChange={onChange}
-              placeholder="Price in Rupee"            
+              placeholder="Selling price in Rupee"            
               required
               type="number"
               value={item.price || ''}
-              variant="outlined"          
-            />             
+              variant="outlined"
+            />
+            <TextField
+              autoComplete="mrp"
+              fullWidth
+              helperText="Leave it empty if it same as selling price"
+              id="mrp"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              label="MRP in Rupee"
+              margin="normal"
+              name="mrp"
+              onChange={onChange}
+              placeholder="MRP in Rupee"
+              type="number"
+              value={item.mrp || ''}
+              variant="outlined"
+            />
             <small>
               Upload Image <br/>
             </small>

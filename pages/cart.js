@@ -1,4 +1,5 @@
 import EachItem from '../components/EachItem';
+import Status from '../components/Status';
 import { useAuth } from '../hooks/useAuth';
 import {
   Box,
@@ -28,16 +29,23 @@ const Row = (props) => {
   const [cartItem, setCartItem] = useState(props.cartItem);
   const [item, setItem] = useState({});
   const cartAttributes = props.cartItem.cartAttributes;
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState({
+    message: '',
+    error: ''
+  });
 
-  const handleChange = e => {
+  const handleChange = async(e) => {
     e.preventDefault();
+    setLoading(true);
     const { name, value } = e.target;
     const temp = {
       ...cartItem,
       cartAttributes:{...cartAttributes, [name]: value}
     };
     setCartItem({...temp});
-    auth.updateCartItems(temp);
+    await auth.updateCartItems(temp);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -82,6 +90,7 @@ const Row = (props) => {
             <MenuItem key={i} value={i}> {i} </MenuItem>
           ))}
       </Select>
+      <Status loading={loading} status={status}/>
       </TableCell>
       <TableCell> { cartItem.price } </TableCell>
       <TableCell> { cartItem.cartAttributes.qty * cartItem.price } </TableCell>
@@ -92,6 +101,7 @@ const Row = (props) => {
 const Cart = () => {
   const auth = useAuth();
   const router = useRouter();
+  const [ whatsAppText, setWhatsAppText ] = useState('');
 
   const handlePay = async(e) => {
     e.preventDefault();
@@ -102,6 +112,25 @@ const Cart = () => {
       router.push(`/checkout?sessionId=${sessionId}`);
     }
   }
+
+  const handleCod = () => {
+    var orderSummary = `Placing order via ${process.env.NEXT_PUBLIC_MY_DOMAIN}\n%0A\n%0A`;
+    orderSummary += 'Order summary as follows:\n%0A';
+    orderSummary += '-'.repeat(25) + '\n%0A';
+    var totalCost = 0;
+    for (var i=1; i<=auth.cartItems; i++) {
+        const item = auth.cartItems[i];
+        const name = item.name;
+        const qty  = item.cartAttributes.qty;
+        const price = item.price;
+        orderSummary += i + name + qty + ' * ' + price + ` ${qty * price} \n`;
+    }
+    setWhatsAppText(orderSummary);
+  }
+
+  useEffect(() => {
+    handleCod();
+  }, [ auth.cartItems ]);
 
   return (
     auth.totalPrice > 0 ?(
@@ -137,11 +166,21 @@ const Cart = () => {
         <Container style={{ textAlign: `center` }}>
           { auth.totalPrice > 0 && (
           <>
-            <Button color="primary" onClick={handlePay} variant="outlined">
-            <Typography variant="subtitle1">
-              Proceed to pay Rs. { auth.totalPrice }
-            </Typography>
-            </Button>
+            { process.env.NEXT_PUBLIC_PAYMENT_COD_ONLY !== "true"  ? (
+              <Button color="primary" onClick={handlePay} variant="outlined">
+              <Typography variant="subtitle1">
+                Proceed to pay Rs. { auth.totalPrice }
+              </Typography>
+              </Button>
+            ) : (
+              <a href={`https://api.whatsapp.com/send?phone=${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}&text=${whatsAppText}`} target="_blank">
+                <Button color="primary" variant="outlined">
+                  <Typography variant="subtitle1">
+                    Whatsapp us your COD order for Rs. { auth.totalPrice }
+                  </Typography>
+                </Button>
+              </a>
+            )}
             <br/><br/>
             <small> Note: PPU means Price Per Unit.<br/>All prices are in Indian Rupees. </small>
           </>

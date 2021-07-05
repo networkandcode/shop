@@ -122,6 +122,13 @@ const EachItem = (props) => {
                           <Typography variant="body1">
                               Rs. { item.price }
                           </Typography>
+                          { item.mrp &&
+                              item.mrp > item.price ? (
+                                <Typography style={{ textDecoration: `line-through` }} variant="body2">
+                                    Rs. { item.mrp }
+                                </Typography>
+                             ) : <></>
+                          }
                       </Grid>
                       <Grid item>
                           {auth.userAuthData && (
