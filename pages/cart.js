@@ -118,13 +118,14 @@ const Cart = () => {
     orderSummary += 'Order summary as follows:\n%0A';
     orderSummary += '-'.repeat(25) + '\n%0A';
     var totalCost = 0;
-    for (var i=1; i<=auth.cartItems; i++) {
+    for (var i=0; i<auth.cartItems.length; i++) {
         const item = auth.cartItems[i];
         const name = item.name;
         const qty  = item.cartAttributes.qty;
         const price = item.price;
-        orderSummary += i + name + qty + ' * ' + price + ` ${qty * price} \n`;
+        orderSummary += `${i+1}. ${name}: ${qty} * ${price} = ${qty * price} \n%0A`;
     }
+    orderSummary += `%0ATotal price: ${auth.totalPrice}`;
     setWhatsAppText(orderSummary);
   }
 
