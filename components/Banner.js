@@ -56,7 +56,7 @@ const Banner = () => {
                       </CardActionArea>
                       <CardContent style={{background: `${ process.env.NEXT_PUBLIC_THEME_COLOR }`, color: `${process.env.NEXT_PUBLIC_THEME_COLOR_SEC}`}}>
                           <Typography style={{ fontFamily: `Monospace`, textShadow: `1px 1px`  }} variant="h3" component="h1"> { process.env.NEXT_PUBLIC_COMPANY_NAME } </Typography>
-                          <Typography component="p" paragraph variant="subtitle1"> 
+                          <Typography paragraph variant="h5"> 
                               { process.env.NEXT_PUBLIC_SUB_TITLE_1 }
                           </Typography>
                           <Typography component="p" paragraph variant="subtitle2">
