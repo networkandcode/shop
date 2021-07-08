@@ -36,13 +36,15 @@ const Banner = () => {
                   <Grid item xs={12} sm={12}>
                     <Card>
                       <CardActionArea>
-                        <CardMedia
-                          component="img"
-                          alt="shopping"
-                          height="150"
-                          image={`https://source.unsplash.com/featured/?${process.env.NEXT_PUBLIC_UNSPLASH_BANNER_TAG}`}
-                          title="shopping"
-                        />
+                        { process.env.NEXT_PUBLIC_UNSPLASH_BANNER_TAG && (
+                          <CardMedia
+                            component="img"
+                            alt="shopping"
+                            height="150"
+                            image={`https://source.unsplash.com/featured/?${process.env.NEXT_PUBLIC_UNSPLASH_BANNER_TAG}`}
+                            title="shopping"
+                          />
+                        )}
                         { process.env.NEXT_PUBLIC_COMPANY_BANNER_URL && (
                           <CardMedia
                             component="img"

@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
        <div>
           <Header id="#"/>
        </div>
-       <div style={{ marginTop: `90px` }}>
+       <div style={{ marginTop: `93px` }}>
           <Component {...pageProps}/>
           <Box mt={2}>
             <br/>

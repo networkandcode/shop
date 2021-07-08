@@ -123,9 +123,9 @@ const Cart = () => {
         const name = item.name;
         const qty  = item.cartAttributes.qty;
         const price = item.price;
-        orderSummary += `${i+1}. ${name}: ${qty} * ${price} = ${qty * price} \n%0A`;
+        orderSummary += `${i+1}. ${name}: ${qty} * ${price} = Rs.${qty * price} \n%0A`;
     }
-    orderSummary += `%0ATotal price: ${auth.totalPrice}`;
+    orderSummary += `%0ATotal price: ${auth.totalPrice} Indian Rupees`;
     setWhatsAppText(orderSummary);
   }
 
