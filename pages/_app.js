@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
        <div>
           <Header id="#"/>
        </div>
-       <div style={{ marginTop: `93px` }}>
+       <div style={{ marginTop: `${process.env.NEXT_PUBLIC_BANNER_MARGIN_TOP}` }}>
           <Component {...pageProps}/>
           <Box mt={2}>
             <br/>
