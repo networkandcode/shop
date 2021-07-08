@@ -10,6 +10,7 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
+          <meta property="og:image" content={ process.env.NEXT_PUBLIC_COMPANY_BANNER_URL || process.env.NEXT_PUBLIC_COMPANY_ICON_URL }/>
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
