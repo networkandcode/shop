@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }) {
           <Header id="#"/>
        </div>
        <div style={{
-         marginTop: `${process.env.NEXT_PUBLIC_BANNER_MARGIN_TOP}` }}>
+         paddingTop: `${process.env.NEXT_PUBLIC_BANNER_MARGIN_TOP}` }}>
           <Component {...pageProps}/>
           <Copyright/>
        </div>

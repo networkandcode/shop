@@ -84,6 +84,8 @@ const EachItem = (props) => {
           <Grid item key={item.id} xs={props.xsSize} sm={props.smSize}>
             <Card
                 style={{
+                    backgroundColor: `${auth.themeBgColor}`,
+                    color: `${auth.themeColor}`,
                     border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR_SEC }`,
                     borderRadius: `5px`,
                     boxShadow: `0.5px 0.5px`,
@@ -98,7 +100,7 @@ const EachItem = (props) => {
               <CardContent>
                   <Grid container justify="space-between">
                       <Grid item xs={10}>
-                          <Typography paragraph variant="body1">
+                          <Typography>
                               {item.name}
                           </Typography>
                       </Grid>
@@ -134,7 +136,7 @@ const EachItem = (props) => {
                           {auth.userAuthData && (
                               <>
                                   <EditItem item={item}/>
-                                  <DeleteForever color="disabled" onClick={deleteItem}/>
+                                  <DeleteForever color="disabled" onClick={deleteItem} style={{ color: `orange` }}/>
                               </>
                           )}
                       </Grid>

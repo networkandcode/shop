@@ -43,7 +43,6 @@ const Category = () => {
     <div
       style={{
         backgroundColor: `${auth.themeBgColor}`,
-        marginTop: `40px`,
         padding: `20px`
       }}
     >

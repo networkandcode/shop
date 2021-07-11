@@ -16,7 +16,7 @@ const Favorites = (props) => {
     },[ auth, router ]);
 
     return (
-        <Box p={2}>
+        <Box p={2} style={{ backgroundColor: `${auth.themeBgColor}` }}>
             <Grid container spacing={2}>
                 {auth.items.map(item => (
                     auth.favs.includes(item.id) &&

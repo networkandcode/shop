@@ -2,6 +2,7 @@ import ItemAttributes from '../components/ItemAttributes';
 import ItemVarAttributes from '../components/ItemVarAttributes';
 import Status from '../components/Status';
 import { useAuth } from '../hooks/useAuth';
+
 import {
     Button,
     Container,
@@ -11,6 +12,8 @@ import {
     Select,
     TextField
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
 import axios from 'axios';
 import firebase from 'firebase';
 import 'firebase/storage';
@@ -124,7 +127,9 @@ const ItemForm = (props) => {
     },[state, router]);
 
     return (
-        <Container maxWidth="xs">
+        <Container
+          maxWidth="xs"
+        >
           <br/>
           <Link href="/add">
             <a>
@@ -153,7 +158,7 @@ const ItemForm = (props) => {
               name="name"
               onChange={onChange}
               placeholder="Name of the Item"  
-              required      
+              required
               value={item.name || ''}
               variant="outlined"
               fullWidth

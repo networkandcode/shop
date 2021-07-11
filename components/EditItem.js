@@ -18,7 +18,7 @@ const EditItem = (props) => {
 
     return(
         <>
-            <Edit color="disabled" onClick={editItem}/>
+            <Edit onClick={editItem} style={{ color: `orange` }}/>
             <Dialog open={isDialogOpen} onClose={onDialogClose}>
                 <Close onClick={onDialogClose}/>
                 <ItemForm isNewItem={false} item={item}/>

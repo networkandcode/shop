@@ -135,7 +135,7 @@ const Cart = () => {
 
   return (
     auth.totalPrice > 0 ?(
-      <Box mt={3}>
+      <Box pt={3} style={{ backgroundColor: `${auth.themeBgColor}` }}>
         <TableContainer component={ Paper } style={{ padding: `auto`, margin: `auto`, marginTop: `0`, maxWidth: `600px`}}>
           <Typography style={{ padding: `10px` }} variant="h6">
             Please review your order.
@@ -188,7 +188,7 @@ const Cart = () => {
           )}
         </Container>
       </Box>
-    ): <Typography gutterBottom style={{ textAlign: `center`}} variant="h5"><br/>There are no items in your cart.</Typography>
+    ): <Typography style={{ backgroundColor: `${auth.themeBgColor}`, color: `${auth.themeColor}`, textAlign: `center`}} variant="h5"><br/>There are no items in your cart.</Typography>
   );
 };
 

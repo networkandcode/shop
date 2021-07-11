@@ -42,6 +42,7 @@ const useAuthProvider = () => {
     const [ totalPrice, setTotalPrice ] = useState(0)
     const [ favs, setFavs ] = useState([]);
     const [ isThemeLight, setIsThemeLight ] = useState(true);
+    const [ themeColor, setThemeColor ] = useState(process.env.NEXT_PUBLIC_THEME_LIGHT_COLOR);
     const [ themeBgColor, setThemeBgColor ] = useState(process.env.NEXT_PUBLIC_THEME_LIGHT_BG_COLOR);
 
     const updateCartItems = async(record) => {
@@ -119,8 +120,10 @@ const useAuthProvider = () => {
     const toggleTheme = () => {
         if(isThemeLight){
           setThemeBgColor(process.env.NEXT_PUBLIC_THEME_DARK_BG_COLOR);
+          setThemeColor(process.env.NEXT_PUBLIC_THEME_LIGHT_BG_COLOR);
         } else {
           setThemeBgColor(process.env.NEXT_PUBLIC_THEME_LIGHT_BG_COLOR);
+          setThemeColor(process.env.NEXT_PUBLIC_THEME_DARK_BG_COLOR);
         }
         setIsThemeLight(!isThemeLight);
     }
@@ -323,6 +326,7 @@ const useAuthProvider = () => {
         signOut,
         signUp,
         themeBgColor,
+        themeColor,
         toggleTheme,
         totalPrice,
         updateCartItems,

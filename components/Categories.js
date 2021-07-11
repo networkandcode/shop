@@ -86,30 +86,35 @@ const EachCategory = (props) => {
                               </a>
                           </Link>
                         </div>
-                        <CardContent>
+                        <CardContent
+                          style={{
+                            backgroundColor: `${auth.themeBgColor}`,
+                            color: `${auth.themeColor}`
+                          }}
+                        >
                             <Grid container justify="space-between">
                                 <Grid item xs={10}>
                                     <Link href={`/c?c=${category.name}`}>
                                         <a>
-                                            <Typography
-                                                gutterBottom
-                                                paragraph
-                                                variant="body1"
-                                                component="p"
-                                            >
-                                                {category.name.split('/').reverse()[0]}({noOfItems})
-                                            </Typography>
+                                          <Typography>
+                                            {category.name.split('/').reverse()[0]}({noOfItems})
+                                          </Typography>
                                         </a>
                                     </Link>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    {auth.userAuthData && (<DeleteForever color="disabled" onClick={() => deleteCategory(category.id)}/>)}
+                                    {auth.userAuthData && (<DeleteForever
+                                      onClick={() => deleteCategory(category.id)}
+                                      style={{ color: `orange` }}
+                                    />)}
                                 </Grid>
                             </Grid>
                         </CardContent>
+                        { loading || status.error || status.message && (
                         <CardActions>
                             <Status loading={loading} status={status}/>
                         </CardActions>
+                        )}
                     </CardActionArea>
                 </Card>
             </Grid>
