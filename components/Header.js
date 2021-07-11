@@ -1,3 +1,6 @@
+import ToggleTheme from './ToggleTheme';
+import { useAuth } from '../hooks/useAuth';
+
 import {
   AppBar,
   Box,
@@ -9,10 +12,12 @@ import {
   Typography,
   Button
 } from '@material-ui/core';
+
 import {
   Facebook,
   Favorite,
   Home,
+  Instagram,
   LocationOn,
   Phone,
   PowerSettingsNew,
@@ -21,11 +26,12 @@ import {
   WhatsApp,
   YouTube
 } from '@material-ui/icons';
+
 import { Alert } from '@material-ui/lab';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
 
 const Header = () => {
   const auth = useAuth();
@@ -42,6 +48,7 @@ const Header = () => {
                 <Alert severity="info">{ process.env.NEXT_PUBLIC_ALERT_MESSAGE }</Alert>
             </Grid>
           )}
+
           <Grid item style={{ color: `${process.env.NEXT_PUBLIC_THEME_COLOR_SEC}`, textAlign: `right` }} xs={12}>
             <Link href="/"><a><Home onClick={() => {handleLinks('home')}}
               style={{backgroundColor: `${linkColor['home'] || 'inherit'}`, borderRadius: `50%`}}/></a></Link>
@@ -64,6 +71,12 @@ const Header = () => {
               </a>
             )}
             {' '}
+            { process.env.NEXT_PUBLIC_INSTAGRAM_URL && (
+              <a href={process.env.NEXT_PUBLIC_INSTAGRAM_URL} target="_blank">
+                <Instagram/>
+              </a>
+            )}
+            {' '}
             { process.env.NEXT_PUBLIC_WHATSAPP_NUMBER && (
               <a href={`https://api.whatsapp.com/send?phone=${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`} target="_blank">
                 <WhatsApp/>
@@ -71,6 +84,8 @@ const Header = () => {
             )}
             {' '}
             {process.env.NEXT_PUBLIC_YOUTUBE_URL && <a href={ process.env.NEXT_PUBLIC_YOUTUBE_URL } target="_blank"><YouTube /></a>}
+            {' '}
+            <ToggleTheme/>
             {' '}
             { auth.userAuthData
               ? (

@@ -93,6 +93,7 @@ const EachCategory = (props) => {
                                         <a>
                                             <Typography
                                                 gutterBottom
+                                                paragraph
                                                 variant="body1"
                                                 component="p"
                                             >

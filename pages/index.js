@@ -28,7 +28,12 @@ const Home = () => {
     return (
         <>
             <Banner/>
-            <div style={{ padding: `20px` }}>
+            <div
+              style={{
+                backgroundColor: `${auth.themeBgColor}`,
+                padding: `20px`
+              }}
+            >
                 {categories.length > 0 && (
                     <div style={{marginBottom: `20px`}}>
                         <Categories categories={categories}/>

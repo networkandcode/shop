@@ -41,6 +41,8 @@ const useAuthProvider = () => {
     const [ cartItems, setCartItems ] = useState([])
     const [ totalPrice, setTotalPrice ] = useState(0)
     const [ favs, setFavs ] = useState([]);
+    const [ isThemeLight, setIsThemeLight ] = useState(true);
+    const [ themeBgColor, setThemeBgColor ] = useState(process.env.NEXT_PUBLIC_THEME_LIGHT_BG_COLOR);
 
     const updateCartItems = async(record) => {
       console.log(record);
@@ -112,6 +114,15 @@ const useAuthProvider = () => {
               }
           }
         }
+    }
+
+    const toggleTheme = () => {
+        if(isThemeLight){
+          setThemeBgColor(process.env.NEXT_PUBLIC_THEME_DARK_BG_COLOR);
+        } else {
+          setThemeBgColor(process.env.NEXT_PUBLIC_THEME_LIGHT_BG_COLOR);
+        }
+        setIsThemeLight(!isThemeLight);
     }
 
     useEffect(() => {
@@ -306,10 +317,13 @@ const useAuthProvider = () => {
         deleteCategory,
         deleteItem,
         favs,
+        isThemeLight,
         items,
         signIn,
         signOut,
         signUp,
+        themeBgColor,
+        toggleTheme,
         totalPrice,
         updateCartItems,
         updateFavs,

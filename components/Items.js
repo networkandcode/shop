@@ -60,7 +60,7 @@ const Items = (props) => {
       <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
           Items <small>({items.length})</small>
       </Typography>
-      <Grid container spacing={2} style={{backgroundColor: `#FFFFFF`}}>
+      <Grid container spacing={2}>
           {items.map(item => (
             <EachItem fullScreen={false} item={item} key={item.id} smSize={3} xsSize={6}/>
           ))}

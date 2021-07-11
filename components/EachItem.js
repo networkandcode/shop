@@ -98,7 +98,7 @@ const EachItem = (props) => {
               <CardContent>
                   <Grid container justify="space-between">
                       <Grid item xs={10}>
-                          <Typography variant="body1">
+                          <Typography paragraph variant="body1">
                               {item.name}
                           </Typography>
                       </Grid>
