@@ -24,7 +24,6 @@ const dbWrite = async(data, operation, table) => {
     return await fetch(url, requestOptions)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
             return result;
         })
         .catch(error => {
