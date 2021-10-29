@@ -54,10 +54,12 @@ const EachCategory = (props) => {
 
     useEffect(() => {
         var temp = 0;
-        auth.items.forEach( i => {
-            if (i.category.startsWith(category.name)){
+        auth.listings.forEach( i => {
+          i.categories.forEach( j => {
+            if (j.startsWith(category.name)){
                 temp = temp + 1;
             }
+          });
         });
         setNoOfItems(temp)
     },[auth]);
@@ -74,7 +76,7 @@ const EachCategory = (props) => {
                 >
                     <CardActionArea>
                         <div style={{ textAlign: `center` }}>
-                          <Link href={`/c?c=${category.name}`}>
+                          <Link href={`/dc?c=${category.name}`}>
                               <a>
                                   <CardMedia
                                       alt={category.name}
@@ -94,7 +96,7 @@ const EachCategory = (props) => {
                         >
                             <Grid container justify="space-between">
                                 <Grid item xs={10}>
-                                    <Link href={`/c?c=${category.name}`}>
+                                    <Link href={`/dc?c=${category.name}`}>
                                         <a>
                                           <Typography>
                                             {category.name.split('/').reverse()[0]}({noOfItems})
@@ -103,7 +105,7 @@ const EachCategory = (props) => {
                                     </Link>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    {auth.userAuthData && (auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) && (<DeleteForever
+                                    {auth.userAuthData && (<DeleteForever
                                       onClick={() => deleteCategory(category.id)}
                                       style={{ color: `orange` }}
                                     />)}
@@ -122,7 +124,7 @@ const EachCategory = (props) => {
     )
 }
 
-const Categories = ({categories}) => {
+const DirCategories = ({categories}) => {
     return (
           <div>
               <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
@@ -137,4 +139,4 @@ const Categories = ({categories}) => {
     )
 }
 
-export default Categories
+export default DirCategories

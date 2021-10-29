@@ -1,5 +1,6 @@
 import Banner from '../components/Banner';
 import Categories from '../components/Categories';
+import DirCategories from '../components/DirCategories';
 import { useAuth } from '../hooks/useAuth'
 import { Card, CardActionArea, CardContent, CardMedia, Container, Dialog, Grid, Typography } from '@material-ui/core'
 import { Close, DeleteForever, KeyboardArrowUp } from '@material-ui/icons'
@@ -34,10 +35,20 @@ const Home = () => {
                 padding: `20px`
               }}
             >
+                <Typography style={{ color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5"> Shop </Typography>
                 {categories.length > 0 && (
                     <div style={{marginBottom: `20px`}}>
                         <Categories categories={categories}/>
                     </div>
+                )}
+                <br/>
+                {process.env.NEXT_PUBLIC_NEED_DIR && (categories.length > 0) && (
+                  <>
+                    <Typography style={{ color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5"> Directory </Typography>
+                      <div style={{marginBottom: `20px`}}>
+                        <DirCategories categories={categories}/>
+                      </div>
+                  </> 
                 )}
             </div>
         </>

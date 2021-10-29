@@ -106,7 +106,7 @@ const Header = () => {
                       borderRadius: `50%`
                     }}/>
                   </a></Link>
-                  <small> { auth.totalPrice > 0 && `Rs. ${auth.totalPrice}` } </small>
+                  <small> { auth.totalPrice > 0 && (auth.totalPrice > 1000 ? `${auth.totalPrice/1000}K` : `${auth.totalPrice}`) } </small>
 
                   <PowerSettingsNew  onClick={() => auth.signOut()}/>
                   { auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN && 

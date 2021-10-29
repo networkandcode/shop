@@ -37,6 +37,7 @@ const useAuthProvider = () => {
     const [ attributes, setAttributes ] = useState([])
     const [ categories, setCategories ] = useState([])
     const [ items, setItems ] = useState([])
+    const [ listings, setListings ] = useState([])
     const [ varAttributes, setVarAttributes ] = useState([])
     const [ cartItems, setCartItems ] = useState([])
     const [ totalPrice, setTotalPrice ] = useState(0)
@@ -180,6 +181,10 @@ const useAuthProvider = () => {
         setItems([...items, record]);
     };
 
+    const insertListing = async(record) => {
+        setListings([...listings, record]);
+    };
+
     const updateItem = async(record) => {
         var temp = [...items];
         temp.forEach((i, idx) => {
@@ -188,6 +193,16 @@ const useAuthProvider = () => {
             }
         });
         setItems([...temp]);
+    };
+
+    const updateListing = async(record) => {
+        var temp = [...listings];
+        temp.forEach((i, idx) => {
+            if(i.id === record.id) {
+                temp[idx] = record;
+            }
+        });
+        setListings([...temp]);
     };
 
     const addCategory = async(record) => {
@@ -212,6 +227,16 @@ const useAuthProvider = () => {
             }
         });
         setItems(temp);
+    }
+
+    const deleteListing = async(id) => {
+        var temp = [];
+        listings.forEach(i => {
+            if(i.id !== id) {
+                temp.push(i);
+            }
+        });
+        setListings(temp);
     }
 
     const handleAuthStateChanged = (user) => {
@@ -286,10 +311,24 @@ const useAuthProvider = () => {
             .catch( error => console.log(error) );
     }
 
+    const fetchListings = async() => {
+        return await dbFetch('listings')
+            .then(result => {
+                console.log('result', result);
+                if(!result.error) {
+                    setListings(result);
+                }
+            })
+            .catch( error => console.log('error', error) );
+    }
+
     // global data fetched by read_only_user via client
     useEffect(() => {
         fetchCategories();
         fetchItems();
+        if(process.env.NEXT_PUBLIC_NEED_DIR){
+          fetchListings();
+        }
     },[]);
 
     // global data fetched by super_user via server
@@ -322,6 +361,7 @@ const useAuthProvider = () => {
         favs,
         isThemeLight,
         items,
+        listings,
         signIn,
         signOut,
         signUp,

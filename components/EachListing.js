@@ -1,6 +1,6 @@
 import CartAttributes from './CartAttributes';
-import EditItem from './EditItem';
-import ItemImage from './ItemImage';
+import EditListing from './EditListing';
+import ListingImage from './ListingImage';
 import Status from './Status';
 import { useAuth } from '../hooks/useAuth';
 import {
@@ -34,12 +34,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const EachItem = (props) => {
+const EachListing = (props) => {
 
     const auth = useAuth();
     const router = useRouter();
 
-    const [ item, setItem ] = useState(props.item);
+    const [ listing, setListing ] = useState(props.listing);
     const [ fav, setFav ] = useState(false);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({
@@ -47,14 +47,14 @@ const EachItem = (props) => {
         error: ''
     });
 
-    const deleteItem = async() => {
+    const deleteListing = async() => {
         setLoading(true);
-        await axios.post("/api/db", { operation: 'delete', record: item, table: 'items' })
+        await axios.post("/api/db", { operation: 'delete', record: listing, table: 'listings' })
             .then(result => {
               if(!result.data.error){
                   setStatus({ ...status, ['message']: result.data.message });
-                  auth.deleteItem(item.id);
-                  setItem({});
+                  auth.deleteListing(listing.id);
+                  setListing({});
               } else{
                   setStatus({ ...status, ['error']: result.data.error });
               }
@@ -64,12 +64,12 @@ const EachItem = (props) => {
     const handleFavorite = e => {
         e.preventDefault();
         setFav(!fav);
-        auth.updateFavs(item.id, !fav);
+        auth.updateFavs(listing.id, !fav);
     };
 
     useEffect(() => {
-        if(item){
-            const { id } = item;
+        if(listing){
+            const { id } = listing;
             if(auth.favs && auth.favs.includes(id)){
                 if(!fav) setFav(true);
             } else {
@@ -80,8 +80,8 @@ const EachItem = (props) => {
 
     return(
       <>
-        {item && item.imgURL && (
-          <Grid item key={item.id} xs={props.xsSize} sm={props.smSize}>
+        {listing && listing.imgURL && (
+          <Grid listing key={listing.id} xs={props.xsSize} sm={props.smSize}>
             <Card
                 style={{
                     backgroundColor: `${auth.themeBgColor}`,
@@ -94,17 +94,17 @@ const EachItem = (props) => {
             >
               <CardActionArea>
                 <div style={{ textAlign: `center` }}>
-                  <ItemImage item={item} mediaHt={props.mediaHt || props.fullScreen ? "50%" : "200"}/>
+                  <ListingImage listing={listing} mediaHt={props.mediaHt || props.fullScreen ? "50%" : "200"}/>
                 </div>
               </CardActionArea>
               <CardContent>
                   <Grid container justify="space-between">
                       <Grid item xs={10}>
                           <Typography>
-                              {item.name}
+                              {listing.name}
                           </Typography>
                       </Grid>
-                      { (auth.userAuthData && (auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) )? (
+                      { (auth.userAuthData && (auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) ) ? (
                       <Grid item xs={2}>
                           {fav
                               ? <Favorite
@@ -122,15 +122,12 @@ const EachItem = (props) => {
                   <Grid container justify="space-between">
                       <Grid item>
                           <Typography variant="body1">
-                              Rs. { item.price }
+                              { listing.name && listing.name }
+                              { listing.companyName && listing.companyName }
+                              { listing.description && listing.description }
+                              { listing.contactNumber && listing.contactNumber }
+                              { listing.address && listing.address }
                           </Typography>
-                          { item.mrp &&
-                              item.mrp > item.price ? (
-                                <Typography style={{ textDecoration: `line-through` }} variant="body2">
-                                    Rs. { item.mrp }
-                                </Typography>
-                             ) : <></>
-                          }
                       </Grid>
                       <Grid item>
                           {auth.userAuthData && (
@@ -140,9 +137,22 @@ const EachItem = (props) => {
                               </>
                           )}
                       </Grid>
+                      <Grid container spacing={2}>
+                        {listing.attributes && Object.keys(listing.attributes).map(key => (
+                        <Grid item key={key} xs={6}>
+                        <TextField
+                          fullWidth
+                          label={key}
+                          readOnly
+                          value={listing.attributes[key]}
+                        />
+                      </Grid>
+                  ))}
+                  </Grid>
+
                   </Grid>
               </CardContent>
-              {props.fullScreen &&
+              {/**props.fullScreen &&
               <CardActions>
               <Container maxWidth="xs">
               <Typography gutterBottom>
@@ -173,7 +183,7 @@ const EachItem = (props) => {
 
               </Container>
               </CardActions>
-              }
+              **/}
             </Card>
           </Grid>
       )}
