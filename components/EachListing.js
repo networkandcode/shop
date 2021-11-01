@@ -1,4 +1,3 @@
-import CartAttributes from './CartAttributes';
 import EditListing from './EditListing';
 import ListingImage from './ListingImage';
 import Status from './Status';
@@ -12,7 +11,6 @@ import {
     CardContent,
     CardMedia,
     Container,
-    Dialog,
     FormControl,
     IconButton,
     InputLabel,
@@ -21,11 +19,13 @@ import {
     TextField,
     Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { Add,
     Close,
     DeleteForever,
     Favorite,
     FavoriteBorder,
+    Phone,
     Remove,
     WhatsApp
 } from '@material-ui/icons';
@@ -34,11 +34,19 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const EachListing = (props) => {
+const useStyles = makeStyles(theme => ({
+    input: {
+      color: process.env.NEXT_PUBLIC_THEME_COLOR
+    },
+    label: {
+      color: process.env.NEXT_PUBLIC_THEME_COLOR
+    }
+}));
 
+const EachListing = (props) => {
+    const classes = useStyles();
     const auth = useAuth();
     const router = useRouter();
-
     const [ listing, setListing ] = useState(props.listing);
     const [ fav, setFav ] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -80,8 +88,8 @@ const EachListing = (props) => {
 
     return(
       <>
-        {listing && listing.imgURL && (
-          <Grid listing key={listing.id} xs={props.xsSize} sm={props.smSize}>
+        {listing && (
+          <Grid item key={listing.id} xs={props.xsSize} sm={props.smSize}>
             <Card
                 style={{
                     backgroundColor: `${auth.themeBgColor}`,
@@ -101,7 +109,7 @@ const EachListing = (props) => {
                   <Grid container justify="space-between">
                       <Grid item xs={10}>
                           <Typography>
-                              {listing.name}
+                              {listing.name || listing.companyName}
                           </Typography>
                       </Grid>
                       { (auth.userAuthData && (auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) ) ? (
@@ -119,21 +127,22 @@ const EachListing = (props) => {
                       </Grid>
                       ) : <></> }
                   </Grid>
-                  <Grid container justify="space-between">
+                  <Grid container>
                       <Grid item>
-                          <Typography variant="body1">
-                              { listing.name && listing.name }
-                              { listing.companyName && listing.companyName }
-                              { listing.description && listing.description }
-                              { listing.contactNumber && listing.contactNumber }
-                              { listing.address && listing.address }
+                          <Typography gutterBottom variant="body2">
+                              { listing.businessType || listing.categories.replace('/', ' >> ') }
+                          </Typography>
+                          <Typography variant="body2">
+                              <a href={`tel: ${listing.contactNumber}`}>
+                                <Phone style={{verticalAlign: `middle`}}/> { listing.contactNumber }
+                              </a>
                           </Typography>
                       </Grid>
                       <Grid item>
                           {auth.userAuthData && (
                               <>
-                                  <EditItem item={item}/>
-                                  <DeleteForever color="disabled" onClick={deleteItem} style={{ color: `orange` }}/>
+                                  <EditListing listing={listing}/>
+                                  <DeleteForever color="disabled" onClick={deleteListing} style={{ color: `orange` }}/>
                               </>
                           )}
                       </Grid>
@@ -144,6 +153,7 @@ const EachListing = (props) => {
                           fullWidth
                           label={key}
                           readOnly
+                          style={{color: `${auth.themeColor}`}}
                           value={listing.attributes[key]}
                         />
                       </Grid>
@@ -152,38 +162,51 @@ const EachListing = (props) => {
 
                   </Grid>
               </CardContent>
-              {/**props.fullScreen &&
+              { props.fullScreen && (
               <CardActions>
               <Container maxWidth="xs">
+              { Object.keys(listing).map(key => {
+                <Typography key={key}>
+                  {key} : {listing[key]}
+                </Typography>
+              })}
               <Typography gutterBottom>
-                  Description: <br/>
-                  {item.description}
+                {listing.companyName || listing.name}
               </Typography>
+              <Typography gutterBottom>
+                { listing.categories.replace('/', ' >> ') || listing.businessType }
+              </Typography>
+              <Typography gutterBottom>
+                {listing.description && listing.description}
+              </Typography>
+              {listing.address && (
+                <Typography gutterBottom>
+                  Address: <br/>
+                  {listing.address}
+                </Typography>
+              )}
               <br/>
                   <Grid container spacing={2}>
-                  {item.attributes && Object.keys(item.attributes).map(key => (
+                  {listing.attributes && Object.keys(listing.attributes).map(key => (
                       <Grid item key={key} xs={6}>
                         <TextField
                           fullWidth
+                          inputProps={{
+                            style: { color: `${auth.themeColor}` },
+                          }}
+                          InputLabelProps={{
+                            className: classes.label
+                          }}
                           label={key}
                           readOnly
-                          value={item.attributes[key]}
+                          value={listing.attributes[key]}
                         />
                       </Grid>
                   ))}
                   </Grid>
-                  { auth.userAuthData
-                    ? <CartAttributes item={item}/>
-                    : (
-                      <Link href="/signin"><a>
-                        <Button color="primary"> Sign in to Buy </Button>
-                      </a></Link>
-                    )
-                  }
-
               </Container>
               </CardActions>
-              **/}
+              )}
             </Card>
           </Grid>
       )}
@@ -191,4 +214,4 @@ const EachListing = (props) => {
     )
 }
 
-export default EachItem;
+export default EachListing;

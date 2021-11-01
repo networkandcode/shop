@@ -34,29 +34,31 @@ const Banner = () => {
           <Box>
               <Grid container>
                   <Grid item xs={12} sm={12}>
-                    <Card>
+                    <Card style={{ backgroundColor: `${process.env.NEXT_PUBLIC_THEME_COLOR}`, color: `${auth.themeBgColor}` }}>
                       <CardActionArea>
-                        { process.env.NEXT_PUBLIC_UNSPLASH_BANNER_TAG && (
-                          <CardMedia
-                            component="img"
-                            alt="shopping"
-                            height="150"
-                            image={`https://source.unsplash.com/featured/?${process.env.NEXT_PUBLIC_UNSPLASH_BANNER_TAG}`}
-                            title="shopping"
-                          />
-                        )}
                         { process.env.NEXT_PUBLIC_COMPANY_BANNER_URL && (
                           <CardMedia
                             component="img"
-                            alt="shopping"
-                            image={process.env.NEXT_PUBLIC_COMPANY_BANNER_URL}
-                            title="shopping"
+                            alt={ process.env.NEXT_PUBLIC_COMPANY_NAME }
+                            image={ process.env.NEXT_PUBLIC_COMPANY_BANNER_URL ||
+                              `https://source.unsplash.com/featured/?${process.env.NEXT_PUBLIC_UNSPLASH_BANNER_TAG}`
+                            }
+                            title={ process.env.NEXT_PUBLIC_COMPANY_NAME }
                           />
                         )}
                       </CardActionArea>
-                      <CardContent style={{background: `${ process.env.NEXT_PUBLIC_THEME_COLOR }`, color: `${process.env.NEXT_PUBLIC_THEME_COLOR_SEC}`}}>
-                          <Typography style={{ fontFamily: `Monospace`, textShadow: `1px 1px`  }} variant="h3" component="h1"> { process.env.NEXT_PUBLIC_COMPANY_NAME } </Typography>
-                          <Typography paragraph variant="h5"> 
+                      <CardContent>
+                          <Typography
+                            style={{
+                              fontFamily: `Monospace`,
+                              textShadow: `1px 1px`
+                            }}
+                            variant="h3"
+                            component="h1"
+                          >
+                            { process.env.NEXT_PUBLIC_COMPANY_NAME }
+                          </Typography>
+                          <Typography paragraph variant="h5">
                               { process.env.NEXT_PUBLIC_SUB_TITLE_1 }
                           </Typography>
                           <Typography component="p" paragraph variant="subtitle2">

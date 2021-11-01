@@ -20,6 +20,7 @@ import {
     TextField,
     Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { Add,
     Close,
     DeleteForever,
@@ -32,8 +33,17 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const CartAttributes = (props) => {
+const useStyles = makeStyles(theme => ({
+    input: {
+      color: process.env.NEXT_PUBLIC_THEME_COLOR
+    },
+    label: {
+      color: process.env.NEXT_PUBLIC_THEME_COLOR
+    }
+}));
 
+const CartAttributes = (props) => {
+    const classes = useStyles();
     const auth = useAuth();
     const router = useRouter();
 
@@ -113,7 +123,7 @@ const CartAttributes = (props) => {
 
             <Grid item xs={6}>
               <FormControl fullWidth margin="normal" required>
-                <InputLabel id="qtyLabel">Quantity</InputLabel>
+                <InputLabel id="qtyLabel" className={classes.label}>Quantity</InputLabel>
                 <Select
                   id="qtyId"
                   labelId="qtyLabel"

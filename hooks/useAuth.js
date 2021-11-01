@@ -93,7 +93,6 @@ const useAuthProvider = () => {
             // add item id to favorites
             if(!favs.includes(id)) {
                 const temp = [...favs, id];
-                console.log('ding');
                 setFavs(temp);
                 const record = { id: userAuthData.uid, favorites: temp };
                 await axios.post('/api/db', { operation: 'upsert', record, table: 'favorites' });
@@ -314,7 +313,6 @@ const useAuthProvider = () => {
     const fetchListings = async() => {
         return await dbFetch('listings')
             .then(result => {
-                console.log('result', result);
                 if(!result.error) {
                     setListings(result);
                 }

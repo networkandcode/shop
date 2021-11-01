@@ -1,5 +1,6 @@
+import Social from './Social';
 import { useAuth } from '../hooks/useAuth';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Grid, Typography } from '@material-ui/core';
 import Link from 'next/link';
 
 const Copyright = () => {
@@ -24,9 +25,10 @@ const Copyright = () => {
         {' '}
         {new Date().getFullYear() + 1}
         {'.'}
-        <br/>
-        <br/>
       </Typography>
+      <Grid container justify="center">
+        <Social/>
+      </Grid>
     </Box>
   );
 }

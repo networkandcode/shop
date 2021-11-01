@@ -1,4 +1,5 @@
 import EachItem from '../components/EachItem';
+import EachListing from '../components/EachListing';
 import { useAuth } from '../hooks/useAuth';
 import {
     Box,
@@ -24,6 +25,19 @@ const Favorites = (props) => {
                             fullScreen={false}
                             item={item}
                             key={item.id}
+                            smSize={3}
+                            xsSize={6}
+                        />
+                ))}
+            </Grid>
+            <br/>
+            <Grid container spacing={2}>
+                {auth.listings.map(listing => (
+                    auth.favs.includes(listing.id) &&
+                        <EachListing
+                            fullScreen={false}
+                            listing={listing}
+                            key={listing.id}
                             smSize={3}
                             xsSize={6}
                         />

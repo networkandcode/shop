@@ -23,7 +23,7 @@ const Category = () => {
       if(c){
         var i = [];
         auth.items.map(item => {
-            if (item.category === c) {
+            if (item.category.startsWith(c)) {
                 i.push(item);
             }
         })
@@ -47,7 +47,7 @@ const Category = () => {
       }}
     >
         <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
-            <Link href="/"><a> Home </a></Link>
+            <Link href="/"><a> {process.env.NEXT_PUBLIC_COMPANY_NAME || 'Home'} </a></Link> >> <Link href="/shop"><a> Shop </a></Link>
             { category && category.split('/').map((i, idx) => (
                 <Link key={`/c?c=${i}`} href={`/c?c=${category.split('/').slice(0,idx+1).join('/')}`}>
                     <a> >> {i}</a>

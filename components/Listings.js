@@ -1,8 +1,8 @@
 import EachListing from './EachListing';
-import EditItem from './EditItem';
+import EditListing from './EditListing';
 import Status from './Status';
-import { db } from '../utils/firebase';
 import { useAuth } from '../hooks/useAuth';
+import { db } from '../utils/firebase';
 import {
     Box,
     Button,
@@ -35,38 +35,66 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const Listings = (props) => {
+const Listings = ({ listings }) => {
   const router = useRouter();
   const auth = useAuth();
-  const [ items, setItems ] = useState([]);
-  const [ refresh, setRefresh ] = useState(false);
+  //const [ listings, setListings ] = useState([]);
 
-  useEffect(() => {
-      const { c } = router.query;
+  /*useEffect(() => {
+      const { pathname } = router;
+      const { c, s } = router.query;
 
       if(c){
         var i = [];
-        auth.listings.map(item => {
-            if (item.category.startsWith(c)) {
-                i.push(item);
+        auth.listings.map(listing => {
+          listing.categories && listing.categories.split(',').forEach( category => {
+            if (category.trim().startsWith(c)) {
+                i.push(listing);
             }
+          });
         })
-        setItems([...i]);
-      }
-  }, [auth.listings, router]);
+        setListings([...i]);
+      } else if(pathname === '/directory'){
+        var i = [];
 
-  return (
-    <div>
+        auth.listings.map(listing => {
+          if (listing.categories) {
+            i.push(listing);
+          }
+        });
+
+        setListings([...i]);
+      } else if(pathname == '/search'){
+        auth.listings.map(listing => {
+          if(s) {
+            const searchFound = s.split().every(sTerm => {
+              return Object.values(listing).join().includes(sTerm); 
+            })
+
+            if(searchFound && listing.categories) {
+              i.push(listing);
+            }
+          } else {
+            if (listing.categories) {
+              i.push(listing);
+            }
+          }
+        });
+      }
+  }, [auth.listings, router]);*/
+
+  return(
+    <>
       <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
-          Listings <small>({items.length})</small>
+          Listings <small>({listings.length})</small>
       </Typography>
       <Grid container spacing={2}>
-          {items.map(item => (
-            <EachListing fullScreen={false} listing={item} key={item.id} smSize={3} xsSize={6}/>
+          {listings.map(listing => (
+            <EachListing fullScreen={false} listing={listing} key={listing.id} smSize={3} xsSize={6}/>
           ))}
       </Grid>
-    </div>
-  );
+    </>
+  )
 };
 
 export default Listings;

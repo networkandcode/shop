@@ -12,7 +12,6 @@ import {
     CardContent,
     CardMedia,
     Container,
-    Dialog,
     FormControl,
     IconButton,
     InputLabel,
@@ -21,6 +20,7 @@ import {
     TextField,
     Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { Add,
     Close,
     DeleteForever,
@@ -34,8 +34,17 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const EachItem = (props) => {
+const useStyles = makeStyles(theme => ({
+    input: {
+      color: process.env.NEXT_PUBLIC_THEME_COLOR
+    },
+    label: {
+      color: process.env.NEXT_PUBLIC_THEME_COLOR
+    }
+}));
 
+const EachItem = (props) => {
+    const classes = useStyles();
     const auth = useAuth();
     const router = useRouter();
 
@@ -155,6 +164,12 @@ const EachItem = (props) => {
                       <Grid item key={key} xs={6}>
                         <TextField
                           fullWidth
+                          inputProps={{
+	                            style: { color: `${auth.themeColor}` },
+                          }}
+                          InputLabelProps={{
+                            className: classes.label
+                          }}
                           label={key}
                           readOnly
                           value={item.attributes[key]}

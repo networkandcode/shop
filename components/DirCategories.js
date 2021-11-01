@@ -23,7 +23,7 @@ import { useEffect, useState } from 'react';
 const EachCategory = (props) => {
     const auth = useAuth();
     const [ category, setCategory ] = useState(props.category);
-    const [ noOfItems, setNoOfItems ] = useState(0);
+    const [ noOfListings, setNoOfListings ] = useState(0);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({
         message: '',
@@ -55,17 +55,20 @@ const EachCategory = (props) => {
     useEffect(() => {
         var temp = 0;
         auth.listings.forEach( i => {
-          i.categories.forEach( j => {
-            if (j.startsWith(category.name)){
-                temp = temp + 1;
-            }
-          });
+          if(i.categories){
+            i.categories.split(',').forEach( j => {
+              if (j.trim().startsWith(category.name)){
+                  temp = temp + 1;
+              } else {
+              }
+            });
+          }
         });
-        setNoOfItems(temp)
+        setNoOfListings(temp)
     },[auth]);
 
     return (
-        <>{category && category.imgURL && (noOfItems > 0) &&
+        <>{category && category.imgURL && (noOfListings > 0) &&
             <Grid item key={category.id} xs={6} sm={3}>
                 <Card
                     style={{
@@ -99,7 +102,7 @@ const EachCategory = (props) => {
                                     <Link href={`/dc?c=${category.name}`}>
                                         <a>
                                           <Typography>
-                                            {category.name.split('/').reverse()[0]}({noOfItems})
+                                            {category.name.split('/').reverse()[0]}({noOfListings})
                                           </Typography>
                                         </a>
                                     </Link>

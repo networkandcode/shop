@@ -1,4 +1,4 @@
-import EachItem from './EachItem';
+import EachListing from './EachListing';
 import { useAuth } from '../hooks/useAuth';
 import {
     CardMedia,
@@ -11,27 +11,27 @@ import {
 import Link from 'next/link';
 import { useState } from 'react';
 
-const ItemImage = ({item, mediaHt}) => {
+const ListingImage = ({listing, mediaHt}) => {
   const auth = useAuth();
   const [openDialog, setOpenDialog] = useState(false);
 
   return(
     <>
-      <Link href={`/item?i=${item.id}`}><a>
+      <Link href={`/listing/${listing.id}`}><a>
         <CardMedia
-          alt={item.name}
+          alt={listing.name}
           component="img"
           height={mediaHt}
-          image={item.imgURL || `https://source.unsplash.com/featured/?${item.category}`}
+          image={listing.imgURL || `https://source.unsplash.com/featured/?${listing.categories} ${listing.businessType}`}
           /* onClick={() => setOpenDialog(true)} */
-          title={item.name}
+          title={listing.name}
         />
       </a></Link>
       <Dialog fullScreen onClose={() => {setOpenDialog(false)}} open={openDialog}>
           <div style={{ backgroundColor: `${auth.themeBgColor}`, width: `100%` }} >
             <Container maxWidth="xs">
             <Close onClick={() => { setOpenDialog(false) } } style={{ color: `${auth.themeColor}` }}/>
-            <EachItem fullScreen={true} item={item} key={item.id} smSize={12} xsSize={12}/>
+            <EachListing fullScreen={true} listing={listing} key={listing.id} smSize={12} xsSize={12}/>
             <br/>
             </Container>
           </div>
@@ -40,4 +40,4 @@ const ItemImage = ({item, mediaHt}) => {
   )
 }
 
-export default ItemImage;
+export default ListingImage;

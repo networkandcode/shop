@@ -9,9 +9,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const Category = () => {
+  // hooks can be called only inside a body function
   const router = useRouter();
   const auth = useAuth();
-  const [ items, setItems ] = useState([]);
+  const [ listings, setListings ] = useState([]);
   const [ refresh, setRefresh ] = useState(false);
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState([]);
@@ -22,14 +23,14 @@ const Category = () => {
 
       if(c){
         var i = [];
-        auth.listings.map(item => {
-            item.categories.map( j => {
-              if (j === c) {
-                i.push(item);
+        auth.listings.forEach(listing => {
+            listing.categories && listing.categories.split(',').map( j => {
+              if (j.trim() === c) {
+                i.push(listing);
               }
             })
         })
-        setItems([...i]);
+        setListings([...i]);
         var temp = [];
         for(var i=0; i<auth.categories.length; i++){
             const name = auth.categories[i].name;
@@ -39,7 +40,7 @@ const Category = () => {
         }
         setCategories([...temp]);
       }
-  }, [auth, router]);
+  }, [auth]);
 
   return (
     <div
@@ -49,7 +50,7 @@ const Category = () => {
       }}
     >
         <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
-            <Link href="/"><a> Home </a></Link>
+            <Link href="/"><a> {process.env.NEXT_PUBLIC_COMPANY_NAME || 'Home'} </a></Link> >> <Link href="/directory"><a> Directory </a></Link>
             { category && category.split('/').map((i, idx) => (
                 <Link key={`/c?c=${i}`} href={`/c?c=${category.split('/').slice(0,idx+1).join('/')}`}>
                     <a> >> {i}</a>
@@ -61,7 +62,7 @@ const Category = () => {
                 <DirCategories categories={categories}/>
             </div>
         )}
-        <Listings items={items}/>
+        <Listings listings={listings}/>
     </div>
   );
 };

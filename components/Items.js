@@ -35,13 +35,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const Items = (props) => {
+const Items = ({items}) => {
   const router = useRouter();
   const auth = useAuth();
-  const [ items, setItems ] = useState([]);
+  //const [ items, setItems ] = useState([]);
   const [ refresh, setRefresh ] = useState(false);
 
-  useEffect(() => {
+  /*useEffect(() => {
+      const { pathname } = router;
       const { c } = router.query;
 
       if(c){
@@ -52,8 +53,17 @@ const Items = (props) => {
             }
         })
         setItems([...i]);
+      } else if(pathname === '/shop'){
+        var i = [];
+        auth.items.map(item => {
+            if (item.category) {
+                i.push(item);
+            }
+        })
+        setItems([...i]);
       }
-  }, [auth.items, router]);
+
+  }, [auth.items, router]);*/
 
   return (
     <div>

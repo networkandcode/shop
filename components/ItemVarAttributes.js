@@ -42,7 +42,13 @@ const availableAttributes = (props) => {
 
     return(
         availableAttributes.map (availableAttribute => (
-            <FormControl fullWidth key={availableAttribute.id}  margin="normal" required>
+            <FormControl
+              fullWidth
+              key={availableAttribute.id}
+              margin="normal"
+              required
+              style={{ color: `${auth.themeColor}` }}
+            >
                 <InputLabel id={`${availableAttribute.name}Label`}>{availableAttribute.name}(choice)</InputLabel>
                 <Select
                     id={`${availableAttribute.name}Select`}
