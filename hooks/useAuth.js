@@ -368,7 +368,7 @@ const useAuthProvider = () => {
     useEffect(() => {
         fetchCategories();
         fetchItems();
-        if(process.env.NEXT_PUBLIC_NEED_DIR){
+        if(process.env.NEXT_PUBLIC_NEED_DIR=='true'){
           fetchListings();
           fetchServices();
           fetchArticles();

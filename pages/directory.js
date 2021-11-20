@@ -11,36 +11,35 @@ import { useEffect, useState } from 'react';
 
 const Home = () => {
 
-    const auth = useAuth();
+    const state = useAuth();
     const router = useRouter();
     const [ categories, setCategories ] = useState([]);
     const [ listings, setListings ] = useState([]);
 
     useEffect(() => {
-        const {sub} = router.query;
         var temp = [];
 
-        var i = [];
-        auth.listings.map(listing => {
+        var tempListings = [];
+        state.listings.forEach(listing => {
             if (listing.categories) {
-                i.push(listing);
+                tempListings.push(listing);
             }
         })
-        setListings([...i]);
+        setListings(tempListings);
 
-        auth.categories.length > 0 && auth.categories.forEach(i => {
+        state.categories.length > 0 && state.categories.forEach(i => {
             if(!i.name.includes('/')){
                 temp.push(i);
             }
         });
         setCategories(temp);
-    },[auth, router])
+    },[state, router])
 
     return (
         <>
             <div
               style={{
-                backgroundColor: `${auth.themeBgColor}`,
+                backgroundColor: `${state.themeBgColor}`,
                 padding: `20px`
               }}
             >
