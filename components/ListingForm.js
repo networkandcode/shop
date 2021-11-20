@@ -102,7 +102,7 @@ const ListingForm = (props) => {
         if (imgURL){
             const temp = listing.categories;
             var operation;
-            var record = {...listing, imgURL, addedByAdmin: true, categories: temp};
+            var record = {...listing, imgURL, categories: temp};
 
             if(props.isNewListing) {
                 operation = 'insert';
@@ -150,29 +150,33 @@ const ListingForm = (props) => {
           maxWidth="xs"
         >
           <br/>
-          <Link href="/add">
-            <a>
-              <Button color="disabled" variant="outlined">
-                Add Listing
-              </Button>
-            </a>
-          </Link>
-          {' '}
-          <Link href="/addcategory">
-            <a>
-              <Button color="disabled" variant="outlined">
-                Add Category
-              </Button>
-            </a>
-          </Link>
-          {' '}
-          <Link href="/addlisting">
-            <a>
-              <Button color="primary" variant="outlined">
-                Add Listing
-              </Button>
-            </a>
-          </Link>
+          { (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) && (
+            <>
+              <Link href="/add">
+                <a>
+                  <Button color="disabled" variant="outlined">
+                    Add Listing
+                  </Button>
+                </a>
+              </Link>
+              {' '}
+              <Link href="/addcategory">
+                <a>
+                  <Button color="disabled" variant="outlined">
+                    Add Category
+                  </Button>
+                </a>
+              </Link>
+              {' '}
+              <Link href="/addlisting">
+                <a>
+                  <Button color="primary" variant="outlined">
+                    Add Listing
+                  </Button>
+                </a>
+              </Link>
+            </>
+          )}
           <form onSubmit={onSubmit}>
             <TextField
               autoComplete="name"

@@ -2,7 +2,6 @@ import ToggleTheme from './ToggleTheme';
 import { useAuth } from '../hooks/useAuth';
 
 import {
-  AccountCircle,
   AppBar,
   Box,
   Card,
@@ -24,6 +23,7 @@ import {
 } from '@material-ui/core';
 
 import {
+  AccountCircle,
   Favorite,
   Instagram,
   Phone,
@@ -200,13 +200,13 @@ const Header = () => {
                     </Grid>
                     ) : (
                     <Grid item>
-                      <Link href="/add">
+                      <Link href="/profile">
                         <a>
                           <AccountCircle/>
                         </a>
                       </Link>
                     </Grid>
-                  }
+                  )}
                 </>
               ) : (
                 <Grid item>
