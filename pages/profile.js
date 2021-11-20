@@ -1,9 +1,9 @@
 import ListingForm from '../components/ListingForm';
 import { useAuth } from '../hooks/useAuth';
 import router from 'next/router';
-import { useEffect, useRouter } from 'react';
+import { useEffect, useState } from 'react';
 
-const Add = () => {
+const Profile = () => {
   const state = useAuth();
   const [ listing, setListing ] = useState({addedByAdmin: false, email: state.userAuthData.email});
   const [ isNewListing, setIsNewListing ] = useState(true);
@@ -15,7 +15,7 @@ const Add = () => {
         setIsNewListing(false);
       }
     })
-  },[]);
+  },[state]);
 
   if(state.userAuthData && (state.userAuthData.email !== process.env.NEXT_PUBLIC_ADMIN)){
     return <ListingForm isNewListing={isNewListing} listing={listing}/>;
@@ -23,4 +23,4 @@ const Add = () => {
   return <div style={{ padding: `100px`, textAlign: `center` }}>Page doesn't exist</div>;
 }
 
-export default Add
+export default Profile;
