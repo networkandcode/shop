@@ -9,6 +9,7 @@ import {
 import dbDelete from '../utils/dbDelete';
 import dbFetch from '../utils/dbFetch';
 import { auth, storage } from '../utils/firebase';
+import { makeStyles } from '@material-ui/core/styles';
 import firebase from 'firebase';
 
 const hdbCredential = {
@@ -38,6 +39,8 @@ const useAuthProvider = () => {
     const [ categories, setCategories ] = useState([])
     const [ items, setItems ] = useState([])
     const [ listings, setListings ] = useState([])
+    const [ services, setServices ] = useState([])
+    const [ articles, setArticles ] = useState([])
     const [ varAttributes, setVarAttributes ] = useState([])
     const [ cartItems, setCartItems ] = useState([])
     const [ totalPrice, setTotalPrice ] = useState(0)
@@ -47,7 +50,6 @@ const useAuthProvider = () => {
     const [ themeBgColor, setThemeBgColor ] = useState(process.env.NEXT_PUBLIC_THEME_LIGHT_BG_COLOR);
 
     const updateCartItems = async(record) => {
-      console.log(record);
          if(cartItems.some(i => i.hash === record.hash)){
              console.log('some');
              var temp = [...cartItems];
@@ -138,7 +140,6 @@ const useAuthProvider = () => {
                 temp += qty * item.price
             }
         });
-        console.log('price', temp);
         setTotalPrice(temp);
 
     },[ cartItems ]);
@@ -320,12 +321,57 @@ const useAuthProvider = () => {
             .catch( error => console.log('error', error) );
     }
 
+    const fetchServices = async() => {
+        return await dbFetch('services')
+            .then(result => {
+                if(!result.error) {
+                    setServices(result);
+                }
+            })
+            .catch( error => console.log('error', error) );
+    }
+
+    const fetchArticles = async() => {
+        return await dbFetch('articles')
+            .then(result => {
+                console.log(result);
+                if(!result.error) {
+                    setArticles(result);
+                }
+            })
+            .catch( error => console.log('error', error) );
+    }
+
+    const useStyles = makeStyles(theme => ({
+      body: {
+        color: `${themeColor}`,
+      },
+      card: {
+        backgroundColor: `${themeBgColor}`,
+        color: `${themeColor}`,
+        border: `0.1px solid ${themeColor}`,
+        borderRadius: `5px`,
+        boxShadow: `0.5px 0.5px`,
+      },
+      heading: {
+        color: `${process.env.NEXT_PUBLIC_THEME_COLOR}`,
+      },
+      input: {
+        color: process.env.NEXT_PUBLIC_THEME_COLOR
+      },
+      label: {
+        color: process.env.NEXT_PUBLIC_THEME_COLOR
+      }
+    }));
+
     // global data fetched by read_only_user via client
     useEffect(() => {
         fetchCategories();
         fetchItems();
         if(process.env.NEXT_PUBLIC_NEED_DIR){
           fetchListings();
+          fetchServices();
+          fetchArticles();
         }
     },[]);
 
@@ -350,16 +396,20 @@ const useAuthProvider = () => {
 
     return {
         addCategory,
-        insertItem,
+        articles,
         attributes,
         cartItems,
         categories,
         deleteCategory,
         deleteItem,
+        deleteListing,
         favs,
         isThemeLight,
+        insertItem,
+        insertListing,
         items,
         listings,
+        services,
         signIn,
         signOut,
         signUp,
@@ -370,7 +420,9 @@ const useAuthProvider = () => {
         updateCartItems,
         updateFavs,
         updateItem,
+        updateListing,
         userAuthData,
+        useStyles,
         varAttributes
     };
 };

@@ -34,18 +34,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const useStyles = makeStyles(theme => ({
-    input: {
-      color: process.env.NEXT_PUBLIC_THEME_COLOR
-    },
-    label: {
-      color: process.env.NEXT_PUBLIC_THEME_COLOR
-    }
-}));
-
 const EachItem = (props) => {
-    const classes = useStyles();
-    const auth = useAuth();
+    const state = useAuth();
+    const classes = state.useStyles();
     const router = useRouter();
 
     const [ item, setItem ] = useState(props.item);
@@ -62,7 +53,7 @@ const EachItem = (props) => {
             .then(result => {
               if(!result.data.error){
                   setStatus({ ...status, ['message']: result.data.message });
-                  auth.deleteItem(item.id);
+                  state.deleteItem(item.id);
                   setItem({});
               } else{
                   setStatus({ ...status, ['error']: result.data.error });
@@ -73,13 +64,13 @@ const EachItem = (props) => {
     const handleFavorite = e => {
         e.preventDefault();
         setFav(!fav);
-        auth.updateFavs(item.id, !fav);
+        state.updateFavs(item.id, !fav);
     };
 
     useEffect(() => {
         if(item){
             const { id } = item;
-            if(auth.favs && auth.favs.includes(id)){
+            if(state.favs && state.favs.includes(id)){
                 if(!fav) setFav(true);
             } else {
                 if(fav) setFav(false);
@@ -92,12 +83,8 @@ const EachItem = (props) => {
         {item && item.imgURL && (
           <Grid item key={item.id} xs={props.xsSize} sm={props.smSize}>
             <Card
+                className={classes.card}
                 style={{
-                    backgroundColor: `${auth.themeBgColor}`,
-                    color: `${auth.themeColor}`,
-                    border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR_SEC }`,
-                    borderRadius: `5px`,
-                    boxShadow: `0.5px 0.5px`,
                     height: `${ props.fullScreen ? "100%" : "300" }`
                 }}
             >
@@ -113,7 +100,7 @@ const EachItem = (props) => {
                               {item.name}
                           </Typography>
                       </Grid>
-                      { (auth.userAuthData && (auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) )? (
+                      { (state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) )? (
                       <Grid item xs={2}>
                           {fav
                               ? <Favorite
@@ -129,6 +116,7 @@ const EachItem = (props) => {
                       ) : <></> }
                   </Grid>
                   <Grid container justify="space-between">
+                      { item.price > 0 ? (
                       <Grid item>
                           <Typography variant="body1">
                               Rs. { item.price }
@@ -141,8 +129,18 @@ const EachItem = (props) => {
                              ) : <></>
                           }
                       </Grid>
+                      ) : (
                       <Grid item>
-                          {auth.userAuthData && (
+                        <a
+                          href={`https://api.whatsapp.com/send?phone=${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}&text='please send quote for ${item.name} at https://marebox.co.in/item/${item.id}'`}
+                          target="_blank"
+                        >
+                          <Button color="primary"> Get Quote </Button>
+                        </a>
+                      </Grid>
+                      )}
+                      <Grid item>
+                          { state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) && (
                               <>
                                   <EditItem item={item}/>
                                   <DeleteForever color="disabled" onClick={deleteItem} style={{ color: `orange` }}/>
@@ -152,8 +150,7 @@ const EachItem = (props) => {
                   </Grid>
               </CardContent>
               {props.fullScreen &&
-              <CardActions>
-              <Container maxWidth="xs">
+              <CardContent>
               <Typography gutterBottom>
                   Description: <br/>
                   {item.description}
@@ -165,7 +162,7 @@ const EachItem = (props) => {
                         <TextField
                           fullWidth
                           inputProps={{
-	                            style: { color: `${auth.themeColor}` },
+	                            style: { color: `${state.themeColor}` },
                           }}
                           InputLabelProps={{
                             className: classes.label
@@ -177,7 +174,9 @@ const EachItem = (props) => {
                       </Grid>
                   ))}
                   </Grid>
-                  { auth.userAuthData
+                  { item.price > 0 && (
+                    <>
+                  { state.userAuthData
                     ? <CartAttributes item={item}/>
                     : (
                       <Link href="/signin"><a>
@@ -185,9 +184,10 @@ const EachItem = (props) => {
                       </a></Link>
                     )
                   }
+                    </>
+                  )}
 
-              </Container>
-              </CardActions>
+              </CardContent>
               }
             </Card>
           </Grid>

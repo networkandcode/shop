@@ -8,8 +8,9 @@ const Copyright = () => {
   const auth = useAuth();
 
   return (
-    <Box style={{ backgroundColor: `${auth.themeBgColor}` }} pt={2}>
+    <Box style={{ backgroundColor: `${auth.themeBgColor}` }} pt={2} pb={2}>
       <Typography
+        gutterBottom
         style={{ color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }}
         variant="body2"
         align="center"
@@ -26,9 +27,7 @@ const Copyright = () => {
         {new Date().getFullYear() + 1}
         {'.'}
       </Typography>
-      <Grid container justify="center">
-        <Social/>
-      </Grid>
+      <Social/>
     </Box>
   );
 }

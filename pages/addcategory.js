@@ -138,7 +138,7 @@ const Add = () => {
               >
                 {categories.map (category => (
                     <MenuItem key={category.id} value={category.name}>
-                        {category.name.split('/').join(' >> ')}
+                        {category.name.split('/').join(' > ')}
                     </MenuItem>
                 ))}
               </Select>

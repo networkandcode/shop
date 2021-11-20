@@ -121,7 +121,7 @@ const CartAttributes = (props) => {
               </Grid>
             ))}
 
-            <Grid item xs={6}>
+            <Grid item sm={2} xs={6}>
               <FormControl fullWidth margin="normal" required>
                 <InputLabel id="qtyLabel" className={classes.label}>Quantity</InputLabel>
                 <Select

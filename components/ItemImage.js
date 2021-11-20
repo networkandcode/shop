@@ -17,7 +17,7 @@ const ItemImage = ({item, mediaHt}) => {
 
   return(
     <>
-      <Link href={`/item?i=${item.id}`}><a>
+      <Link href={`/item/${item.id}`}><a>
         <CardMedia
           alt={item.name}
           component="img"

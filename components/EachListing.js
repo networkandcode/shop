@@ -1,5 +1,7 @@
 import EditListing from './EditListing';
+import ListingGallery from './ListingGallery';
 import ListingImage from './ListingImage';
+import ListingSocial from './ListingSocial';
 import Status from './Status';
 import { useAuth } from '../hooks/useAuth';
 import {
@@ -34,18 +36,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const useStyles = makeStyles(theme => ({
-    input: {
-      color: process.env.NEXT_PUBLIC_THEME_COLOR
-    },
-    label: {
-      color: process.env.NEXT_PUBLIC_THEME_COLOR
-    }
-}));
-
 const EachListing = (props) => {
-    const classes = useStyles();
-    const auth = useAuth();
+    const state = useAuth();
+    const classes = state.useStyles();
+
     const router = useRouter();
     const [ listing, setListing ] = useState(props.listing);
     const [ fav, setFav ] = useState(false);
@@ -61,7 +55,7 @@ const EachListing = (props) => {
             .then(result => {
               if(!result.data.error){
                   setStatus({ ...status, ['message']: result.data.message });
-                  auth.deleteListing(listing.id);
+                  state.deleteListing(listing.id);
                   setListing({});
               } else{
                   setStatus({ ...status, ['error']: result.data.error });
@@ -72,13 +66,13 @@ const EachListing = (props) => {
     const handleFavorite = e => {
         e.preventDefault();
         setFav(!fav);
-        auth.updateFavs(listing.id, !fav);
+        state.updateFavs(listing.id, !fav);
     };
 
     useEffect(() => {
         if(listing){
             const { id } = listing;
-            if(auth.favs && auth.favs.includes(id)){
+            if(state.favs && state.favs.includes(id)){
                 if(!fav) setFav(true);
             } else {
                 if(fav) setFav(false);
@@ -91,12 +85,8 @@ const EachListing = (props) => {
         {listing && (
           <Grid item key={listing.id} xs={props.xsSize} sm={props.smSize}>
             <Card
+                className={classes.card}
                 style={{
-                    backgroundColor: `${auth.themeBgColor}`,
-                    color: `${auth.themeColor}`,
-                    border: `0.1px solid ${ process.env.NEXT_PUBLIC_THEME_COLOR_SEC }`,
-                    borderRadius: `5px`,
-                    boxShadow: `0.5px 0.5px`,
                     height: `${ props.fullScreen ? "100%" : "300" }`
                 }}
             >
@@ -108,11 +98,28 @@ const EachListing = (props) => {
               <CardContent>
                   <Grid container justify="space-between">
                       <Grid item xs={10}>
-                          <Typography>
-                              {listing.name || listing.companyName}
-                          </Typography>
+
+                            {listing.name || listing.companyName} {'   '}
+                            { listing.logo && (
+                              <img
+                                alt={listing.companyName || listing.name}
+                                height={35}
+                                src={listing.logo}
+                                title={listing.companyName || listing.name}
+                              />
+                            )}
+
+                            <br/>
+
+                            <Typography gutterBottom variant="body2">
+                              <a href={`tel: ${listing.contactNumber}`}>
+                                <Phone style={{verticalAlign: `middle`}}/> { listing.contactNumber }
+                              </a>
+                            </Typography>
+
                       </Grid>
-                      { (auth.userAuthData && (auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) ) ? (
+
+                      { (state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) ) ? (
                       <Grid item xs={2}>
                           {fav
                               ? <Favorite
@@ -127,44 +134,28 @@ const EachListing = (props) => {
                       </Grid>
                       ) : <></> }
                   </Grid>
+
                   <Grid container>
                       <Grid item>
                           <Typography gutterBottom variant="body2">
-                              { listing.businessType || listing.categories.replace('/', ' >> ') }
-                          </Typography>
-                          <Typography variant="body2">
-                              <a href={`tel: ${listing.contactNumber}`}>
-                                <Phone style={{verticalAlign: `middle`}}/> { listing.contactNumber }
-                              </a>
+                              { listing.businessType || listing.categories.replace('/', ' > ') }
                           </Typography>
                       </Grid>
                       <Grid item>
-                          {auth.userAuthData && (
+                          { state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) && (
                               <>
                                   <EditListing listing={listing}/>
                                   <DeleteForever color="disabled" onClick={deleteListing} style={{ color: `orange` }}/>
                               </>
                           )}
                       </Grid>
-                      <Grid container spacing={2}>
-                        {listing.attributes && Object.keys(listing.attributes).map(key => (
-                        <Grid item key={key} xs={6}>
-                        <TextField
-                          fullWidth
-                          label={key}
-                          readOnly
-                          style={{color: `${auth.themeColor}`}}
-                          value={listing.attributes[key]}
-                        />
-                      </Grid>
-                  ))}
                   </Grid>
 
-                  </Grid>
               </CardContent>
               { props.fullScreen && (
-              <CardActions>
-              <Container maxWidth="xs">
+              <CardContent>
+                <Grid container>
+                  <Grid item xs={12} sm={6}>
               { Object.keys(listing).map(key => {
                 <Typography key={key}>
                   {key} : {listing[key]}
@@ -173,39 +164,41 @@ const EachListing = (props) => {
               <Typography gutterBottom>
                 {listing.companyName || listing.name}
               </Typography>
+
               <Typography gutterBottom>
-                { listing.categories.replace('/', ' >> ') || listing.businessType }
+                { listing.categories.replace('/', ' > ') || listing.businessType }
               </Typography>
-              <Typography gutterBottom>
-                {listing.description && listing.description}
-              </Typography>
+
+              {listing.description && (
+                <Typography gutterBottom>
+                  {listing.description}
+                </Typography>
+              )}
+
+              { listing.productsOffered && (
+                <Typography gutterBottom>
+                  Products offered: { listing.productsOffered }
+                </Typography>
+              )}
+
               {listing.address && (
                 <Typography gutterBottom>
                   Address: <br/>
-                  {listing.address}
+                  {listing.address} {' '}
+                  {listing.pinCode && listing.pinCode}
                 </Typography>
               )}
+
               <br/>
-                  <Grid container spacing={2}>
-                  {listing.attributes && Object.keys(listing.attributes).map(key => (
-                      <Grid item key={key} xs={6}>
-                        <TextField
-                          fullWidth
-                          inputProps={{
-                            style: { color: `${auth.themeColor}` },
-                          }}
-                          InputLabelProps={{
-                            className: classes.label
-                          }}
-                          label={key}
-                          readOnly
-                          value={listing.attributes[key]}
-                        />
-                      </Grid>
-                  ))}
-                  </Grid>
-              </Container>
-              </CardActions>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <ListingSocial listing={listing}/>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <ListingGallery listing={listing}/>
+                </Grid>
+              </Grid>
+              </CardContent>
               )}
             </Card>
           </Grid>

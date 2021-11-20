@@ -47,6 +47,7 @@ const Banner = () => {
                           />
                         )}
                       </CardActionArea>
+                      { process.env.NEXT_PUBLIC_COMPANY_BANNER_NEXT == 'true' && (
                       <CardContent>
                           <Typography
                             style={{
@@ -65,6 +66,7 @@ const Banner = () => {
                               { process.env.NEXT_PUBLIC_SUB_TITLE_2 }
                           </Typography>
                       </CardContent>
+                      )}
                     </Card>
                   </Grid>
               </Grid>

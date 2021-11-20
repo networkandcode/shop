@@ -84,49 +84,63 @@ const Social = () => {
   },[isChecked, s, searchCategory])
 
   return (
-    <div
+    <Grid
+      container
+      justify="center"
       style={{
         color: `${process.env.NEXT_PUBLIC_THEME_COLOR}`
       }}
     >
       { process.env.NEXT_PUBLIC_PHONE_NUMBER && (
+        <Grid item>
           <a href={`tel: ${process.env.NEXT_PUBLIC_PHONE_NUMBER}`}>
             <Phone/>
           </a>
+        </Grid>
       )}
 
       { process.env.NEXT_PUBLIC_FACEBOOK_URL && (
+        <Grid item>
           <a href={process.env.NEXT_PUBLIC_FACEBOOK_URL} target="_blank">
             <Facebook/>
           </a>
+        </Grid>
       )}
 
       { process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL && (
+        <Grid item>
           <a href={process.env.NEXT_PUBLIC_GOOGLE_MAPS_URL} target="_blank">
             <LocationOn/>
           </a>
+        </Grid>
       )}
 
       { process.env.NEXT_PUBLIC_INSTAGRAM_URL && (
+        <Grid item>
           <a href={process.env.NEXT_PUBLIC_INSTAGRAM_URL} target="_blank">
             <Instagram/>
           </a>
+        </Grid>
       )}
 
       { process.env.NEXT_PUBLIC_WHATSAPP_NUMBER && (
+        <Grid item>
           <a href={`https://api.whatsapp.com/send?phone=${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`} target="_blank">
             <WhatsApp/>
           </a>
+        </Grid>
       )}
 
 
       { process.env.NEXT_PUBLIC_YOUTUBE_URL && (
+        <Grid item>
           <a href={ process.env.NEXT_PUBLIC_YOUTUBE_URL } target="_blank">
             <YouTube />
           </a>
+        </Grid>
       )}
 
-    </div>
+    </Grid>
 
   )
 };

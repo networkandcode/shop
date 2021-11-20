@@ -1,10 +1,9 @@
-import ItemAttributes from '../components/ItemAttributes';
-import ItemVarAttributes from '../components/ItemVarAttributes';
 import Status from '../components/Status';
 import { useAuth } from '../hooks/useAuth';
 
 import {
     Button,
+    Chip,
     Container,
     FormControl,
     InputLabel,
@@ -28,6 +27,7 @@ const ListingForm = (props) => {
     const state = useAuth();
 
     const [listing, setListing] = useState(props.listing);
+    const [listingCategories, setListingCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({
       message: '',
@@ -38,6 +38,19 @@ const ListingForm = (props) => {
     const onChange = e => {
       const {name, value} = e.target;
       setListing({...listing, [name]: value });
+      setLoading(false);
+      setStatus({
+        message: '',
+        error: ''
+      });
+    }
+
+    const onChangeListingCategories = e => {
+      const {name, value} = e.target;
+      console.log(name, value);
+      setListingCategories(value);
+      const temp = value.join(',');
+      setListing({...listing, categories: temp });
       setLoading(false);
       setStatus({
         message: '',
@@ -87,8 +100,9 @@ const ListingForm = (props) => {
 
     const addListingToDB = async(imgURL) => {
         if (imgURL){
+            const temp = listing.categories;
             var operation;
-            var record = {...listing, imgURL};
+            var record = {...listing, imgURL, addedByAdmin: true, categories: temp};
 
             if(props.isNewListing) {
                 operation = 'insert';
@@ -106,6 +120,7 @@ const ListingForm = (props) => {
                             record = { ...record, id: res.data.id };
                             state.insertListing(record);
                             setListing({});
+                            setListingCategories([]);
                         } else if(operation === 'update'){
                             state.updateListing(record);
                         }
@@ -119,12 +134,14 @@ const ListingForm = (props) => {
       if(!state.userAuthData){
         router.push('/signin');
       } else{
+          setCategories([...state.categories]);
           var temp = [];
-          console.log(state);
-          state.categories.forEach(i => {
-              temp.push(i);
-          });
-          setCategories([...temp]);
+          listing.categories && listing.categories.split(',').forEach(l => {
+            if(l.trim()){
+              temp.push(l.trim());
+            }
+          })
+          setListingCategories(temp);
       }
     },[state, router]);
 
@@ -135,7 +152,7 @@ const ListingForm = (props) => {
           <br/>
           <Link href="/add">
             <a>
-              <Button color="primary" variant="outlined">
+              <Button color="disabled" variant="outlined">
                 Add Listing
               </Button>
             </a>
@@ -148,23 +165,32 @@ const ListingForm = (props) => {
               </Button>
             </a>
           </Link>
+          {' '}
+          <Link href="/addlisting">
+            <a>
+              <Button color="primary" variant="outlined">
+                Add Listing
+              </Button>
+            </a>
+          </Link>
           <form onSubmit={onSubmit}>
             <TextField
-              autoComplete="contactPerson"
-              id="contactPerson"
+              autoComplete="name"
+              id="name"
               InputLabelProps={{
                 shrink: true,
               }}
               label="Contact Person"
               margin="normal"
-              name="contactPerson"
+              name="name"
               onChange={onChange}
               placeholder="Name of the Contact Person"
               required
-              value={listing.contactPerson || ''}
+              value={listing.name || ''}
               variant="outlined"
               fullWidth
             />
+
             <TextField
               autoComplete="description"
               fullWidth
@@ -182,6 +208,60 @@ const ListingForm = (props) => {
               value={listing.description || ''}
               variant="outlined"
             />
+
+            <TextField
+              autoComplete="companyName"
+              fullWidth
+              helperText=""
+              id="companyName"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              label="Company Name"
+              margin="normal"
+              name="companyName"
+              onChange={onChange}
+              placeholder="Name of the Company"
+              value={listing.companyName || ''}
+              variant="outlined"
+            />
+
+            <TextField
+              autoComplete="contactNumber"
+              fullWidth
+              helperText="Contact Phone Number"
+              id="contactNumber"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              label="Contact Phone Number"
+              margin="normal"
+              name="contactNumber"
+              onChange={onChange}
+              placeholder="Contact Phone Number"
+              type="number"
+              value={listing.contactNumber || ''}
+              variant="outlined"
+            />
+
+            <TextField
+              autoComplete="productsOffered"
+              fullWidth
+              helperText="Products offered"
+              id="productsOffered"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              label="Products offered"
+              margin="normal"
+              multiline
+              name="productsOffered"
+              onChange={onChange}
+              placeholder="Products offered"
+              value={listing.productsOffered || ''}
+              variant="outlined"
+            />
+
           <FormControl fullWidth margin="normal" required>
             <InputLabel id="categoriesLabel">Categories</InputLabel>
             <Select
@@ -189,24 +269,25 @@ const ListingForm = (props) => {
               labelId="categoriesLabel"
               multiple
               name="categories"
-              onChange={onChange}
-              renderValue={(selected) => (
+              onChange={onChangeListingCategories}
+              renderValue={selected => (
                 <div>
-                  {selected.map((value) => (
+                  {selected.map(value => (
                     <Chip key={value} label={value}/>
                   ))}
                 </div>
               )}
               size = {categories.length}
-              value={listing.categories || []}
+              value={listingCategories || []}
             >
               {categories && categories.map( (category, idx) => (
                 <MenuItem key={category.id} value={category.name}>
-                  <ListItemText primary={category.name.split('/').join(' >> ')}/>
+                  <ListItemText primary={category.name.split('/').join(' > ')}/>
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
+
           <FormControl fullWidth margin="normal" required>
               <InputLabel id="businessTypeLabel">Business Type</InputLabel>
               <Select
@@ -228,40 +309,42 @@ const ListingForm = (props) => {
               </Select>
             </FormControl>
 
-            {listing.categories && <ListingAttributes listing={listing} onChangeAttributes={onChangeAttributes}/>}
             <TextField
-              autoComplete="companyName"
+              autoComplete="address"
               fullWidth
-              helperText=""
-              id="companyName"
+              helperText="Address"
+              id="address"
               InputLabelProps={{
                 shrink: true,
               }}
-              label="Company Name"
+              label="Address"
               margin="normal"
-              name="companyName"
+              multiline
+              name="address"
               onChange={onChange}
-              placeholder="Name of the Company"
-              value={listing.companyName || ''}
+              placeholder="Address"
+              value={listing.address || ''}
               variant="outlined"
             />
+
             <TextField
-              autoComplete="contactNumber"
+              autoComplete="pinCode"
               fullWidth
-              helperText="Contact Phone Number"
-              id="contactNumber"
+              helperText="PIN code"
+              id="pinCode"
               InputLabelProps={{
                 shrink: true,
               }}
-              label="Contact Phone Number"
+              label="PIN code"
               margin="normal"
-              name="contactNumber"
+              name="pinCode"
               onChange={onChange}
-              placeholder="Contact Phone Number"
+              placeholder="PIN code"
               type="number"
-              value={listing.contactNumber || ''}
+              value={listing.pinCode || ''}
               variant="outlined"
             />
+
             <small>
               Upload Image <br/>
             </small>

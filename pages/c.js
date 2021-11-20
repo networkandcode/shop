@@ -47,10 +47,10 @@ const Category = () => {
       }}
     >
         <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
-            <Link href="/"><a> {process.env.NEXT_PUBLIC_COMPANY_NAME || 'Home'} </a></Link> >> <Link href="/shop"><a> Shop </a></Link>
+            <Link href="/"><a> {process.env.NEXT_PUBLIC_COMPANY_NAME || 'Home'} </a></Link> > <Link href="/shop"><a> Shop </a></Link>
             { category && category.split('/').map((i, idx) => (
                 <Link key={`/c?c=${i}`} href={`/c?c=${category.split('/').slice(0,idx+1).join('/')}`}>
-                    <a> >> {i}</a>
+                    <a> > {i}</a>
                 </Link>
             ))}
         </Typography>

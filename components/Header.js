@@ -2,6 +2,7 @@ import ToggleTheme from './ToggleTheme';
 import { useAuth } from '../hooks/useAuth';
 
 import {
+  AccountCircle,
   AppBar,
   Box,
   Card,
@@ -25,7 +26,6 @@ import {
 import {
   Favorite,
   Instagram,
-  LocationOn,
   Phone,
   PowerSettingsNew,
   Search,
@@ -86,10 +86,10 @@ const Header = () => {
     <AppBar style={{ backgroundColor: `${process.env.NEXT_PUBLIC_THEME_COLOR}`, padding: `0.5px`}}>
 
         <Grid
+          alignItems="center"
           container
-          justify="flex-end"
-          spacing={1}
-          style={{ color: `${auth.themeBgColor}` }}
+          justify="space-between"
+          style={{ color: `${auth.themeBgColor}`, padding: `2px` }}
         >
 
            { process.env.NEXT_PUBLIC_ALERT_MESSAGE && (
@@ -106,8 +106,8 @@ const Header = () => {
                     src={process.env.NEXT_PUBLIC_COMPANY_LOGO_URL}
                     style={{backgroundColor: `${linkColor['home'] || process.env.NEXT_PUBLIC_THEME_COLOR}`, borderRadius: `50%`}}
                     alt="Logo"
-                    width={25}
-                    height={25}
+                    width={35}
+                    height={35}
                   />
               </a></Link>
               </div>
@@ -190,11 +190,19 @@ const Header = () => {
                     <PowerSettingsNew  onClick={() => auth.signOut()}/>
                   </Grid>
 
-                  { auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN &&
+                  { auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN ? (
                     <Grid item>
                       <Link href="/add">
                         <a>
                           <SupervisorAccount/>
+                        </a>
+                      </Link>
+                    </Grid>
+                    ) : (
+                    <Grid item>
+                      <Link href="/add">
+                        <a>
+                          <AccountCircle/>
                         </a>
                       </Link>
                     </Grid>

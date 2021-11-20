@@ -46,7 +46,7 @@ const Home = () => {
             >
 
               <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
-                <Link href="/"><a> {process.env.NEXT_PUBLIC_COMPANY_NAME || 'Home'} </a></Link> >> <Link href="/shop"><a> Shop </a></Link>
+                <Link href="/"><a> {process.env.NEXT_PUBLIC_COMPANY_NAME || 'Home'} </a></Link> > <Link href="/shop"><a> Shop </a></Link>
               </Typography>
 
                 {categories.length > 0 && (

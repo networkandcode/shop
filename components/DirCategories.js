@@ -108,7 +108,7 @@ const EachCategory = (props) => {
                                     </Link>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    {auth.userAuthData && (<DeleteForever
+                                    { auth.userAuthData && (auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) && (<DeleteForever
                                       onClick={() => deleteCategory(category.id)}
                                       style={{ color: `orange` }}
                                     />)}

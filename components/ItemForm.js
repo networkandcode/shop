@@ -146,6 +146,14 @@ const ItemForm = (props) => {
               </Button>
             </a>
           </Link>
+          {' '}
+          <Link href="/addlisting">
+            <a>
+              <Button color="disabled" variant="outlined">
+                Add Listing
+              </Button>
+            </a>
+          </Link>
           <form onSubmit={onSubmit}>
             <TextField
               autoComplete="name"
@@ -180,6 +188,40 @@ const ItemForm = (props) => {
               value={item.description || ''}
               variant="outlined"
             />
+            <TextField
+              autoComplete="size"
+              fullWidth
+              helperText=""
+              id="size"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              label="Size or Dimensions of the Item"
+              margin="normal"
+              multiline
+              name="size"
+              onChange={onChange}
+              placeholder="Size or Dimensions of the Item, include units also"
+              value={item.size || ''}
+              variant="outlined"
+            />
+            <TextField
+              autoComplete="weight"
+              fullWidth
+              helperText=""
+              id="weight"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              label="Weight of the Item"
+              margin="normal"
+              multiline
+              name="weight"
+              onChange={onChange}
+              placeholder="Weight of the Item, include units also"
+              value={item.weight || ''}
+              variant="outlined"
+            />
             <FormControl fullWidth margin="normal" required>
               <InputLabel id="categoryLabel">Category</InputLabel>
               <Select
@@ -195,7 +237,7 @@ const ItemForm = (props) => {
                         key={category.id}
                         value={category.name}
                     >
-                        { category.name.split('/').join(' >> ') }
+                        { category.name.split('/').join(' > ') }
                     </MenuItem>
                 ))}
               </Select>

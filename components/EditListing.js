@@ -1,13 +1,13 @@
-import ItemForm from './ItemForm';
+import ListingForm from './ListingForm';
 import { Dialog } from '@material-ui/core';
 import { Close, Edit } from '@material-ui/icons';
 import { useState } from 'react';
 
-const EditItem = (props) => {
+const EditListing = (props) => {
     const [ isDialogOpen, setIsDialogOpen ] = useState(false);
-    const [ item, setItem ] = useState(props.item);
+    const [ listing, setListing ] = useState(props.listing);
 
-    const editItem = (e) => {
+    const editListing = (e) => {
         e.preventDefault();
         setIsDialogOpen(true);
     }
@@ -18,14 +18,14 @@ const EditItem = (props) => {
 
     return(
         <>
-            <Edit onClick={editItem} style={{ color: `orange` }}/>
+            <Edit onClick={editListing} style={{ color: `orange` }}/>
             <Dialog open={isDialogOpen} onClose={onDialogClose}>
                 <Close onClick={onDialogClose}/>
-                <ItemForm isNewItem={false} item={item}/>
+                <ListingForm isNewListing={false} listing={listing}/>
                 <br/>
             </Dialog>
         </>
     );
 }
 
-export default EditItem;
+export default EditListing;
