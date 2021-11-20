@@ -95,7 +95,7 @@ const ListingForm = (props) => {
             const fileRef = storageRef.child(`${listing.category}/${listing.name}/${listing.imgFile.name}`);
             imgURL = await fileRef.put(listing.imgFile).then(async()=>(await fileRef.getDownloadURL()))
         }
-        addListingToDB(imgURL);
+        addListingToDB(imgURL || `https://source.unsplash.com/featured/?${process.env.NEXT_PUBLIC_UNSPLASH_BANNER_TAG}`);
     }
 
     const addListingToDB = async(imgURL) => {
@@ -176,7 +176,7 @@ const ListingForm = (props) => {
                 </a>
               </Link>
             </>
-          )}
+          )}<br/><br/><br/>
           <form onSubmit={onSubmit}>
             <TextField
               autoComplete="name"
@@ -194,7 +194,8 @@ const ListingForm = (props) => {
               variant="outlined"
               fullWidth
             />
-
+            {listing.name}{'hello'}
+            {listing.email}{listing.name}
             <TextField
               autoComplete="description"
               fullWidth
