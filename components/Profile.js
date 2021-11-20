@@ -1,4 +1,3 @@
-import TextBox from '../components/TextBox';
 import Status from '../components/Status';
 import { useAuth } from '../hooks/useAuth';
 
@@ -23,6 +22,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
 const ListingForm = (props) => {
+    console.log(props);
     const inputEl = useRef(null);
     const router = useRouter();
     const state = useAuth();
@@ -176,7 +176,7 @@ const ListingForm = (props) => {
                 </a>
               </Link>
             </>
-          )}
+          )}<br/><br/><br/>
           <form onSubmit={onSubmit}>
             <TextField
               autoComplete="name"
@@ -347,16 +347,6 @@ const ListingForm = (props) => {
               value={listing.pinCode || ''}
               variant="outlined"
             />
-
-            <TextBox helperText="WhatsApp number" id="whatsAppNumber" onChange={onChange} type="number" value={listing.whatsAppNumber} />
-            <TextBox helperText="Facebook URL" id="facebookUrl" onChange={onChange} type="text" value={listing.facebookUrl} />
-            <TextBox helperText="Instagram URL" id="instagramUrl" onChange={onChange} type="text" value={listing.instagramUrl} />
-            <TextBox helperText="YouTube URL" id="youTubeUrl" onChange={onChange} type="text" value={listing.youTubeUrl} />
-            <TextBox helperText="Twitter URL" id="twitterUrl" onChange={onChange} type="text" value={listing.twitterUrl} />
-            <TextBox helperText="LinkedIn URL" id="linkedInUrl" onChange={onChange} type="text" value={listing.linkedInUrl} />
-            <TextBox helperText="Website" id="website" onChange={onChange} type="text" value={listing.website} />
-            <TextBox helperText="Email Address" id="emailAddress" onChange={onChange} type="text" value={listing.emailAddress} />
-            <TextBox helperText="Google Maps Plus Code" id="plusCode" onChange={onChange} type="text" value={listing.plusCode} />
 
             <small>
               Upload Image <br/>

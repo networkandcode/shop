@@ -1,5 +1,5 @@
 import { CardContent, Typography } from '@material-ui/core';
-import { ContactPhone, Facebook, Instagram, Language, LocationOn, WhatsApp } from '@material-ui/icons';
+import { ContactPhone, Email, Facebook, Instagram, Language, LinkedIn, LocationOn, Twitter, WhatsApp, YouTube } from '@material-ui/icons';
 
 const ListingSocial = ({ listing }) => {
   return (
@@ -14,19 +14,37 @@ const ListingSocial = ({ listing }) => {
         </>
       )}
 
-      { listing.facebook && (
+      { listing.emailAddress && (
           <>
-            <a href={listing.facebook}>
-              <Facebook style={{ verticalAlign: `middle` }}/> { listing.facebook }
+            <a href={`mailto:${listing.emailAddress}`} >
+              <Email style={{ verticalAlign: `middle` }}/> { listing.emailAddress }
             </a>
             <br/>
           </>
       )}
 
-      { listing.instagram && (
+      { listing.facebookUrl && (
+          <>
+            <a href={listing.facebookUrl}>
+              <Facebook style={{ verticalAlign: `middle` }}/> { listing.facebookUrl }
+            </a>
+            <br/>
+          </>
+      )}
+
+      { listing.instagramUrl && (
         <>
-          <a href={listing.instagram}>
-            <Instagram style={{ verticalAlign: `middle` }}/> { listing.instagram }
+          <a href={listing.instagramUrl}>
+            <Instagram style={{ verticalAlign: `middle` }}/> { listing.instagramUrl }
+          </a>
+          <br/>
+        </>
+      )}
+
+      { listing.linkedInUrl && (
+        <>
+          <a href={listing.linkedInUrl}>
+            <LinkedIn style={{ verticalAlign: `middle` }}/> { listing.linkedInUrl }
           </a>
           <br/>
         </>
@@ -41,6 +59,15 @@ const ListingSocial = ({ listing }) => {
         </>
       )}
 
+      { listing.twitterUrl && (
+        <>
+          <a href={listing.twitterUrl}>
+            <Twitter style={{ verticalAlign: `middle` }}/> { listing.twitterUrl }
+          </a>
+          <br/>
+        </>
+      )}
+
       { listing.website && (
         <>
           <a href={listing.website}>
@@ -50,10 +77,19 @@ const ListingSocial = ({ listing }) => {
         </>
       )}
 
-      { listing.whatsApp && (
+      { listing.whatsAppUrl && (
         <>
           <a href={`https://api.whatsapp.com/send?phone=${listing.whatsApp}`} target="_blank">
-            <WhatsApp style={{ verticalAlign: `middle` }}/> { listing.whatsApp }
+            <WhatsApp style={{ verticalAlign: `middle` }}/> { listing.whatsAppUrl }
+          </a>
+          <br/>
+        </>
+      )}
+
+      { listing.youTubeUrl && (
+        <>
+          <a href={listing.youTubeUrl} target="_blank">
+            <YouTube style={{ verticalAlign: `middle` }}/> { listing.youTubeUrl }
           </a>
           <br/>
         </>

@@ -22,14 +22,17 @@ import {
     Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Add,
-    Close,
-    DeleteForever,
-    Favorite,
-    FavoriteBorder,
-    Phone,
-    Remove,
-    WhatsApp
+import {
+  Add,
+  Clear,
+  Check,
+  Close,
+  DeleteForever,
+  Favorite,
+  FavoriteBorder,
+  Phone,
+  Remove,
+  WhatsApp
 } from '@material-ui/icons';
 import axios from 'axios';
 import Link from 'next/link';
@@ -42,6 +45,7 @@ const EachListing = (props) => {
 
     const router = useRouter();
     const [ listing, setListing ] = useState(props.listing);
+    console.log(listing);
     const [ fav, setFav ] = useState(false);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({
@@ -63,6 +67,20 @@ const EachListing = (props) => {
             });
     };
 
+    const approveListing = async(bool) => {
+      const record = {...listing, verifiedByAdmin: bool };
+      await axios.post("/api/db", { operation: 'update', record, table: 'listings' })
+       .then(res => {
+         if(res.data.error){
+           setStatus({ ...status, ['error']: res.data.error });
+         } else{
+           setStatus({ ...status, ['message']: res.data.message });
+           state.updateListing(record);
+           setListing({ ...record });
+         }
+       });
+    };
+
     const handleFavorite = e => {
         e.preventDefault();
         setFav(!fav);
@@ -82,7 +100,7 @@ const EachListing = (props) => {
 
     return(
       <>
-        {listing && (
+        {listing && (listing.verifiedByAdmin || (state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) )) &&(
           <Grid item key={listing.id} xs={props.xsSize} sm={props.smSize}>
             <Card
                 className={classes.card}
@@ -144,6 +162,10 @@ const EachListing = (props) => {
                       <Grid item>
                           { state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) && (
                               <>
+                                { listing.verifiedByAdmin === true
+                                  ? <Clear onClick={approveListing(false)} />
+                                  : <Check onClick={approveListing(true)} />
+                                }
                                   <EditListing listing={listing}/>
                                   <DeleteForever color="disabled" onClick={deleteListing} style={{ color: `orange` }}/>
                               </>

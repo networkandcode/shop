@@ -38,50 +38,6 @@ import { useEffect, useState } from 'react';
 const Listings = ({ listings }) => {
   const router = useRouter();
   const auth = useAuth();
-  //const [ listings, setListings ] = useState([]);
-
-  /*useEffect(() => {
-      const { pathname } = router;
-      const { c, s } = router.query;
-
-      if(c){
-        var i = [];
-        auth.listings.map(listing => {
-          listing.categories && listing.categories.split(',').forEach( category => {
-            if (category.trim().startsWith(c)) {
-                i.push(listing);
-            }
-          });
-        })
-        setListings([...i]);
-      } else if(pathname === '/directory'){
-        var i = [];
-
-        auth.listings.map(listing => {
-          if (listing.categories) {
-            i.push(listing);
-          }
-        });
-
-        setListings([...i]);
-      } else if(pathname == '/search'){
-        auth.listings.map(listing => {
-          if(s) {
-            const searchFound = s.split().every(sTerm => {
-              return Object.values(listing).join().includes(sTerm); 
-            })
-
-            if(searchFound && listing.categories) {
-              i.push(listing);
-            }
-          } else {
-            if (listing.categories) {
-              i.push(listing);
-            }
-          }
-        });
-      }
-  }, [auth.listings, router]);*/
 
   return(
     <>

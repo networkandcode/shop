@@ -200,7 +200,7 @@ const Header = () => {
                     </Grid>
                     ) : (
                     <Grid item>
-                      <Link href="/profile">
+                      <Link href="/addlisting">
                         <a>
                           <AccountCircle/>
                         </a>

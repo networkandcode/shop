@@ -1,11 +1,20 @@
 import ListingForm from '../components/ListingForm';
 import { useAuth } from '../hooks/useAuth';
 import router from 'next/router';
+import { useEffect, useState } from 'react';
 
 const Add = () => {
-  const auth = useAuth();
-  if(auth.userAuthData && (auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN)){
-    return <ListingForm isNewListing={true} listing={{addedByAdmin: true}}/>;
+  const state = useAuth();
+  const [ verifiedByAdmin, setVerifiedByAdmin ] = useState(false);
+
+  useEffect(() => {
+    if (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN){
+      setVerifiedByAdmin(true);
+    }
+  }, [ state ]);
+
+  if(state.userAuthData){
+    return <ListingForm isNewListing={true} listing={{ addedBy: state.userAuthData.email, verifiedByAdmin }}/>;
   }
   return <div style={{ padding: `100px`, textAlign: `center` }}>Page doesn't exist</div>;
 }
