@@ -45,7 +45,6 @@ const EachListing = (props) => {
 
     const router = useRouter();
     const [ listing, setListing ] = useState(props.listing);
-    console.log(listing);
     const [ fav, setFav ] = useState(false);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({
@@ -162,9 +161,9 @@ const EachListing = (props) => {
                       <Grid item>
                           { state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) && (
                               <>
-                                { listing.verifiedByAdmin === true
-                                  ? <Clear onClick={approveListing(false)} />
-                                  : <Check onClick={approveListing(true)} />
+                                { (listing.verifiedByAdmin === true || listing.addedBy ===  process.env.NEXT_PUBLIC_ADMIN)
+                                  ? <Clear onClick={() => approveListing(false)} />
+                                  : <Check onClick={() => approveListing(true)} />
                                 }
                                   <EditListing listing={listing}/>
                                   <DeleteForever color="disabled" onClick={deleteListing} style={{ color: `orange` }}/>

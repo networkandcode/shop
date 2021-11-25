@@ -30,6 +30,7 @@ const Category = () => {
               }
             })
         })
+        console.log(i);
         setListings([...i]);
         var temp = [];
         for(var i=0; i<auth.categories.length; i++){
