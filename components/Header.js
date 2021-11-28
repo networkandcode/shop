@@ -161,7 +161,7 @@ const Header = () => {
             <ToggleTheme/>
           </Grid>
 
-            { auth.userAuthData
+            { (auth.userAuthData && auth.userAuthData.emailVerified)
               ? (
                 <>
                   <Grid item>
@@ -189,8 +189,8 @@ const Header = () => {
                   <Grid item>
                     <PowerSettingsNew  onClick={() => auth.signOut()}/>
                   </Grid>
-
-                  { auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN ? (
+                  { auth.userAuthData.emailVerified && (
+                  auth.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN ? (
                     <Grid item>
                       <Link href="/add">
                         <a>
@@ -206,6 +206,7 @@ const Header = () => {
                         </a>
                       </Link>
                     </Grid>
+                  )
                   )}
                 </>
               ) : (

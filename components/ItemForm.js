@@ -2,6 +2,7 @@ import ItemAttributes from '../components/ItemAttributes';
 import ItemVarAttributes from '../components/ItemVarAttributes';
 import Status from '../components/Status';
 import { useAuth } from '../hooks/useAuth';
+import ReactMarkdown from 'react-markdown';
 
 import {
     Button,
@@ -184,10 +185,20 @@ const ItemForm = (props) => {
               multiline
               name="description"
               onChange={onChange}
-              placeholder="Description of the Item"            
+              placeholder="Description of the Item, Markdown supported"            
               value={item.description || ''}
               variant="outlined"
             />
+            
+            { item.description && (
+              <div>
+                Preview:
+                <ReactMarkdown>
+                  { item.description }
+                </ReactMarkdown>
+              </div>
+            )}
+            
             <TextField
               autoComplete="size"
               fullWidth

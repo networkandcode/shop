@@ -8,7 +8,7 @@ const Add = () => {
   const [ verifiedByAdmin, setVerifiedByAdmin ] = useState(false);
 
   useEffect(() => {
-    if (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN){
+    if (state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN)){
       setVerifiedByAdmin(true);
     }
   }, [ state ]);

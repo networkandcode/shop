@@ -51,11 +51,9 @@ const useAuthProvider = () => {
 
     const updateCartItems = async(record) => {
          if(cartItems.some(i => i.hash === record.hash)){
-             console.log('some');
              var temp = [...cartItems];
              for(var j=0; j<temp.length; j++) {
                  if(temp[j].hash === record.hash) {
-                     console.log('hash_match');
                      if(record.cartAttributes.qty === 0) {
                          temp.splice(j, 1);
                          const dataObject = {
@@ -66,8 +64,6 @@ const useAuthProvider = () => {
                          await axios.post('/api/cart', dataObject);
 
                      } else{
-
-                         console.log('update');
                          temp[j] = record;
                          const dataObject = {
                            operation: 'update',
@@ -78,12 +74,10 @@ const useAuthProvider = () => {
 
                      }
                      setCartItems([...temp]);
-                     console.log([...temp]);
                      break;
                  }
              }
          } else if(record.cartAttributes.qty !== 0) {
-             console.log('not 0', record);
              const dataObject = { operation: 'insert', records: [ record ], table: 'cart_items' };
              await axios.post('/api/cart', dataObject);
              setCartItems([...cartItems, record]);
@@ -106,7 +100,6 @@ const useAuthProvider = () => {
               const idx = temp.indexOf(id);
               if(idx !== -1) {
                   temp.splice(idx, 1);
-                  console.log('dong');
                   setFavs(temp);
                   const record = { id: userAuthData.uid, favorites: temp };
                   await axios.post('/api/db', {
@@ -143,18 +136,34 @@ const useAuthProvider = () => {
         setTotalPrice(temp);
 
     },[ cartItems ]);
-
+    
+    const sendPasswordResetEmail = async(email) => {
+        return await auth.sendPasswordResetEmail(email)
+            .then((response) => {
+                return 'Password reset link sent to email'
+            })
+            .catch((error) => {
+                return { error };
+            });
+    };
+    
+    const sendEmailVerification = async() => {
+        return await auth.currentUser.sendEmailVerification()
+            .then((response) => {
+                return 'Email verification link sent';
+            })
+            .catch((error) => {
+                return { error };
+            });
+    };
+    
     const signUp = async(email, password) => {
         return await auth
             .createUserWithEmailAndPassword(email, password)
             .then((response) => {
-                auth.currentUser.sendEmailVerification(); 
-                setUserAuthData({
-                    ...userAuthData,
-                    email: response.user.email,
-                    emailVerified: response.user.emailVerified
-                });
-                return response.user;
+                auth.currentUser.sendEmailVerification();
+                const error = { 'message': 'Signup initiated, please check your email and login after getting verified' };
+                return { error };
             })
             .catch((error) => {
                 return { error };
@@ -165,8 +174,14 @@ const useAuthProvider = () => {
         return await auth
             .signInWithEmailAndPassword(email, password)
             .then((response) => {
-                setUserAuthData({...userAuthData, ...response.user});
-                return response.user;
+                console.log(response.user);
+                if(response.user.emailVerified){
+                  setUserAuthData({...userAuthData, ...response.user});
+                  return response.user;
+                } else {
+                  const error = { 'message': 'Signin not successful, please check your email and login after getting verified' };
+                  return { error };
+                }
             })
             .catch((error) => {
                 return { error };
@@ -409,6 +424,8 @@ const useAuthProvider = () => {
         insertListing,
         items,
         listings,
+        sendEmailVerification,
+        sendPasswordResetEmail,
         services,
         signIn,
         signOut,

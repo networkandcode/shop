@@ -92,7 +92,8 @@ const Add = () => {
       } else{
           setAttributes(auth.attributes);
           setCategories(auth.categories);
-          setVarAttributes(auth.varAttributes);
+          console.log(auth.varAttributes);
+          //setVarAttributes(auth.varAttributes);
       }
     },[auth, router]);
 
@@ -143,7 +144,7 @@ const Add = () => {
                 ))}
               </Select>
             </FormControl>
-            {varAttributes && <FormControl fullWidth margin="normal">
+            {(varAttributes.length > 0) && <FormControl fullWidth margin="normal">
                 <InputLabel id="varAttributesLabel">Variable Attributes</InputLabel>
                 <Select
                     id="varAttributesSelect"
@@ -161,7 +162,7 @@ const Add = () => {
                     size={varAttributes.length}
                     value={item.varAttributes || []}
                 >
-                    {varAttributes.map(attribute => (
+                    {varAttributes.length > 0 && varAttributes.map(attribute => (
                         <MenuItem key={attribute.id} value={attribute.name}>
                             <ListItemText primary={attribute.name}/>
                         </MenuItem>

@@ -21,6 +21,7 @@ import 'firebase/storage';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 const ListingForm = (props) => {
     const inputEl = useRef(null);
@@ -207,11 +208,20 @@ const ListingForm = (props) => {
               multiline
               name="description"
               onChange={onChange}
-              placeholder="Description of the Listing"
+              placeholder="Description of the Listing, Markdown supported"
               value={listing.description || ''}
               variant="outlined"
             />
-
+            
+            { listing.description && (
+              <div>
+                Preview:
+                <ReactMarkdown>
+                  { listing.description }
+                </ReactMarkdown>
+              </div>
+            )}
+            
             <TextField
               autoComplete="companyName"
               fullWidth

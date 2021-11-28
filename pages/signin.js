@@ -34,6 +34,7 @@ const Auth = () => {
         const {newUser} = data;
         setData({...data, ['message']: '', ['error']: '', ['newUser']: !newUser});    
     }
+    
     const onSubmit = async(e) => {
         e.preventDefault();
         const { email, password } = data;
@@ -46,12 +47,12 @@ const Auth = () => {
                         ? setData({...data, ['error']: response.error.message})
                         : router.push('/');
                 });
-            }else{ 
+            }else{
                 await auth.signIn({email, password}).then((response) => {                    
                     setData({...data, ['isLoading']: false});
-                    response.error 
-                        ? setData({...data, ['error']: response.error.message})
-                        : router.push('/');
+                    response.error
+                      ? setData({...data, ['error']: response.error.message})
+                      : router.push('/');
                 });
             }
         } else{
@@ -60,15 +61,27 @@ const Auth = () => {
 
     }
 
-  const resetPassword = async(e) => {
+  const sendPasswordResetEmail = async(e) => {
         e.preventDefault();
         const { email } = data;
         if(email){
-            setLoading(true);
-            setStatus({...status, ['error']: ''});
             const { email } = data;
             await auth.sendPasswordResetEmail(email).then((response) => {
-                setLoading(false);
+                response.error
+                    ? setData({...data, ['error']: response.error.message})
+                    : setData({...data, ['message']: response});
+            });
+        } else{
+            setData({...data, ['error']: 'Please enter email'});
+        }
+  }
+  
+  const sendEmailVerification = async(e) => {
+        e.preventDefault();
+        const { email } = data;
+        if(email){
+            const { email } = data;
+            await auth.sendEmailVerification().then((response) => {
                 response.error
                     ? setData({...data, ['error']: response.error.message})
                     : setData({...data, ['message']: response});
@@ -78,11 +91,12 @@ const Auth = () => {
         }
   }
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(auth.userAuthData && Object.entries(auth.userAuthData).length > 0){
+          console.log('test', auth.userAuthData);
           router.push('/');
         }
-    },[auth, router]);
+    },[auth, router]);*/
 
     return(        
         <Container component="main" maxWidth="xs">
@@ -145,7 +159,11 @@ const Auth = () => {
                     />
 
                     {!data.newUser && (
-                        <Button onClick={resetPassword}>Reset password</Button>
+                      <>
+                        <br/>
+                        <Button color="secondary" onClick={sendPasswordResetEmail}>Reset password</Button>
+                        <Button color="secondary" onClick={sendEmailVerification}>Resend email verification</Button>
+                      </>
                     )}
 
                     <Button
