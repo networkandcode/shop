@@ -27,6 +27,7 @@ const ListingForm = (props) => {
     const inputEl = useRef(null);
     const router = useRouter();
     const state = useAuth();
+    const classes = state.useStyles();
 
     const [listing, setListing] = useState(props.listing);
     const [listingCategories, setListingCategories] = useState([]);
@@ -155,15 +156,15 @@ const ListingForm = (props) => {
             <>
               <Link href="/add">
                 <a>
-                  <Button color="disabled" variant="outlined">
-                    Add Listing
+                  <Button color="secondary" variant="outlined">
+                    Add Item
                   </Button>
                 </a>
               </Link>
               {' '}
               <Link href="/addcategory">
                 <a>
-                  <Button color="disabled" variant="outlined">
+                  <Button color="secondary" variant="outlined">
                     Add Category
                   </Button>
                 </a>

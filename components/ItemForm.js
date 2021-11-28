@@ -142,7 +142,7 @@ const ItemForm = (props) => {
           {' '}
           <Link href="/addcategory">
             <a>
-              <Button color="disabled" variant="outlined">
+              <Button color="secondary" variant="outlined">
                 Add Category
               </Button>
             </a>
@@ -150,7 +150,7 @@ const ItemForm = (props) => {
           {' '}
           <Link href="/addlisting">
             <a>
-              <Button color="disabled" variant="outlined">
+              <Button color="secondary" variant="outlined">
                 Add Listing
               </Button>
             </a>
