@@ -2,7 +2,6 @@ import ItemAttributes from '../components/ItemAttributes';
 import ItemVarAttributes from '../components/ItemVarAttributes';
 import Status from '../components/Status';
 import { useAuth } from '../hooks/useAuth';
-import ReactMarkdown from 'react-markdown';
 
 import {
     Button,
@@ -21,6 +20,7 @@ import 'firebase/storage';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import Markdown from 'markdown-to-jsx';
 
 const ItemForm = (props) => {
     const inputEl = useRef(null);
@@ -193,9 +193,9 @@ const ItemForm = (props) => {
             { item.description && (
               <div>
                 Preview:
-                <ReactMarkdown>
+                <Markdown>
                   { item.description }
-                </ReactMarkdown>
+                </Markdown>
               </div>
             )}
             

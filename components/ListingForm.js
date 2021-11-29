@@ -21,7 +21,7 @@ import 'firebase/storage';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import Markdown from 'markdown-to-jsx';
 
 const ListingForm = (props) => {
     const inputEl = useRef(null);
@@ -217,9 +217,9 @@ const ListingForm = (props) => {
             { listing.description && (
               <div>
                 Preview:
-                <ReactMarkdown>
+                <Markdown>
                   { listing.description }
-                </ReactMarkdown>
+                </Markdown>
               </div>
             )}
             

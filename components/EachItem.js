@@ -33,7 +33,6 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
 
 const EachItem = (props) => {
     const state = useAuth();
