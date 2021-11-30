@@ -33,6 +33,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import Markdown from 'markdown-to-jsx';
 
 const EachItem = (props) => {
     const state = useAuth();
@@ -152,9 +153,9 @@ const EachItem = (props) => {
               {props.fullScreen &&
               <CardContent>
               <Typography gutterBottom>
-                <ReactMarkdown>
+                <Markdown>
                   { item.description }
-                </ReactMarkdown>
+                </Markdown>
               </Typography>
               <br/>
                   <Grid container spacing={2}>
