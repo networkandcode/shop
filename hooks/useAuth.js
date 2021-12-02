@@ -381,21 +381,19 @@ const useAuthProvider = () => {
 
     // global data fetched by read_only_user via client
     useEffect(() => {
+        
+        fetchAttributes();
         fetchCategories();
         fetchItems();
+        fetchVarAttributes();
+        
         if(process.env.NEXT_PUBLIC_NEED_DIR=='true'){
           fetchListings();
           fetchServices();
           fetchArticles();
         }
     },[]);
-
-    // global data fetched by super_user via server
-    useEffect(() => {
-        fetchAttributes();
-        fetchVarAttributes();
-    }, []);
-
+    
     // private data fetched by super_user via server
     useEffect(() => {
         if(userAuthData && userAuthData.uid) {

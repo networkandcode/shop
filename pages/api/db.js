@@ -3,7 +3,7 @@ import { username, password, url, schema } from '../../utils/dbCredentials';
 
 const db = async(req, res) => {
 
-    const { conditions, get_attributes, operation, record, table } = req.body;
+    const { conditions, get_attributes, operation, record, table, timestamp } = req.body;
     const headers = { 'Content-Type': 'application/json' };
 
     var dataObject = {
@@ -14,6 +14,10 @@ const db = async(req, res) => {
 
     if(operation === 'delete' || operation === 'search_by_hash') {
         dataObject = { ...dataObject, hash_values: [ record.id ] }
+    }
+    
+    if(operation === 'delete_transaction_logs_before') {
+        dataObject = { ...dataObject, timestamp }
     }
 
     if(operation === 'insert' || operation === 'update' || operation === 'upsert'){

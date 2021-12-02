@@ -6,6 +6,12 @@ import { useEffect, useState } from 'react';
 const Add = () => {
   const state = useAuth();
   const [ verifiedByAdmin, setVerifiedByAdmin ] = useState(false);
+  
+  useEffect(() => {
+    if(!state.userAuthData || !state.userAuthData.uid){
+      router.push('/');
+    }  
+  },[state, router]);
 
   useEffect(() => {
     if (state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN)){

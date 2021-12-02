@@ -114,6 +114,13 @@ const ItemForm = (props) => {
         }
         setLoading(false);
     }
+    
+    const clearTransactionLogs = async() => {
+      const timestamp = new Date().getTime();
+      console.log(timestamp);
+      await axios.post("/api/db", { operation: 'delete_transaction_logs_before', table: 'items', timestamp });
+      await axios.post("/api/db", { operation: 'delete_transaction_logs_before', table: 'listings', timestamp });
+    }
 
     useEffect(() => {
       if(!state.userAuthData){
@@ -155,6 +162,13 @@ const ItemForm = (props) => {
               </Button>
             </a>
           </Link>
+          {/*
+            {' '}
+            <Button color="secondary" onClick={clearTransactionLogs} variant="outlined">
+              Clear Transaction Log
+            </Button>
+          */}
+      
           <form onSubmit={onSubmit}>
             <TextField
               autoComplete="name"

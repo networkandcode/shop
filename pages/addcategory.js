@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react';
 
 const Add = () => {
     const router = useRouter();
-    const auth = useAuth();
+    const state = useAuth();
 
     const [attributes, setAttributes] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -78,7 +78,7 @@ const Add = () => {
                         setStatus({ ...status, ['error']: result.data.error });
                     } else{
                         setStatus({ ...status, ['message']: result.data.message });
-                        auth.addCategory(record);
+                        state.addCategory(record);
                     }
                 });
         }
@@ -87,15 +87,15 @@ const Add = () => {
     }
 
     useEffect(() => {
-      if(!auth.userAuthData){
-        router.push('/signin');
+      if(!state.userAuthData || !state.userAuthData.uid){
+        router.push('/');
       } else{
-          setAttributes(auth.attributes);
-          setCategories(auth.categories);
-          console.log(auth.varAttributes);
-          //setVarAttributes(auth.varAttributes);
+          setAttributes(state.attributes);
+          setCategories(state.categories);
+          console.log(state.varAttributes);
+          //setVarAttributes(state.varAttributes);
       }
-    },[auth, router]);
+    },[state, router]);
 
     return (
         <Container maxWidth="xs">
