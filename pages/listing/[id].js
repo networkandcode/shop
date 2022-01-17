@@ -1,6 +1,6 @@
 import EachListing from '../../components/EachListing';
 import { useAuth } from '../../hooks/useAuth';
-import { Box, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -29,14 +29,16 @@ const Listing = () => {
   },[ router, state ])
 
   return (
-    <Box
+    
+    <Grid
       container
-      justify="center"
+      alignItems="center"
+      direction="column"
       style={{
         backgroundColor: `${state.themeBgColor}`,
-        padding: `20px`
       }}
     >
+     <Grid item xs={12} sm={6}>
       <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
         <Link href="/">
           <a>
@@ -51,7 +53,7 @@ const Listing = () => {
         </Link>
         <br/>
       </Typography>
-      <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
+      <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
         { categories && categories.map(c => (
           <>
             { c.trim() && c.trim().split('/').map((i, idx) => (
@@ -66,10 +68,10 @@ const Listing = () => {
       <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
         { listing.name || listing.companyName }
       </Typography>
-
+    </Grid>
       { listing.categories && <EachListing fullScreen={true} listing={listing} smSize={6} xsSize={12}/> }
 
-    </Box>
+    </Grid>
   )
 }
 

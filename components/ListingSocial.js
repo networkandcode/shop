@@ -14,7 +14,7 @@ const ListingSocial = ({ listing }) => {
         </>
       )}
 
-      { listing.emailAddress && (
+      { listing.email && (
           <>
             <a href={`mailto:${listing.emailAddress}`} >
               <Email style={{ verticalAlign: `middle` }}/> { listing.emailAddress }

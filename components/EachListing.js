@@ -118,6 +118,7 @@ const EachListing = (props) => {
                       <Grid item xs={10}>
 
                             {listing.name || listing.companyName} {'   '}
+                            {listing.designation && listing.designation}
                             { listing.logo && (
                               <img
                                 alt={listing.companyName || listing.name}
@@ -185,6 +186,7 @@ const EachListing = (props) => {
               })}
               <Typography gutterBottom>
                 {listing.companyName || listing.name}
+                {listing.establishedYear && <>Since {listing.establishedYear}</>}
               </Typography>
 
               <Typography gutterBottom>
