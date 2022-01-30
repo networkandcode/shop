@@ -1,4 +1,4 @@
-import Banner from '../components/Banner';
+import NewBanner from '../components/NewBanner';
 import Categories from '../components/Categories';
 import DirCategories from '../components/DirCategories';
 import { useAuth } from '../hooks/useAuth'
@@ -30,37 +30,7 @@ const Home = () => {
 
     return (
         <>
-            <Banner/>
-              <Grid container
-                spacing={2}
-                style={{ backgroundColor: `${state.themeBgColor}`, padding: `10px` }}
-              >
-
-               {Object.values(homePageSections).map( homePageSection => (
-
-                <Grid item xs={12} key={homePageSection.name} sm={3}>
-                  <Link href={homePageSection.link}><Card className={classes.card}>
-                    <CardActionArea>
-                      <CardMedia
-                        component="img"
-                        alt={homePageSection.name}
-                        height="150"
-                        image={`https://source.unsplash.com/featured/?${homePageSection.name} ${process.env.NEXT_PUBLIC_UNSPLASH_BANNER_TAG}`}
-                        title={homePageSection.name}
-                      />
-                    </CardActionArea>
-                    <CardContent>
-                      <Typography gutterBottom variant="h6" component="h3">
-                      <a>{homePageSection.name}</a>
-                      </Typography>
-                      <Typography variant="body2" component="p">
-                        {homePageSection.description}
-                      </Typography>
-                    </CardContent>
-                  </Card></Link>
-                </Grid>
-                ))}
-            </Grid>
+            <NewBanner/>
         </>
     )
 }

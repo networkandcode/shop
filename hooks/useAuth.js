@@ -362,7 +362,7 @@ const useAuthProvider = () => {
         color: `${themeColor}`,
       },
       card: {
-        backgroundColor: `${themeBgColor}`,
+        backgroundColor: `transparent`,
         color: `${themeColor}`,
         border: `0.1px solid ${themeColor}`,
         borderRadius: `5px`,
