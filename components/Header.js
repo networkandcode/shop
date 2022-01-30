@@ -16,6 +16,8 @@ import {
   Grid,
   IconButton,
   InputBase,
+  Menu,
+  MenuItem,
   Radio,
   RadioGroup,
   Typography,
@@ -26,6 +28,7 @@ import {
   AccountCircle,
   Favorite,
   Instagram,
+  MoreVert,
   Phone,
   PowerSettingsNew,
   Search,
@@ -44,6 +47,7 @@ import { useEffect, useState } from 'react';
 
 const Header = () => {
   const auth = useAuth();
+  const classes = auth.useStyles();
   const router = useRouter();
 
   const [linkColor, setLinkColor] = useState({});
@@ -51,6 +55,16 @@ const Header = () => {
   const [ isDialogOpen, setIsDialogOpen ] = useState(false);
   const [ isChecked, setIsChecked ] = useState(false);
   const [ searchCategory, setSearchCategory ] = useState('shop');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLinks = (linkName) => {
     setLinkColor({[linkName]: "hotpink"})
@@ -160,6 +174,35 @@ const Header = () => {
           <Grid item>
             <ToggleTheme/>
           </Grid>
+          
+          <Grid item>
+            <IconButton
+                id="basic-button"
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+              >
+                <MoreVert style={{color: `${auth.themeBgColor}`, borderRadius: `50%`}} />
+              </IconButton>
+              
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              classes = {{ paper: classes.paper}}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              
+              <MenuItem onClick={handleClose}><Link href="/directory"><a>Directory</a></Link></MenuItem>
+              <MenuItem onClick={handleClose}><Link href="/shop"><a>Shop</a></Link></MenuItem>
+              <MenuItem onClick={handleClose}><Link href="/services"><a>Services</a></Link></MenuItem>
+              <MenuItem onClick={handleClose}><Link href="/kb"><a>Knowledge Base</a></Link></MenuItem>
+            </Menu>
+          </Grid>
 
             { (auth.userAuthData && auth.userAuthData.emailVerified)
               ? (
@@ -184,7 +227,11 @@ const Header = () => {
                       }}/>
                     </a></Link>
                     <small> { auth.totalPrice > 0 && (auth.totalPrice > 1000 ? `${auth.totalPrice/1000}K` : `${auth.totalPrice}`) } </small>
+                    
                   </Grid>
+                    
+                    
+                  
 
                   <Grid item>
                     <PowerSettingsNew  onClick={() => auth.signOut()}/>

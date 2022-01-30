@@ -20,6 +20,7 @@ const Home = () => {
         var temp = [];
 
         var tempListings = [];
+        
         state.listings.forEach(listing => {
             if (listing.categories) {
                 tempListings.push(listing);

@@ -31,14 +31,14 @@ const Listing = () => {
   return (
     
     <Grid
-      container
       alignItems="center"
+      container
       direction="column"
       style={{
         backgroundColor: `${state.themeBgColor}`,
       }}
     >
-     <Grid item xs={12} sm={6}>
+     <Grid item xs={12} sm={6} style={{textAlign: `center`}}>
       <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h5">
         <Link href="/">
           <a>

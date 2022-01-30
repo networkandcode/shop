@@ -369,13 +369,17 @@ const useAuthProvider = () => {
         boxShadow: `0.5px 0.5px`,
       },
       heading: {
-        color: `${process.env.NEXT_PUBLIC_THEME_COLOR}`,
+        color: process.env.NEXT_PUBLIC_THEME_COLOR,
       },
       input: {
         color: process.env.NEXT_PUBLIC_THEME_COLOR
       },
       label: {
         color: process.env.NEXT_PUBLIC_THEME_COLOR
+      },
+      paper: {
+        background: themeBgColor,
+        color: themeColor
       }
     }));
 

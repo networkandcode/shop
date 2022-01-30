@@ -10,7 +10,7 @@ const ListingGallery = ({ listing }) => {
           alt={listing.name || listing.businessName}
           component="img"
           height="200"
-          image={listing.images}
+          image={listing.images.split(',')[Math.floor(Math.random() * listing.images.split(',').length)]}
           title={listing.name || listing.businessName}
         />
       }

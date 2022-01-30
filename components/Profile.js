@@ -230,20 +230,38 @@ const ListingForm = (props) => {
             />
 
             <TextField
-              autoComplete="contactNumber"
+              autoComplete="mobileNumber1"
               fullWidth
-              helperText="Contact Phone Number"
-              id="contactNumber"
+              helperText="Mobile Ph. No."
+              id="mobileNumber1"
               InputLabelProps={{
                 shrink: true,
               }}
-              label="Contact Phone Number"
+              label="Mobile Ph. No."
               margin="normal"
-              name="contactNumber"
+              name="mobileNumber1"
               onChange={onChange}
-              placeholder="Contact Phone Number"
+              placeholder="Mobile Ph. No."
               type="number"
-              value={listing.contactNumber || ''}
+              value={listing.mobileNumber1 || ''}
+              variant="outlined"
+            />
+            
+            <TextField
+              autoComplete="mobileNumber2"
+              fullWidth
+              helperText="Alternate Mobile Ph. No."
+              id="mobileNumber2"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              label="Alternate Mobile Ph. No."
+              margin="normal"
+              name="mobileNumber2"
+              onChange={onChange}
+              placeholder="Alternate Mobile Ph. No."
+              type="number"
+              value={listing.mobileNumber2 || ''}
               variant="outlined"
             />
 

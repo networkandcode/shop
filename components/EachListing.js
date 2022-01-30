@@ -19,20 +19,25 @@ import {
     MenuItem,
     Select,
     TextField,
-    Typography,
+    Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Add,
+  Business,
   Clear,
   Check,
   Close,
+  ContactPhone,
   DeleteForever,
   Favorite,
   FavoriteBorder,
   Phone,
   Remove,
-  WhatsApp
+  Security,
+  VerifiedUser,
+  WhatsApp,
+  WorkOutline
 } from '@material-ui/icons';
 import axios from 'axios';
 import Link from 'next/link';
@@ -52,6 +57,8 @@ const EachListing = (props) => {
         message: '',
         error: ''
     });
+    
+    const address = listing.addressLine1 + (listing.addressLine2 !== null ? (', ' + listing.addressLine2) : '') + ', ' + listing.city + ', ' + listing.district + ', ' + listing.state + ' ' + listing.pinCode;
 
     const deleteListing = async() => {
         setLoading(true);
@@ -110,32 +117,32 @@ const EachListing = (props) => {
             >
               <CardActionArea>
                 <div style={{ textAlign: `center` }}>
-                  <ListingImage listing={listing} mediaHt={props.mediaHt || props.fullScreen ? "50%" : "200"}/>
+                  <ListingImage listing={listing} mediaHt={props.mediaHt || props.fullScreen ? "300" : "200"}/>
                 </div>
               </CardActionArea>
+              
               <CardContent>
                   <Grid container justify="space-between">
                       <Grid item xs={10}>
 
                             {listing.name || listing.companyName} {'   '}
-                            {listing.designation && listing.designation}
+                            
                             { listing.logo && (
                               <img
                                 alt={listing.companyName || listing.name}
-                                height={35}
+                                height={45}
                                 src={listing.logo}
                                 title={listing.companyName || listing.name}
                               />
                             )}
-
-                            <br/>
+                            
+                            {listing.designation && <Typography gutterBottom variant="body2">{listing.designation}</Typography>}
 
                             <Typography gutterBottom variant="body2">
-                              <a href={`tel: ${listing.contactNumber}`}>
-                                <Phone style={{verticalAlign: `middle`}}/> { listing.contactNumber }
+                              <a href={`tel: ${listing.mobileNumber1}`}>
+                                <Phone style={{color: `hotpink`, verticalAlign: `middle`}}/> { listing.mobileNumber1 }
                               </a>
                             </Typography>
-
                       </Grid>
 
                       { (state.userAuthData && (state.userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) ) ? (
@@ -157,7 +164,7 @@ const EachListing = (props) => {
                   <Grid container>
                       <Grid item>
                           <Typography gutterBottom variant="body2">
-                              { listing.businessType || listing.categories.replace('/', ' > ') }
+                            Business type: { listing.businessType || listing.categories.replace('/', ' > ') }
                           </Typography>
                       </Grid>
                       <Grid item>
@@ -172,27 +179,16 @@ const EachListing = (props) => {
                               </>
                           )}
                       </Grid>
-                  </Grid>
-
-              </CardContent>
-              { props.fullScreen && (
-              <CardContent>
-                <Grid container>
-                  <Grid item xs={12} sm={6}>
-              { Object.keys(listing).map(key => {
-                <Typography key={key}>
-                  {key} : {listing[key]}
-                </Typography>
-              })}
-              <Typography gutterBottom>
+                          <Grid item xs={12} sm={12}>
+                         <Typography gutterBottom>
                 {listing.companyName || listing.name}
-                {listing.establishedYear && <>Since {listing.establishedYear}</>}
+                {listing.establishedYear && <>{' '}since {listing.establishedYear}</>}
               </Typography>
 
               <Typography gutterBottom>
                 { listing.categories.replace('/', ' > ') || listing.businessType }
               </Typography>
-
+              
               {listing.description && (
                 <Typography gutterBottom>
                   <Markdown>
@@ -200,32 +196,123 @@ const EachListing = (props) => {
                   </Markdown>
                 </Typography>
               )}
-
-              { listing.productsOffered && (
-                <Typography gutterBottom>
-                  Products offered: { listing.productsOffered }
+              
+              </Grid>
+              
+                  </Grid>
+              
+              { props.fullScreen && (
+              <>
+                <Grid container>
+                  <Grid item xs={4} sm={4}>
+              { Object.keys(listing).map(key => {
+                <Typography key={key}>
+                  {key} : {listing[key]}
                 </Typography>
-              )}
-
-              {listing.address && (
+              })}
+              
+              {listing.verifiedByAdmin && (
+                            <Typography gutterBottom variant="body2">
+                              Verified <VerifiedUser style={{ color: `green`, verticalAlign: `middle` }}/>
+                            </Typography>
+                          )}
+                          
+                          {listing.mareboxRecommendation === 'Trusted' && (
+                            <Typography gutterBottom variant="body2">
+                              Trusted <Security style={{ color: `green`, verticalAlign: `middle` }}/>
+                            </Typography>
+                          )}
+                  </Grid>
+              
+                  <Grid item xs={8} sm={4}>
+                  
+                    {listing.mobileNumber2 && (
+                      <Typography gutterBottom variant="body2">
+                        <a href={`tel: ${listing.mobileNumber2}`}>
+                          <Phone style={{color: `hotpink`, verticalAlign: `middle`}}/> { listing.mobileNumber2 }
+                        </a>
+                      </Typography>
+                    )}
+                    
+                    {listing.telephoneNumber && (
+                      <Typography gutterBottom variant="body2">
+                        <a href={`tel: ${listing.telephoneNumber}`}>
+                          <ContactPhone style={{color: `hotpink`, verticalAlign: `middle`}}/> { listing.telephoneNumber }
+                        </a>
+                      </Typography>
+                    )}
+                    
+                    <ListingSocial listing={listing}/>
+                    
+                  </Grid>
+              
+              <Grid item xs={12} sm={4}>
+              {address && (
                 <Typography gutterBottom>
                   Address: <br/>
-                  {listing.address} {' '}
-                  {listing.pinCode && listing.pinCode}
+                  {address}
                 </Typography>
               )}
-
-              <br/>
+              
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <ListingSocial listing={listing}/>
-                </Grid>
+              
+              <Grid item xs={12} sm={12}>
+              {listing.workingHours && (
+                <Typography gutterBottom variant="body2">
+                  <WorkOutline style={{ color: `hotpink`, verticalAlign: `middle` }} />
+                  Working Hours: {listing.workingHours.replace('-',' to ')}
+                </Typography>
+              )}
+                {listing.workingDays && (
+                  <Typography gutterBottom variant="body2">
+                    <Business style={{ color: `hotpink`, verticalAlign: `middle` }} />
+                    Working Days: {listing.workingDays
+                      .replace('1',' Monday ')
+                      .replace('2',' Tuesday ')
+                      .replace('3',' Wednesday ')
+                      .replace('4',' Thursday ')
+                      .replace('5',' Friday ')
+                      .replace('6',' Saturday ')
+                      .replace('7',' Sunday ')
+                    }
+                  </Typography>
+                )}
+              </Grid>
+                
                 <Grid item xs={12} sm={12}>
                   <ListingGallery listing={listing}/>
                 </Grid>
+                
               </Grid>
-              </CardContent>
+              
+              <br/>
+              
+              <Grid container spacing={1}>
+              
+                {listing.youTubeMediaLinks && (
+                  <Grid item xs={12} sm={6}>
+                    <CardMedia
+                      component="iframe"
+                      image={listing.youTubeMediaLinks.split(',')[Math.floor(Math.random() * listing.youTubeMediaLinks.split(',').length)]}
+                    />
+                  </Grid>
+                )}
+              
+              <Grid item xs={12} sm={6}>
+                {listing.videos && (
+                  <CardMedia
+                    component="video"
+                    controls
+                    image={listing.videos.split(',')[Math.floor(Math.random() * listing.videos.split(',').length)]}
+                  />
+                )}
+              </Grid>
+              </Grid>
+              
+              </>
               )}
+              
+              </CardContent>
             </Card>
           </Grid>
       )}

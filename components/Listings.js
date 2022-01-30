@@ -38,6 +38,8 @@ import { useEffect, useState } from 'react';
 const Listings = ({ listings }) => {
   const router = useRouter();
   const auth = useAuth();
+  
+  console.log(listings);
 
   return(
     <>
@@ -46,7 +48,7 @@ const Listings = ({ listings }) => {
       </Typography>
       <Grid container spacing={2}>
           {listings.map(listing => (
-            <EachListing fullScreen={false} listing={listing} key={listing.id} smSize={3} xsSize={6}/>
+            <EachListing fullScreen={false} listing={listing} key={listing.id} smSize={3} xsSize={12}/>
           ))}
       </Grid>
     </>

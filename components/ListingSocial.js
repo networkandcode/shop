@@ -3,95 +3,91 @@ import { ContactPhone, Email, Facebook, Instagram, Language, LinkedIn, LocationO
 
 const ListingSocial = ({ listing }) => {
   return (
-    <Typography variant="body2">
+    <Typography gutterBottom variant="body2">
 
       { listing.telePhone && (
         <>
           <a href={`tel: ${listing.telePhone}`}>
-            <ContactPhone style={{ verticalAlign: `middle` }}/> { listing.telePhone }
+            <ContactPhone style={{ color: `hotpink`, verticalAlign: `middle` }}/> { listing.telePhone }
+          </a>
+          <br/>
+        </>
+      )}
+      
+       { listing.whatsApp && (
+        <>
+          <a href={`https://api.whatsapp.com/send?phone=${listing.whatsApp}`} target="_blank">
+            <WhatsApp style={{ color: `hotpink`, verticalAlign: `middle` }}/> { listing.whatsApp }
           </a>
           <br/>
         </>
       )}
 
+      <br/>
+      
       { listing.email && (
           <>
-            <a href={`mailto:${listing.emailAddress}`} >
-              <Email style={{ verticalAlign: `middle` }}/> { listing.emailAddress }
+            <a href={`mailto:${listing.email}`} >
+              <Email style={{ color: `hotpink`, verticalAlign: `middle` }}/>
             </a>
-            <br/>
           </>
       )}
 
       { listing.facebookUrl && (
           <>
             <a href={listing.facebookUrl}>
-              <Facebook style={{ verticalAlign: `middle` }}/> { listing.facebookUrl }
+              <Facebook style={{ color: `hotpink`, verticalAlign: `middle` }}/>
             </a>
-            <br/>
           </>
       )}
 
       { listing.instagramUrl && (
         <>
           <a href={listing.instagramUrl}>
-            <Instagram style={{ verticalAlign: `middle` }}/> { listing.instagramUrl }
+            <Instagram style={{ color: `hotpink`, verticalAlign: `middle` }}/>
           </a>
-          <br/>
         </>
       )}
 
       { listing.linkedInUrl && (
         <>
           <a href={listing.linkedInUrl}>
-            <LinkedIn style={{ verticalAlign: `middle` }}/> { listing.linkedInUrl }
+            <LinkedIn style={{ color: `hotpink`, verticalAlign: `middle` }}/>
           </a>
-          <br/>
         </>
       )}
 
       { listing.plusCode && (
         <>
-          <a href={`https://plus.codes/${location.plusCode}`}>
-            <LocationOn style={{ verticalAlign: `middle` }}/> { listing.plusCode }
+          <a href={`https://plus.codes/${listing.plusCode}`}>
+            <LocationOn style={{ color: `hotpink`, verticalAlign: `middle` }}/>
           </a>
-          <br/>
         </>
       )}
 
       { listing.twitterUrl && (
         <>
           <a href={listing.twitterUrl}>
-            <Twitter style={{ verticalAlign: `middle` }}/> { listing.twitterUrl }
+            <Twitter style={{ color: `hotpink`, verticalAlign: `middle` }}/>
           </a>
-          <br/>
         </>
       )}
 
       { listing.website && (
         <>
           <a href={listing.website}>
-            <Language style={{ verticalAlign: `middle` }}/> { listing.website }
+            <Language style={{ color: `hotpink`, verticalAlign: `middle` }}/>
           </a>
-          <br/>
         </>
       )}
 
-      { listing.whatsAppUrl && (
-        <>
-          <a href={`https://api.whatsapp.com/send?phone=${listing.whatsApp}`} target="_blank">
-            <WhatsApp style={{ verticalAlign: `middle` }}/> { listing.whatsAppUrl }
-          </a>
-          <br/>
-        </>
-      )}
+      
 
       { listing.youTubeUrl && (
         <>
           <a href={listing.youTubeUrl} target="_blank">
-            <YouTube style={{ verticalAlign: `middle` }}/> { listing.youTubeUrl }
+            <YouTube style={{ color: `hotpink`, verticalAlign: `middle` }}/>
           </a>
-          <br/>
         </>
       )}
 
