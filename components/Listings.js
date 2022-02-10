@@ -35,7 +35,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const Listings = ({ listings }) => {
+const Listings = ({ listings, title }) => {
   const router = useRouter();
   const auth = useAuth();
   
@@ -43,9 +43,11 @@ const Listings = ({ listings }) => {
 
   return(
     <>
-      <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
+      { title && (
+        <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
           Listings <small>({listings.length})</small>
-      </Typography>
+        </Typography>
+      )}
       <Grid container spacing={2}>
           {listings.map(listing => (
             <EachListing fullScreen={false} listing={listing} key={listing.id} smSize={3} xsSize={12}/>

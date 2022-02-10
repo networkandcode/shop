@@ -330,7 +330,13 @@ const useAuthProvider = () => {
         return await dbFetch('listings')
             .then(result => {
                 if(!result.error) {
-                    setListings(result);
+                    var temp = [];
+                    result.forEach(i => {
+                      if(i.verifiedByAdmin || (userAuthData && (userAuthData.email === process.env.NEXT_PUBLIC_ADMIN) )){
+                          temp.push(i)
+                      }
+                    })
+                    setListings(temp);
                 }
             })
             .catch( error => console.log('error', error) );

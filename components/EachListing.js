@@ -121,7 +121,7 @@ const EachListing = (props) => {
                 </div>
               </CardActionArea>
               
-              <CardContent>
+              <CardContent style={{backgroundColor: `${state.themeBgColor}`}}>
                   <Grid container justify="space-between">
                       <Grid item xs={10}>
 

@@ -94,7 +94,7 @@ const EachItem = (props) => {
                   <ItemImage item={item} mediaHt={props.mediaHt || props.fullScreen ? "50%" : "200"}/>
                 </div>
               </CardActionArea>
-              <CardContent>
+              <CardContent style={{backgroundColor: `${state.themeBgColor}`}}>
                   <Grid container justify="space-between">
                       <Grid item xs={10}>
                           <Typography>

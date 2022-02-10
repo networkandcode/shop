@@ -35,41 +35,19 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-const Items = ({items}) => {
+const Items = ({items, title}) => {
   const router = useRouter();
   const auth = useAuth();
   //const [ items, setItems ] = useState([]);
   const [ refresh, setRefresh ] = useState(false);
 
-  /*useEffect(() => {
-      const { pathname } = router;
-      const { c } = router.query;
-
-      if(c){
-        var i = [];
-        auth.items.map(item => {
-            if (item.category.startsWith(c)) {
-                i.push(item);
-            }
-        })
-        setItems([...i]);
-      } else if(pathname === '/shop'){
-        var i = [];
-        auth.items.map(item => {
-            if (item.category) {
-                i.push(item);
-            }
-        })
-        setItems([...i]);
-      }
-
-  }, [auth.items, router]);*/
-
   return (
     <div>
-      <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
+      { title && (
+        <Typography gutterBottom style={{color: `${process.env.NEXT_PUBLIC_THEME_COLOR}` }} variant="h6">
           Items <small>({items.length})</small>
-      </Typography>
+        </Typography>
+      )}
       <Grid container spacing={2}>
           {items.map(item => (
             <EachItem fullScreen={false} item={item} key={item.id} smSize={3} xsSize={6}/>
